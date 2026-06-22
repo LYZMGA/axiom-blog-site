@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Wireshark — Network Traffic Analysis — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-security">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-security">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Wireshark — Network Traffic Analysis</h1>
+    <div class="post-meta">
+      <time>2026-06-04</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">2 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/security/" class="cat-badge cat-badge-link cat-security">Security</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">wireshark</span>
+          
+            <span class="tag">network</span>
+          
+            <span class="tag">pcap</span>
+          
+            <span class="tag">traffic analysis</span>
+          
+            <span class="tag">pentesting</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Complete guide to Wireshark — capture filters, display filters, protocol dissection, TLS decryption, and real-world traffic analysis workflows for security research and CTFs.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What Is Wireshark?</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Wireshark is the world's most widely used network protocol analyser. It captures live packets from any interface and lets you inspect every byte of every frame — from Ethernet headers down to application-layer payloads. Whether you're debugging a protocol, hunting for credentials in cleartext, or reconstructing a compromised host's activity from a PCAP, Wireshark is the baseline tool.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Use case</th><th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Protocol debugging</td><td>Why is my TLS handshake failing?</td>
+                </tr>
+              
+                <tr>
+                  <td>Credential hunting</td><td>HTTP Basic Auth, FTP, Telnet in cleartext</td>
+                </tr>
+              
+                <tr>
+                  <td>Malware analysis</td><td>C2 beacon intervals, DNS tunnelling</td>
+                </tr>
+              
+                <tr>
+                  <td>CTF / challenge</td><td>Extract files from PCAP, decode custom protocols</td>
+                </tr>
+              
+                <tr>
+                  <td>Network recon</td><td>Map hosts, services, OS fingerprints from traffic</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Installation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Kali / Debian
+apt install wireshark
+
+# Allow non-root capture (adds your user to wireshark group)
+sudo dpkg-reconfigure wireshark-common   # choose Yes
+sudo usermod -aG wireshark $USER
+newgrp wireshark
+
+# CLI-only (no GUI needed)
+apt install tshark
+
+# macOS
+brew install --cask wireshark</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><blockquote>
+<p>On Linux, raw socket capture requires <code>CAP_NET_RAW</code>. Adding yourself to the <code>wireshark</code> group grants this without running as root.</p>
+</blockquote></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Capture Filters</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Capture filters use BPF (Berkeley Packet Filter) syntax and are applied <strong>before</strong> packets hit the buffer — essential for high-traffic environments.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># By host
+host 192.168.1.10
+not host 192.168.1.1          # exclude default gateway noise
+
+# By port
+port 443
+port 80 or port 443
+not port 22                    # suppress SSH
+
+# By protocol
+icmp
+udp
+tcp
+
+# By direction
+src host 10.0.0.5
+dst net 10.0.0.0/24
+
+# Combinations
+tcp and host 10.10.10.5 and port 80
+net 192.168.0.0/16 and not broadcast
+
+# Capture only SYN packets (portscans, new connections)
+tcp[tcpflags] &amp; tcp-syn != 0 and tcp[tcpflags] &amp; tcp-ack == 0</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Set capture filters in: <strong>Capture → Options → Enter a capture filter</strong></p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Display Filters</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Display filters run on already-captured packets and use Wireshark's own rich filter language. Far more powerful than BPF.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Protocol
+http
+dns
+smb
+ftp
+telnet
+ssl or tls
+
+# IP address
+ip.addr == 10.10.10.5
+ip.src == 192.168.1.0/24
+ip.dst != 10.0.0.1
+
+# Port
+tcp.port == 4444
+udp.port == 53
+
+# HTTP specifics
+http.request.method == &#34;POST&#34;
+http.request.uri contains &#34;login&#34;
+http.response.code == 200
+http.cookie contains &#34;session&#34;
+
+# DNS
+dns.qry.name contains &#34;evil&#34;
+dns.flags.rcode != 0          # DNS errors
+
+# TCP flags
+tcp.flags.syn == 1 and tcp.flags.ack == 0   # SYN scan
+tcp.flags.rst == 1                           # resets
+
+# Credentials in cleartext
+ftp.request.command == &#34;PASS&#34;
+telnet                                        # entire stream is cleartext
+http.authbasic                                # HTTP Basic Auth header
+
+# Large transfers
+frame.len &gt; 1400
+
+# Specific string in payload
+tcp contains &#34;password&#34;
+frame contains &#34;flag{&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Following Streams</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The single most useful feature for application-layer analysis.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Right-click any packet → Follow → TCP Stream  (or UDP / TLS / HTTP)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This reassembles the full conversation in both directions, colour-coded — client in red, server in blue. You can:<br>
+- Read cleartext HTTP requests and responses in full<br>
+- See FTP commands and directory listings<br>
+- Extract the raw bytes of a file transfer<br>
+- Copy as hex, C array, or raw binary</p>
+<p><strong>In the Follow Stream dialog</strong> — use the <em>Show and save data as</em> dropdown to switch between ASCII, hex, raw, and base64 views.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Exporting Objects (File Extraction)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Wireshark can reconstruct transferred files directly from traffic.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">File → Export Objects → HTTP
+File → Export Objects → SMB
+File → Export Objects → DICOM / IMF / TFTP</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This lists every file transferred over the selected protocol. Click <strong>Save All</strong> to dump them all to a directory. Works on:<br>
+- HTTP downloads (EXE, ZIP, PDF, images)<br>
+- SMB file shares<br>
+- TFTP firmware uploads</p>
+<p><strong>CTF tip:</strong> A PCAP with image files hidden in HTTP traffic is a classic challenge. Export objects, then run <code>file *</code> to identify them regardless of extension.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">TLS Decryption</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Method 1 — Pre-master secret log (browsers / apps)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Set the environment variable before launching the browser:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">export SSLKEYLOGFILE=~/tls-keys.log
+chromium &amp;
+# or
+firefox &amp;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Then in Wireshark:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Edit → Preferences → Protocols → TLS
+(Pre)-Master-Secret log filename → ~/tls-keys.log</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>All TLS traffic from that browser session is now decryptable in real time.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Method 2 — Server private key</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If you have the server's RSA private key (CTF, test lab, your own server):</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Edit → Preferences → Protocols → TLS → RSA Keys list → Add
+IP: &lt;server IP&gt;   Port: 443   Protocol: http   Key file: server.key</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><blockquote>
+<p>This only works for RSA key exchange — not ECDHE (forward-secret) ciphers. Most modern servers use ECDHE, so the SSLKEYLOGFILE method is more universally useful.</p>
+</blockquote></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Statistics &amp; Analysis Views</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Statistics → Protocol Hierarchy</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Shows a breakdown of all protocols by packet count and bytes — instantly reveals what protocols dominate the capture.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Statistics → Conversations</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Lists all IP/TCP/UDP conversations sorted by bytes. Find the noisiest hosts immediately.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Statistics → Endpoints</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>All unique IPs/MACs — useful for host discovery from a PCAP.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Statistics → IO Graph</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Plots traffic volume over time. Spike at a specific time? Correlate with an event.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Statistics → HTTP → Requests
+Statistics → DNS</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Dedicated breakdowns for HTTP and DNS traffic.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">tshark — CLI Wireshark</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>tshark</code> is the headless version — essential for scripting, remote capture, and large PCAP processing.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Live capture to file
+tshark -i eth0 -w capture.pcap
+
+# Read a PCAP
+tshark -r capture.pcap
+
+# Apply display filter
+tshark -r capture.pcap -Y &#39;http.request.method == &#34;POST&#34;&#39;
+
+# Extract specific fields
+tshark -r capture.pcap -Y dns -T fields -e ip.src -e dns.qry.name
+
+# Extract HTTP host + URI
+tshark -r capture.pcap -Y http.request \
+  -T fields -e http.host -e http.request.uri
+
+# Follow TCP stream 0
+tshark -r capture.pcap -q -z follow,tcp,ascii,0
+
+# Count conversations
+tshark -r capture.pcap -q -z conv,ip
+
+# Decrypt TLS with key log
+tshark -r capture.pcap -o tls.keylog_file:tls-keys.log -Y http
+
+# Extract credentials from FTP
+tshark -r capture.pcap -Y ftp -T fields \
+  -e ip.src -e ftp.request.command -e ftp.request.arg</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">Real-World Pentest Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>On-path / tap capture</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Capture on interface facing the target network
+tshark -i eth0 -w pentest-$(date +%Y%m%d).pcap
+
+# Quick wins — look for cleartext auth immediately
+tshark -r pentest.pcap -Y &#39;ftp or telnet or http.authbasic&#39; \
+  -T fields -e ip.src -e ip.dst -e text</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>After capture — triage steps</strong><br>
+1. Protocol hierarchy → identify unexpected protocols<br>
+2. Conversations → find the noisiest or most suspicious IPs<br>
+3. Filter <code>dns</code> → look for unusual domain resolutions<br>
+4. Filter <code>http</code> → follow streams on interesting POST requests<br>
+5. Export objects → recover any transferred files<br>
+6. Filter <code>tcp.flags.syn==1 &amp;&amp; tcp.flags.ack==0</code> → map port scan activity</p>
+<p><strong>Credential extraction one-liner</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">tshark -r capture.pcap -Y &#39;http.request.method==&#34;POST&#34;&#39; \
+  -T fields -e ip.src -e http.host -e http.request.uri \
+  -e http.file_data 2&gt;/dev/null | grep -i &#39;pass\|user\|login\|token&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">CTF Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Most CTF PCAP challenges fall into one of these patterns:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># 1. String hunt — flag in cleartext traffic
+strings capture.pcap | grep -i &#39;flag{\|CTF{\|htb{&#39;
+tshark -r capture.pcap -Y &#39;frame contains &#34;flag{&#34;&#39;
+
+# 2. File extraction
+# File → Export Objects → HTTP (or SMB)
+# Then: file * &amp;&amp; binwalk *
+
+# 3. Credential leak
+tshark -r capture.pcap -Y &#39;http.authbasic or ftp.request.command==&#34;PASS&#34;&#39;
+# Base64 decode HTTP Basic: echo &#39;dXNlcjpwYXNz&#39; | base64 -d
+
+# 4. Custom/unknown protocol
+# Statistics → Protocol Hierarchy → find the odd one out
+# Follow TCP stream → look at the raw bytes
+# Use Data field: data contains &lt;hex bytes&gt;
+
+# 5. DNS exfiltration
+tshark -r capture.pcap -Y dns -T fields -e dns.qry.name \
+  | sort | uniq | grep -v &#39;google\|microsoft\|apple&#39;
+
+# 6. Decrypting TLS (if key provided)
+tshark -r capture.pcap -o tls.keylog_file:provided.log -Y http2</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Useful keyboard shortcuts</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Key</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`Ctrl+F`</td><td>Find packet (search payload)</td>
+                </tr>
+              
+                <tr>
+                  <td>`Ctrl+G`</td><td>Go to packet number</td>
+                </tr>
+              
+                <tr>
+                  <td>`Ctrl+R`</td><td>Reload live capture</td>
+                </tr>
+              
+                <tr>
+                  <td>`Ctrl+E`</td><td>Edit display filter</td>
+                </tr>
+              
+                <tr>
+                  <td>`Ctrl+Alt+Shift+T`</td><td>Follow TCP stream</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Quick Reference</span>
+            </div>
+          
+          <div class="note-body"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capture filter (BPF)</td>
+<td>Set before capture: <code>host 10.0.0.5 and port 80</code></td>
+</tr>
+<tr>
+<td>Display filter</td>
+<td>Filter bar: <code>http.request.method == "POST"</code></td>
+</tr>
+<tr>
+<td>Follow TCP stream</td>
+<td>Right-click packet → Follow → TCP Stream</td>
+</tr>
+<tr>
+<td>Extract files</td>
+<td>File → Export Objects → HTTP</td>
+</tr>
+<tr>
+<td>Decrypt TLS</td>
+<td>Preferences → TLS → keylog file</td>
+</tr>
+<tr>
+<td>CLI capture</td>
+<td><code>tshark -i eth0 -w out.pcap</code></td>
+</tr>
+<tr>
+<td>CLI filter+fields</td>
+<td><code>tshark -r f.pcap -Y dns -T fields -e dns.qry.name</code></td>
+</tr>
+<tr>
+<td>Find string in PCAP</td>
+<td><code>strings cap.pcap \| grep flag</code></td>
+</tr>
+</tbody>
+</table></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/snmp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SNMP – Network Intelligence &amp; Enumeration</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">SNMP exposes a wealth of device info — system details, interfaces, running processes, installed software. Learn to query it, brute-force community strings, and extract data for both ops and offensive use.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ssh-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SSH — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-02</time></div>
+          <p class="post-card-summary">Key auth, port forwarding, SCP, SOCKS proxying, and a CTF workflow covering key cracking, pivoting, and writing your own key to a compromised box.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/sql-sqlmap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SQL Injection &amp; sqlmap – From Manual Payloads to Full Dumps</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">SQL injection is one of the most impactful web vulnerabilities. Learn manual detection and exploitation techniques, then automate the heavy lifting with sqlmap — from basic dumps to OS shell access.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

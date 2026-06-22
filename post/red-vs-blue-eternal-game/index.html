@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Red vs Blue: The Eternal Game — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-security">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-security">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Red vs Blue: The Eternal Game</h1>
+    <div class="post-meta">
+      <time>2026-06-16</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/security/" class="cat-badge cat-badge-link cat-security">Security</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">blue-team</span>
+          
+            <span class="tag">purple-team</span>
+          
+            <span class="tag">attack-defense</span>
+          
+            <span class="tag">mitre-attack</span>
+          
+            <span class="tag">detection</span>
+          
+            <span class="tag">adversary-simulation</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">The cat-and-mouse between attackers and defenders has no finish line. A structured breakdown of every major kill-chain phase — attacker technique on the left, defender response on the right — and why purple teaming is the only way to close the loop.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Every intrusion is a conversation. The attacker sends a move; the defender responds or misses it. The game has been running since the first worm crawled a network in 1988 and it will never end — because the asymmetry is fundamental: attackers need to find one gap, defenders must close every gap simultaneously.</p>
+<p>This post maps the kill chain phase by phase. For each stage: what the attacker does, what artefacts they leave, and what a competent defender should have in place to detect or deny it. Read both columns. Build the right one. Test with the left.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">The Asymmetry Problem</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Before the phase-by-phase breakdown, the structural reality defenders must accept:</p>
+<ul>
+<li><strong>Attackers operate in time</strong> — they can spend weeks on reconnaissance before touching a target system</li>
+<li><strong>Defenders operate in real-time</strong> — they must detect while managing change, patching, and business operations simultaneously</li>
+<li><strong>Attackers can iterate freely</strong> — a failed technique costs them time; it costs a defender nothing because they may not have known about it</li>
+<li><strong>Defenders bear the burden of proof</strong> — every alert must be investigated; attackers pay no cost for false positives in your SIEM</li>
+</ul>
+<p>None of this means defence is futile. It means the game is not symmetric and your strategy must account for that.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Phase 1 — Reconnaissance</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Passive OSINT**: LinkedIn employee harvesting, job postings reveal tech stack, GitHub leaks internal hostnames and API keys, WHOIS history shows acquired domains</td><td>**Reduce exposure**: audit GitHub org for secrets, scrub job postings of internal tool names, enforce email format privacy on public sites</td>
+                </tr>
+              
+                <tr>
+                  <td>**Active recon**: Shodan/Censys enumerate exposed services, certificate transparency reveals internal subdomains, DNS brute-force maps infrastructure</td><td>**Monitor certificates**: subscribe to crt.sh alerts for your domains. Shodan Monitor for your IP ranges. Run your own Shodan searches monthly</td>
+                </tr>
+              
+                <tr>
+                  <td>**Tools**: theHarvester, maltego, recon-ng, amass, subfinder — entirely passive, never touches target systems</td><td>**Control the attack surface**: internet exposure review quarterly. Ask: should this port be open? Should this service be internet-facing at all?</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Defender advantage in phase 1</span>
+            </div>
+          
+          <div class="note-body"><p>Reconnaissance is the phase where defenders have the strongest hand — because the attacker is gathering public data, you can audit the same sources they use. Run the attacker's tools against yourself once a quarter. Every internal hostname, credential, or technology detail you find in public sources is one the adversary already has.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Phase 2 — Initial Access</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Spearphishing**: crafted email referencing legitimate context from OSINT, malicious attachment or credential-harvesting link, targets with VPN or email access</td><td>**Email security stack**: SPF + DKIM + DMARC enforcement (reject policy), sandboxed attachment detonation, link rewriting and real-time reputation checks</td>
+                </tr>
+              
+                <tr>
+                  <td>**Exploit public-facing app**: VPN gateway auth bypass, unpatched web app RCE, exposed admin panels with default/weak credentials</td><td>**Patch SLA enforcement**: critical internet-facing systems get 24–48 hour SLA. Run Shodan against your own IP ranges weekly. Web app scanning in CI/CD</td>
+                </tr>
+              
+                <tr>
+                  <td>**Supply chain / trusted software**: trojanised update, compromised developer dependency, malicious VS Code extension</td><td>**Software composition analysis**: enforce dependency signing, vendor security questionnaires, monitor update channels for anomalies</td>
+                </tr>
+              
+                <tr>
+                  <td>**Valid credentials**: purchased from initial access brokers (stolen from previous breach), password spraying on OWA/VPN, credential stuffing from combo lists</td><td>**MFA everywhere**: FIDO2/passkeys on VPN and email make credential theft worthless. Monitor for password spray patterns (many failures across few accounts)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Red team: test your own perimeter for initial access vectors (authorised)
+
+# Find exposed admin interfaces
+nmap -p 8080,8443,9090,4443,3389,5900,5985 --open &lt;your-ranges&gt;
+
+# Password spray test (authorised, with IR team aware)
+# Use low-and-slow: 1 attempt per account per 30 minutes stays under lockout threshold
+python3 spray.py --user-list users.txt --password &#39;Winter2026!&#39; --target mail.corp.com --interval 30
+
+# Check your domains against breach databases
+curl -s &#39;https://haveibeenpwned.com/api/v3/breachedaccount/user@corp.com&#39; \
+  -H &#39;hibp-api-key: YOUR_KEY&#39;
+
+# Blue team: detect password spray in Wazuh / SIEM
+# Many unique usernames, same source IP, short time window, all fail (event 4625)
+# Rule: &gt;20 unique usernames with 4625 from same IP in 10 minutes = spray</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Phase 3 — Execution</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**PowerShell (T1059.001)**: encoded commands, download-cradles (`IEX (New-Object Net.WebClient).DownloadString(...)`), bypass execution policy</td><td>**Script block logging + AMSI**: enable PowerShell v5 ScriptBlock Logging (Event 4104), Constrained Language Mode, log and alert on encoded `-enc` flags</td>
+                </tr>
+              
+                <tr>
+                  <td>**WMI (T1047)**: `wmic process call create`, wmiprvse.exe spawns attacker&#39;s binary — difficult to attribute in many SIEMs</td><td>**WMI event subscription hunting**: Sysmon Event ID 19/20/21 captures WMI subscriptions. Alert on wmiprvse.exe spawning shells or suspicious children</td>
+                </tr>
+              
+                <tr>
+                  <td>**Macro-enabled documents (T1137)**: Office macro downloads and executes stager, MSHTA, or rundll32 LOLBin chain</td><td>**Disable macros by policy**: GPO to block macros from internet-origin documents. Defender Attack Surface Reduction rules block Office child processes</td>
+                </tr>
+              
+                <tr>
+                  <td>**Living-off-the-land binaries**: certutil, mshta, rundll32, regsvr32, bitsadmin — signed Microsoft binaries abused to download/execute</td><td>**LOLBin detection**: alert on certutil -urlcache, mshta.exe with http:// arguments, regsvr32 with /s /u /i:http. These are almost always malicious in modern environments</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Phase 4 — Persistence</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Registry Run keys (T1547.001)**: `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` — survives user logon, low privilege required</td><td>**Autoruns monitoring**: Sysinternals Autoruns comparison on gold image vs live system. Wazuh file integrity monitoring (FIM) on registry hives</td>
+                </tr>
+              
+                <tr>
+                  <td>**Scheduled tasks (T1053.005)**: `schtasks /create`, often with SYSTEM context, hidden in `\Microsoft\Windows\` folder</td><td>**Task baseline and alerting**: Sysmon EID 1 on schtasks.exe, Windows Event 4698 (task created). Alert on tasks created outside change windows</td>
+                </tr>
+              
+                <tr>
+                  <td>**Services (T1543.003)**: malicious service installed, runs on boot as SYSTEM, blends with legitimate service names</td><td>**Service integrity monitoring**: baseline all services on gold image. Alert on new service installations (Event 7045). Check service binary paths for anomalies</td>
+                </tr>
+              
+                <tr>
+                  <td>**WMI Event Subscriptions (T1546.003)**: fileless persistence, survives reboots, notoriously hard to detect without dedicated tooling</td><td>**Hunt WMI subscriptions**: `Get-WMIObject -Namespace root\subscription -Class __EventFilter`. PowerShell script to dump and diff all subscriptions weekly</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            
+          </div>
+          <pre><code class="language-powershell"># Blue team: hunt for persistence mechanisms (run on Windows endpoints)
+
+# Registry Run key inspection
+$runKeys = @(
+    &#39;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#39;,
+    &#39;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce&#39;,
+    &#39;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#39;
+)
+foreach ($key in $runKeys) {
+    Get-ItemProperty -Path $key -ErrorAction SilentlyContinue | 
+        Select-Object * -ExcludeProperty PSPath,PSParentPath,PSChildName,PSProvider
+}
+
+# Scheduled tasks — find non-Microsoft tasks
+Get-ScheduledTask | Where-Object { $_.TaskPath -notmatch &#39;Microsoft&#39; } |
+    Select-Object TaskName, TaskPath, State, @{n=&#39;Command&#39;;e={$_.Actions.Execute}}
+
+# Services with non-standard binary paths
+Get-WmiObject Win32_Service |
+    Where-Object { $_.PathName -notmatch &#39;System32|SysWOW64|Program Files&#39; } |
+    Select-Object Name, StartMode, State, PathName
+
+# WMI Event subscriptions (fileless persistence)
+Get-WMIObject -Namespace root\subscription -Class __EventFilter
+Get-WMIObject -Namespace root\subscription -Class __EventConsumer
+Get-WMIObject -Namespace root\subscription -Class __FilterToConsumerBinding</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Phase 5 — Privilege Escalation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Token impersonation (T1134)**: SeImpersonatePrivilege abuse via Potato exploits (Hot/Sweet/Rogue) — nearly guaranteed SYSTEM from IIS/SQL service accounts</td><td>**Remove unnecessary privileges**: service accounts should not have SeImpersonatePrivilege unless required. Audit with `whoami /priv` on each service account context</td>
+                </tr>
+              
+                <tr>
+                  <td>**Unquoted service paths (T1574.009)**: `C:\Program Files\My App\service.exe` → attacker plants `C:\Program.exe`</td><td>**Audit unquoted paths**: `wmic service get name,pathname | findstr /v &#39;&#34;&#39; | findstr /v &#39;C:\Windows&#39;`. Fix with quotes in service registry key</td>
+                </tr>
+              
+                <tr>
+                  <td>**AlwaysInstallElevated (T1548.002)**: MSI files install as SYSTEM when this GPO is set — trivial privilege escalation</td><td>**Disable via GPO**: Computer Configuration &gt; Policies &gt; Administrative Templates &gt; Windows Components &gt; Windows Installer &gt; Always install with elevated privileges = Disabled</td>
+                </tr>
+              
+                <tr>
+                  <td>**Kerberoasting (T1558.003)**: request Kerberos service tickets for SPNs, crack offline — no special privilege needed, entirely in-memory</td><td>**Protect service accounts**: use Group Managed Service Accounts (gMSA) with 240-char random passwords. Alert on 4769 events with encryption type 0x17 (RC4) at scale</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Phase 6 — Lateral Movement</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Pass-the-Hash (T1550.002)**: NTLM hash from memory used directly — no password cracking needed, works for remote services</td><td>**Enable Protected Users group**: prevents NTLM for members. Credential Guard on Windows 10+ isolates LSA secrets in hypervisor-protected memory</td>
+                </tr>
+              
+                <tr>
+                  <td>**PsExec / SMB lateral (T1021.002)**: copies binary to ADMIN$, creates service — classic but still works in environments without EDR coverage</td><td>**Alert on ADMIN$ writes**: Sysmon network connections + service creation from remote hosts. Firewall rule: restrict SMB port 445 to management hosts only</td>
+                </tr>
+              
+                <tr>
+                  <td>**WinRM / PowerShell Remoting (T1021.006)**: `Enter-PSSession`, `Invoke-Command` — built-in, encrypted, legitimate — blends perfectly</td><td>**Restrict WinRM**: allow only from jump hosts via firewall. Log all remote PowerShell sessions (Event 4103/4104). Alert on first-time WinRM connections between workstations</td>
+                </tr>
+              
+                <tr>
+                  <td>**DCOM (T1021.003)**: `MMC20.Application`, `ShellWindows` — used by APT groups because it leaves minimal artefacts and uses legitimate COM infrastructure</td><td>**DCOM hunting**: Sysmon network connections from svchost.exe or mmc.exe to remote hosts. Baseline which systems legitimately use DCOM</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Phase 7 — Impact / Objectives</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>ATTACKER</th><th>DEFENDER</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Data exfiltration (T1048)**: HTTPS to cloud services (OneDrive, Dropbox, Mega) — encrypted and whitelisted; DNS exfiltration via `data.attacker.com` TXT records</td><td>**DNS monitoring**: flag unusually long subdomains (&gt;50 chars), high-frequency queries to new domains, queries to domains registered &lt;30 days ago</td>
+                </tr>
+              
+                <tr>
+                  <td>**Ransomware deployment (T1486)**: RaaS affiliate deploys encryptor after weeks of dwell time — encryption is the last step, not the breach</td><td>**Canary files**: plant fake documents in file shares with unique names. Any read = immediate alert. Also monitor for mass file rename events (ransomware extension pattern)</td>
+                </tr>
+              
+                <tr>
+                  <td>**Domain persistence (T1207, T1484)**: DCSync, Golden/Silver tickets, AdminSDHolder modification — attackers in AD maintain access long after initial cleanup</td><td>**Privileged Access Workstations**: DCSync generates Event 4662 on the DC for the DS-Replication-Get-Changes right. Alert on any non-DC account triggering this</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">The Purple Team Bridge</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Red team finds gaps. Blue team builds detections. Purple team closes the loop between them. Without structured purple teaming, red team reports become expensive documents that sit in a backlog.</p>
+<p>The purple team model is simple: red and blue work the same attack chain <em>together, in real time</em>. Red executes technique T1059.001. Blue checks if the SIEM fired. If not, blue writes the detection rule. Red tests again. Iterate until the technique is covered, then move to the next one.</p>
+<p>This is fundamentally different from a traditional pentest where the red team hands over a PDF and leaves.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Purple team workflow — Atomic Red Team + SIEM validation
+
+# Step 1: Red team executes a specific ATT&amp;CK technique
+Invoke-AtomicTest T1003.001 -TestNumbers 1  # LSASS memory dump via Task Manager
+
+# Step 2: Blue team queries SIEM for the expected artefact
+# In Wazuh/Kibana:
+# query: rule.mitre.technique:&#34;T1003.001&#34; AND timestamp:[now-5m TO now]
+# Expected: Wazuh rule 92211 or Sysmon EID 10 on lsass.exe
+
+# Step 3: If no alert — write the detection rule and re-test
+# Step 4: Document in coverage matrix (ATT&amp;CK Navigator layer)
+
+# Generate ATT&amp;CK Navigator layer showing detection coverage
+python3 - &lt;&lt; &#39;EOF&#39;
+import json
+
+# Techniques with confirmed detection
+covered = [&#39;T1059.001&#39;, &#39;T1003.001&#39;, &#39;T1547.001&#39;, &#39;T1558.003&#39;, &#39;T1021.002&#39;]
+no_coverage = [&#39;T1021.003&#39;, &#39;T1207&#39;, &#39;T1048&#39;, &#39;T1134&#39;]
+
+layer = {
+    &#39;name&#39;: &#39;SOC Lab Coverage&#39;,
+    &#39;domain&#39;: &#39;enterprise-attack&#39;,
+    &#39;techniques&#39;: [
+        {&#39;techniqueID&#39;: t, &#39;color&#39;: &#39;#4caf50&#39;, &#39;comment&#39;: &#39;Detected&#39;} for t in covered
+    ] + [
+        {&#39;techniqueID&#39;: t, &#39;color&#39;: &#39;#f44336&#39;, &#39;comment&#39;: &#39;No detection&#39;} for t in no_coverage
+    ]
+}
+print(json.dumps(layer, indent=2))
+EOF
+# Upload output to https://mitre-attack.github.io/attack-navigator/</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-danger">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>
+              
+              <span>The uncomfortable truth</span>
+            </div>
+          
+          <div class="note-body"><p>Most organisations detect fewer than 15% of the ATT&amp;CK techniques an average red team uses. The MITRE ATT&amp;CK Evaluations consistently show that leading EDR products miss technique variants that differ slightly from their trained patterns. The answer is not a better product — it is a structured programme of attack simulation and detection validation repeated continuously. Purple teaming is not a project. It is a practice.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/threat-hunting-sigma-rules" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Threat Hunting with Sigma Rules — Writing Detections That Actually Work</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">Sigma is the vendor-neutral standard for writing detection rules that compile to any SIEM. Covers the Sigma format in depth, writing rules for real ATT&amp;CK techniques, converting to Splunk/Elastic/QRadar queries, hunting methodologies, and building a detection pipeline that keeps pace with evolving adversaries.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/living-off-the-land-binaries" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Living Off The Land Binaries — Attackers Using Your Own Tools Against You</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">LOLBins are signed Microsoft binaries that attackers weaponise to download, execute, and persist — bypassing application whitelisting and AV. A comprehensive reference table of the most abused LOLBins, what they do, and how to detect and restrict each one.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/purple-team-exercise-guide" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Purple Team Exercise — Planning and Running a Full Scenario</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A step-by-step guide to running a structured purple team exercise: choosing a threat scenario that matches real risk, defining success criteria up front, executing the kill chain in coordination with the blue team, and converting the results into a lasting detection programme.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

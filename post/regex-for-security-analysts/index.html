@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Regex for Security Analysts — The Patterns You Need and Nothing Else — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-notes">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-notes">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Regex for Security Analysts — The Patterns You Need and Nothing Else</h1>
+    <div class="post-meta">
+      <time>2026-06-17</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/notes/" class="cat-badge cat-badge-link cat-notes">Notes</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">regex</span>
+          
+            <span class="tag">log-analysis</span>
+          
+            <span class="tag">detection-engineering</span>
+          
+            <span class="tag">osint</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">A compact, copy-paste reference of the regex patterns that actually come up constantly in log analysis, detection rule writing, and OSINT — IPv4/IPv6, domains, hashes, base64 detection, Windows paths, and the IOC formats you&#39;ll grep for on a weekly basis.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Not a regex tutorial — a lookup table. These are the patterns I actually reach for when grepping logs, validating IoC feeds, or scripting extraction from raw text. All tested against standard PCRE (Python <code>re</code>, grep -P, most SIEM query languages with PCRE support).</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Network Indicators</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Target</th><th>Pattern</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>IPv4</td><td>\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)\b</td>
+                </tr>
+              
+                <tr>
+                  <td>IPv4 CIDR</td><td>\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)/(?:[0-9]|[1-2][0-9]|3[0-2])\b</td>
+                </tr>
+              
+                <tr>
+                  <td>IPv6 (general, covers compressed form)</td><td>\b(?:[A-Fa-f0-9]{1,4}:){2,7}[A-Fa-f0-9]{1,4}\b|\b(?:[A-Fa-f0-9]{1,4}:){1,7}:\b</td>
+                </tr>
+              
+                <tr>
+                  <td>Domain name</td><td>\b(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}\b</td>
+                </tr>
+              
+                <tr>
+                  <td>Defanged domain (`example[.]com`, `example(.)com`)</td><td>\b[a-zA-Z0-9-]+(?:\[\.\]|\(\.\)|\.)[a-zA-Z0-9-]+(?:(?:\[\.\]|\(\.\)|\.)[a-zA-Z]{2,63})+\b</td>
+                </tr>
+              
+                <tr>
+                  <td>URL</td><td>\bhttps?://[a-zA-Z0-9.-]+(?::\d+)?(?:/[^\s&#34;&#39;&lt;&gt;]*)?\b</td>
+                </tr>
+              
+                <tr>
+                  <td>Email address</td><td>\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>IPv4 — why not just `\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`</span>
+            </div>
+          
+          <div class="note-body"><p>That naive version matches <code>999.999.999.999</code>, which isn't a valid address. It's fine for a quick eyeball grep, but if the output feeds an automated blocklist or enrichment pipeline, the octet-bounded version above (each octet capped at 0–255) avoids garbage entries silently breaking downstream tooling.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Hashes</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Hash type</th><th>Pattern</th><th>Length</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>MD5</td><td>\b[a-fA-F0-9]{32}\b</td><td>32 hex chars</td>
+                </tr>
+              
+                <tr>
+                  <td>SHA1</td><td>\b[a-fA-F0-9]{40}\b</td><td>40 hex chars</td>
+                </tr>
+              
+                <tr>
+                  <td>SHA256</td><td>\b[a-fA-F0-9]{64}\b</td><td>64 hex chars</td>
+                </tr>
+              
+                <tr>
+                  <td>SSDEEP (fuzzy hash)</td><td>\b\d+:[a-zA-Z0-9/+]+:[a-zA-Z0-9/+]+\b</td><td>variable, block-size prefixed</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-warning">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              
+              <span>Length alone isn&#39;t proof</span>
+            </div>
+          
+          <div class="note-body"><p>A 32-character hex string matches the MD5 pattern whether or not it's actually an MD5 hash — a truncated SHA256, a hex-encoded GUID, and plenty of other 32-char hex strings will false-positive against this pattern in free-text log fields. Treat hash-shaped regex matches in unstructured log lines as candidates to verify, not as confirmed IoCs, especially before auto-feeding them into a blocklist.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Encoding &amp; Obfuscation Detection</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Target</th><th>Pattern</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Base64 blob (generic, 20+ chars to reduce noise)</td><td>\b(?:[A-Za-z0-9+/]{4}){5,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?\b</td>
+                </tr>
+              
+                <tr>
+                  <td>PowerShell `-EncodedCommand` invocation</td><td>(?i)-(?:e|en|enc|encodedcommand)\s+[A-Za-z0-9+/=]{20,}</td>
+                </tr>
+              
+                <tr>
+                  <td>Hex-encoded shellcode/string (`\x41\x42...`)</td><td>(?:\\x[a-fA-F0-9]{2}){4,}</td>
+                </tr>
+              
+                <tr>
+                  <td>JWT (three base64url segments)</td><td>\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*\b</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Windows Artifacts</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Target</th><th>Pattern</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Windows file path</td><td>\b[a-zA-Z]:\\(?:[^\\/:*?&#34;&lt;&gt;|\r\n]+\\)*[^\\/:*?&#34;&lt;&gt;|\r\n]*\b</td>
+                </tr>
+              
+                <tr>
+                  <td>UNC path</td><td>\\\\[a-zA-Z0-9._-]+\\[^\\\r\n]+</td>
+                </tr>
+              
+                <tr>
+                  <td>Registry key path</td><td>\bHK(?:LM|CU|CR|U|CC)\\[^\r\n]+</td>
+                </tr>
+              
+                <tr>
+                  <td>Windows event log GUID</td><td>\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}</td>
+                </tr>
+              
+                <tr>
+                  <td>SID</td><td>\bS-1-(?:0|1|2|3|4|5|[0-9]{1,2})(?:-\d+){1,5}\b</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Common IOC / Detection Formats</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Target</th><th>Pattern</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>CVE ID</td><td>\bCVE-\d{4}-\d{4,7}\b</td>
+                </tr>
+              
+                <tr>
+                  <td>MITRE ATT&amp;CK technique ID</td><td>\bT\d{4}(?:\.\d{3})?\b</td>
+                </tr>
+              
+                <tr>
+                  <td>MAC address</td><td>\b(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b</td>
+                </tr>
+              
+                <tr>
+                  <td>Bitcoin address (legacy/P2SH)</td><td>\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b</td>
+                </tr>
+              
+                <tr>
+                  <td>User-Agent string field (for quick extraction from raw logs)</td><td>(?i)User-Agent:\s*([^\r\n]+)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Practical grep -P examples against a raw log file</span>
+          </div>
+          <pre><code class="language-bash"># Pull every IPv4 address out of a firewall log
+grep -oP &#39;\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)\b&#39; firewall.log | sort -u
+
+# Find PowerShell encoded-command invocations across a Sysmon export
+grep -oP &#39;(?i)-(?:e|en|enc|encodedcommand)\s+[A-Za-z0-9+/=]{20,}&#39; sysmon_export.csv
+
+# Extract every CVE mentioned in a vendor advisory dump
+grep -oP &#39;\bCVE-\d{4}-\d{4,7}\b&#39; advisory.txt | sort -u
+
+# Defanged domains in a threat intel feed -&gt; refang in one pass
+grep -oP &#39;\b[a-zA-Z0-9-]+(?:\[\.\]|\(\.\))[a-zA-Z0-9.-]+\b&#39; feed.txt | sed -E &#39;s/\[\.\]|\(\.\)/./g&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>When to stop using regex</span>
+            </div>
+          
+          <div class="note-body"><p>Regex is the right tool for extraction from unstructured text — raw logs, PDF-to-text dumps, free-form report prose. The moment the source is already structured (JSON, CSV, a proper SIEM field), parse it with the structured tool instead of regexing the serialized form. A <code>grep</code> for an IP inside a JSON blob will eventually break on a value that happens to contain IP-shaped digits in an unrelated field; <code>jq '.source_ip'</code> won't.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/purple-team-exercise-guide" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Purple Team Exercise — Planning and Running a Full Scenario</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A step-by-step guide to running a structured purple team exercise: choosing a threat scenario that matches real risk, defining success criteria up front, executing the kill chain in coordination with the blue team, and converting the results into a lasting detection programme.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/osint-open-source-intelligence" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">OSINT — Open Source Intelligence from First Principles</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">OSINT methodology, Google dorks, Shodan, email and username enumeration, social media investigation, domain and IP recon, image geolocation, document metadata, GitHub secrets, dark web sources, and building target profiles for red team engagements.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/malware-development-for-defenders" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Malware Development for Defenders — Understanding What You&#39;re Detecting</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">An introductory guide to malware internals, written for blue teamers: how a stager actually works, what shellcode injection looks like in memory, how C2 beaconing is implemented under the hood, and why understanding the implementation makes your detection rules dramatically better. Built entirely on open-source C2 frameworks as illustrative examples — no novel tooling.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

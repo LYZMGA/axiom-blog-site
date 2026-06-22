@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Threat Hunting with Sigma Rules — Writing Detections That Actually Work — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-security">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-security">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Threat Hunting with Sigma Rules — Writing Detections That Actually Work</h1>
+    <div class="post-meta">
+      <time>2026-06-16</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/security/" class="cat-badge cat-badge-link cat-security">Security</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">threat-hunting</span>
+          
+            <span class="tag">sigma</span>
+          
+            <span class="tag">detection</span>
+          
+            <span class="tag">siem</span>
+          
+            <span class="tag">blue-team</span>
+          
+            <span class="tag">edr</span>
+          
+            <span class="tag">soc</span>
+          
+            <span class="tag">mitre-attack</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Sigma is the vendor-neutral standard for writing detection rules that compile to any SIEM. Covers the Sigma format in depth, writing rules for real ATT&amp;CK techniques, converting to Splunk/Elastic/QRadar queries, hunting methodologies, and building a detection pipeline that keeps pace with evolving adversaries.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Threat hunting is not waiting for an alert. It is the proactive search for adversary activity that your current detections have missed — the assumption that a breach has occurred or is occurring, and a structured effort to find it.</p>
+<p>Sigma is the language that makes detections portable. Write a rule once, compile it to Splunk, Elastic, Azure Sentinel, QRadar, or Wazuh. The Sigma community maintains a library of thousands of rules mapped to MITRE ATT&amp;CK — the best starting point for any detection programme. This post covers the format, the methodology, and the craft of writing rules that catch real adversary behaviour without flooding analysts with noise.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">Reactive Monitoring vs Proactive Hunting</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Monitoring (Reactive)</th><th>Threat Hunting (Proactive)</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Waits for an alert to fire</td><td>Assumes the alert will not fire — actively looks for what signatures miss</td>
+                </tr>
+              
+                <tr>
+                  <td>Driven by vendor signatures and correlation rules</td><td>Driven by threat intelligence, ATT&amp;CK techniques, and analyst hypotheses</td>
+                </tr>
+              
+                <tr>
+                  <td>Optimised for speed of response</td><td>Optimised for depth of investigation</td>
+                </tr>
+              
+                <tr>
+                  <td>Alert → Triage → Escalate</td><td>Hypothesis → Evidence search → Either: nothing found OR new detection rule created</td>
+                </tr>
+              
+                <tr>
+                  <td>Effective against known-bad</td><td>Effective against novel techniques and long-dwell-time attackers</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The output of a threat hunt is either <strong>confirmation that a technique is absent</strong> (and therefore implicitly covered) or <strong>a new detection rule</strong> for the thing you found. Every hunt should produce a Sigma rule, even if the hunt found nothing — you have now validated that the absence of that artefact means the technique was not used.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">The Sigma Format</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A Sigma rule is a YAML document describing a detection. It is structured into a header (metadata), a detection section (the logic), and conditions (how to combine the logic).</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml"># Sigma rule skeleton — every rule follows this structure
+title: Descriptive Name of What This Detects        # required
+id: 8b6b0def-1234-5678-9abc-def012345678            # UUID, required, generate with uuidgen
+status: experimental                                 # stable | test | experimental | deprecated
+description: |                                       # required
+    One paragraph explaining what behaviour this detects,
+    why it matters, and what adversary technique it covers.
+references:                                          # optional but important
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://example.com/blog/technique-analysis
+author: Your Name                                    # optional
+date: 2026-06-16                                    # optional
+tags:                                               # MITRE ATT&amp;CK mapping
+    - attack.execution
+    - attack.t1059.001
+logsource:                                          # what log source
+    category: process_creation                      # Sigma category (maps to EventID etc.)
+    product: windows                                # product filter
+detection:                                          # the logic lives here
+    selection_main:                                 # named selection block
+        Image|endswith: &#39;\powershell.exe&#39;
+        CommandLine|contains|all:                   # ALL of these must match
+            - &#39;-enc&#39;
+            - &#39;-NonI&#39;
+    selection_alt:
+        Image|endswith: &#39;\pwsh.exe&#39;
+        CommandLine|contains: &#39;-enc&#39;
+    filter_legitimate:                              # whitelist / false positive reduction
+        ParentImage|endswith:
+            - &#39;\msiexec.exe&#39;
+            - &#39;\wmiprvse.exe&#39;
+    condition: (selection_main or selection_alt) and not filter_legitimate
+falsepositives:                                     # document known FPs
+    - Legitimate software deployment tools that use encoded commands
+level: medium                                       # informational | low | medium | high | critical</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Detection Logic — Field Modifiers</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Sigma's power is in its field modifiers. They translate to native SIEM query language when compiled.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Modifier</th><th>Meaning</th><th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`contains`</td><td>Field contains the value as a substring</td><td>`CommandLine|contains: &#39;-enc&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`startswith`</td><td>Field starts with the value</td><td>`Image|startswith: &#39;C:\\Windows\\&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`endswith`</td><td>Field ends with the value</td><td>`Image|endswith: &#39;\\powershell.exe&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`contains|all`</td><td>Field contains ALL listed values</td><td>`CommandLine|contains|all: [&#39;-enc&#39;, &#39;-w&#39;, &#39;hidden&#39;]`</td>
+                </tr>
+              
+                <tr>
+                  <td>`re`</td><td>Regular expression match</td><td>`CommandLine|re: &#39;(?i)iex\\s*\\(&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`cidr`</td><td>IP matches CIDR range</td><td>`DestinationIp|cidr: &#39;10.0.0.0/8&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`base64offset|contains`</td><td>Value appears as base64 in field (any offset)</td><td>`CommandLine|base64offset|contains: &#39;/bin/sh&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`windash`</td><td>Match both `-flag` and `/flag` variants</td><td>`CommandLine|windash|contains: &#39;-enc&#39;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`gt`, `lt`, `gte`, `lte`</td><td>Numeric comparison</td><td>`count(CommandLine)|gt: 50`</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Real Detection Rules — ATT&amp;CK Technique by Technique</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">T1059.001 — PowerShell with encoded commands</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml">title: PowerShell Encoded Command Execution
+id: c539afac-c12a-46ed-b1c5-924a97ec9de8
+status: stable
+description: |
+    Detects PowerShell execution with the -EncodedCommand flag, which is used
+    to pass base64-encoded scripts. While occasionally legitimate (some deployment
+    tools use it), the combination with -NonInteractive and -WindowStyle Hidden
+    is almost always malicious — it suppresses the console window and disables
+    user interaction, characteristic of stager and dropper behaviour.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - &#39;\powershell.exe&#39;
+            - &#39;\pwsh.exe&#39;
+        CommandLine|windash|contains|all:
+            - &#39;-enc&#39;          # -EncodedCommand, -Enc, -en, -e (PowerShell accepts prefixes)
+            - &#39;-w&#39;
+            - &#39;hidden&#39;        # -WindowStyle Hidden — suppress console window
+    condition: selection
+falsepositives:
+    - Rare: some enterprise deployment tools use encoded commands with hidden windows
+    - Legitimate Citrix/remote desktop software has been observed using this pattern
+level: high
+
+# ─────────────────────────────────────────────────────────────────
+# WHY THIS WORKS: base64-encoded payload + hidden window = attacker
+# trying to run code without a visible terminal. The combination is
+# the signal — individual flags appear in legit software but combined
+# with a hidden window, this is ~95% malicious in practice.
+# ─────────────────────────────────────────────────────────────────</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">T1003.001 — LSASS memory dump</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml">title: LSASS Memory Access by Unusual Process
+id: a0184def-a2b9-40e7-88f5-31a9734b65a3
+status: stable
+description: |
+    Detects process access to LSASS (Local Security Authority Subsystem Service)
+    memory by processes that are not legitimate security or system processes.
+    LSASS holds credential material (NTLM hashes, Kerberos tickets) in memory.
+    Access by unusual processes indicates credential dumping — Mimikatz,
+    procdump, or custom tools reading the LSASS process memory space.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    category: process_access          # Sysmon Event ID 10
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: &#39;\lsass.exe&#39;
+        GrantedAccess|contains:       # access rights that allow memory read
+            - &#39;0x1010&#39;                # PROCESS_VM_READ + PROCESS_QUERY_INFORMATION
+            - &#39;0x1410&#39;
+            - &#39;0x147a&#39;
+            - &#39;0x143a&#39;
+            - &#39;0x1438&#39;
+            - &#39;0x1fffff&#39;              # PROCESS_ALL_ACCESS — very suspicious
+    filter_legitimate:
+        SourceImage|endswith:
+            - &#39;\MsMpEng.exe&#39;          # Windows Defender
+            - &#39;\svchost.exe&#39;
+            - &#39;\csrss.exe&#39;
+            - &#39;\wininit.exe&#39;
+            - &#39;\wmiprvse.exe&#39;
+            - &#39;\taskmgr.exe&#39;          # Task Manager (legitimate LSASS access)
+            - &#39;\lsm.exe&#39;
+    condition: selection and not filter_legitimate
+falsepositives:
+    - AV and EDR products legitimately access LSASS — add to filter
+    - Some forensic/backup tools access process memory
+level: critical</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">T1558.003 — Kerberoasting</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml">title: Kerberoasting — Service Ticket Request with RC4 Encryption
+id: b3ae2f78-d4d7-4e93-a8d4-23b71bd3b7e1
+status: stable
+description: |
+    Detects Kerberoasting: the technique of requesting Kerberos service tickets
+    for accounts with SPNs (Service Principal Names) and cracking them offline.
+    The tell is RC4 encryption (etype 0x17 / 23) for the service ticket —
+    modern environments use AES (etype 0x11/0x12). An attacker requests RC4
+    tickets because they are faster to crack.
+    
+    Key signal: multiple RC4-encrypted TGS requests for different service accounts
+    from a single source within a short window (automated enumeration).
+references:
+    - https://attack.mitre.org/techniques/T1558/003/
+    - https://adsecurity.org/?p=2293
+tags:
+    - attack.credential_access
+    - attack.t1558.003
+logsource:
+    product: windows
+    service: security           # Windows Security Event Log
+detection:
+    selection:
+        EventID: 4769           # Kerberos Service Ticket Operations
+        TicketOptions: &#39;0x40810000&#39;
+        TicketEncryptionType: &#39;0x17&#39;   # RC4-HMAC — the Kerberoasting fingerprint
+    filter_computer_accounts:
+        ServiceName|endswith: &#39;$&#39;  # machine accounts ending in $, not user accounts
+    condition: selection and not filter_computer_accounts
+falsepositives:
+    - Legacy systems (pre-Windows 2008) that do not support AES Kerberos
+    - Applications explicitly configured to use RC4 for compatibility
+level: high
+
+# ─────────────────────────────────────────────────────────────────
+# TUNING NOTE: Aggregate this rule. One RC4 TGS = possible legacy
+# system. Five RC4 TGS requests for different accounts within 60
+# seconds from the same IP = Kerberoasting. Use statistical detection
+# or temporal aggregation in your SIEM to raise severity on volume.
+# ─────────────────────────────────────────────────────────────────</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">T1021.002 — PsExec-style lateral movement</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml">title: Remote Service Installation via ADMIN$ Share (PsExec Pattern)
+id: f23a2a60-6ef1-4bb2-9b15-8d34e8d7b5d0
+status: stable
+description: |
+    Detects the PsExec lateral movement pattern: copying a binary to the ADMIN$
+    share of a remote host and then creating a service to execute it. This is the
+    technique used by PsExec (Sysinternals), Impacket psexec.py, and many C2
+    frameworks for lateral movement. Key artefacts:
+    1. File written to C:\Windows\PSEXESVC.exe (or random name)
+    2. Service created with that binary path
+    3. Source is typically a remote SMB connection (logon type 3)
+references:
+    - https://attack.mitre.org/techniques/T1021/002/
+tags:
+    - attack.lateral_movement
+    - attack.t1021.002
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_service_install:
+        EventID: 7045               # New service installed
+        ServiceFileName|contains:
+            - &#39;PSEXESVC&#39;
+            - &#39;PAEXEC&#39;
+    selection_generic_suspicious:
+        EventID: 7045
+        ServiceFileName|startswith:
+            - &#39;C:\Windows\Temp\&#39;
+            - &#39;C:\Users\&#39;
+            - &#39;C:\ProgramData\&#39;
+    condition: selection_service_install or selection_generic_suspicious
+falsepositives:
+    - Authorised remote administration using PsExec during maintenance
+    - SCCM and similar management platforms installing services remotely
+level: high</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">T1048 — DNS exfiltration detection</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml">title: Potential DNS Tunneling or Exfiltration
+id: a7b3c4d5-e6f7-8901-abcd-ef0123456789
+status: experimental
+description: |
+    Detects potential DNS-based data exfiltration by identifying DNS queries
+    with anomalously long subdomain labels (&gt;50 characters). Legitimate DNS
+    queries rarely have subdomains longer than 30 characters. Attackers use
+    DNS tunneling tools (iodine, dnscat2, DNSExfiltrator) to encode data
+    in subdomain labels of queries to attacker-controlled nameservers.
+references:
+    - https://attack.mitre.org/techniques/T1048/
+    - https://github.com/iagox86/dnscat2
+tags:
+    - attack.exfiltration
+    - attack.t1048
+logsource:
+    category: dns
+detection:
+    selection:
+        query|re: &#39;([a-zA-Z0-9]{50,})\.&#39;
+    filter_known_long:
+        query|endswith:
+            - &#39;.in-addr.arpa&#39;
+            - &#39;.ip6.arpa&#39;
+    filter_cdn:
+        query|endswith:
+            - &#39;.cloudfront.net&#39;
+            - &#39;.azureedge.net&#39;
+            - &#39;.akamaiedge.net&#39;
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Some legitimate CDN and cloud services use very long subdomains
+    - Telemetry and analytics services sometimes encode data in subdomains
+    - Adjust the 50-character threshold based on your environment baseline
+level: medium</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Converting Sigma Rules to SIEM Queries</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install sigma-cli (official converter)
+pip3 install sigma-cli
+# Install backend plugins for your SIEM
+pip3 install pySigma-backend-splunk
+pip3 install pySigma-backend-elasticsearch
+pip3 install pySigma-backend-qradar
+pip3 install pySigma-backend-azure-monitor
+
+# Convert a single rule to Splunk
+sigma convert -t splunk rules/my_rule.yml
+
+# Convert with specific pipeline (field name mapping for your SIEM)
+sigma convert -t splunk -p splunk_windows rules/my_rule.yml
+
+# Convert entire directory
+sigma convert -t splunk -p splunk_windows rules/ -o splunk_queries.txt
+
+# Convert to Elastic (ECS fields)
+sigma convert -t elasticsearch -p ecs_windows rules/ -f ndjson &gt; rules.ndjson
+
+# Convert to Wazuh (custom Wazuh backend)
+sigma convert -t wazuh rules/lsass_access.yml
+
+# Convert to KQL (Azure Sentinel / Microsoft Defender)
+sigma convert -t kusto -p azure_windows rules/kerberoasting.yml</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Example — Splunk query output for the PowerShell rule</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Generated by: sigma convert -t splunk -p splunk_windows powershell_enc.yml
+
+index=windows source=&#34;XmlWinEventLog:Microsoft-Windows-Sysmon/Operational&#34; EventCode=1
+( Image IN (&#34;*\\powershell.exe&#34;, &#34;*\\pwsh.exe&#34;) )
+CommandLine IN (&#34;*-enc*&#34;, &#34;*-Enc*&#34;, &#34;*/enc*&#34;)
+CommandLine IN (&#34;*-w*&#34;, &#34;*-W*&#34;, &#34;/w*&#34;)
+CommandLine IN (&#34;*hidden*&#34;, &#34;*Hidden*&#34;, &#34;*HIDDEN*&#34;)
+| eval risk_score=80, technique=&#34;T1059.001&#34;
+| table _time, host, user, Image, CommandLine, ParentImage, risk_score</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Example — Elasticsearch/Kibana KQL</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Generated by: sigma convert -t elasticsearch -p ecs_windows powershell_enc.yml
+
+process.executable: (*\powershell.exe OR *\pwsh.exe) AND
+process.command_line: (*-enc* OR *-Enc* OR */enc*) AND
+process.command_line: (*-w* OR */w*) AND
+process.command_line: (*hidden* OR *Hidden*)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Hunting Methodology — The Hypothesis Framework</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Unstructured hunting is random. The hypothesis framework gives each hunt a defined scope, expected output, and success criteria.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">HUNT HYPOTHESIS TEMPLATE
+─────────────────────────────────────────────────────────────────
+Hypothesis:
+  &#39;An adversary with valid credentials has used WinRM/PSRemoting
+   to move laterally between workstations, which would not be
+   detected by our current network-based detection&#39;
+
+Based On:
+  - Recent threat intel: APT group targeting finance sector via WinRM
+  - ATT&amp;CK T1021.006 not covered in our detection matrix
+  - No current alert rule for workstation-to-workstation WinRM
+
+Data Sources Required:
+  - Windows Security Event Log: 4624 (logon), 4103/4104 (PowerShell)
+  - Sysmon: network connections from wsmprovhost.exe
+  - Firewall logs: TCP/5985 (HTTP WinRM), TCP/5986 (HTTPS WinRM)
+
+Query Strategy:
+  1. Find all 4624 logon events with LogonType=3 (network) from
+     source hosts that are workstations (not servers)
+  2. Correlate with wsmprovhost.exe process creation on target host
+  3. Flag workstation-to-workstation lateral movement
+
+Success Criteria (either outcome is success):
+  A) Found evidence → escalate as incident + write detection rule
+  B) No evidence found → document as &#39;technique not observed in
+     this period&#39; + write Sigma rule to detect it going forward
+
+Time Box: 2 hours
+─────────────────────────────────────────────────────────────────</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Hunt query — WinRM lateral movement</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml"># Sigma rule written DURING the hunt — captures the hypothesis as a detection
+title: WinRM Lateral Movement Between Workstations
+id: c7b2a1e0-d3f4-5678-90ab-cdef01234567
+status: experimental
+description: |
+    Detects WinRM/PowerShell Remoting usage between workstations, which is rarely
+    legitimate in most environments. Legitimate WinRM use is typically from
+    management servers or jump hosts to workstations/servers — not between peers.
+    Workstation-to-workstation WinRM is a strong indicator of lateral movement.
+tags:
+    - attack.lateral_movement
+    - attack.t1021.006
+logsource:
+    product: windows
+    service: security
+detection:
+    selection_winrm_network_logon:
+        EventID: 4624
+        LogonType: 3           # Network logon
+        AuthenticationPackageName: &#39;Kerberos&#39;
+        # ProcessName will be wsmprovhost.exe for WinRM sessions on target
+    selection_process_on_target:
+        EventID: 4688          # Process creation
+        NewProcessName|endswith: &#39;\wsmprovhost.exe&#39;
+    filter_servers:
+        ComputerName|contains:
+            - &#39;SRV-&#39;
+            - &#39;SERVER&#39;
+            - &#39;DC-&#39;
+    condition: (selection_winrm_network_logon or selection_process_on_target)
+              and not filter_servers
+falsepositives:
+    - IT administrators remoting into workstations for support
+    - Management tooling configured to use WinRM against workstations
+level: medium</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Sigma Rule Quality Checklist</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Before merging a detection rule to your production ruleset:</p>
+<p>✓ Mapped to one or more ATT&amp;CK technique IDs in the <code>tags</code> field<br>
+✓ <code>id</code> field contains a unique UUID (<code>uuidgen</code> to generate)<br>
+✓ <code>description</code> explains WHY this is suspicious, not just what it matches<br>
+✓ False positives documented — every known exception is listed<br>
+✓ Filter blocks exclude legitimate uses (don't just have selection blocks)<br>
+✓ Tested against known-good baseline: zero false positives in 24-hour dry run<br>
+✓ Tested against a known attack: Atomic Red Team test fires the rule<br>
+✓ <code>level</code> reflects actual risk: most rules should be <code>medium</code> — use <code>critical</code> sparingly<br>
+✓ Peer-reviewed by a second analyst before production deployment<br>
+✗ Do not ship a rule without testing it — untested rules erode trust in your alerting<br>
+✗ Do not copy rules from the SigmaHQ community repository without testing them in your environment first — your baseline is different</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">The Detection Pipeline</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">PRODUCTION DETECTION PIPELINE
+
+  [Threat Intel / ATT&amp;CK]    [Red Team / Purple Team]
+          │                           │
+          └──────────┬────────────────┘
+                     ▼
+           Hunt Hypothesis
+                     │
+                     ▼
+           Raw Log Query (SIEM)        ← baseline the environment first
+                     │
+             Found anomaly?
+            ┌────────┴────────┐
+           YES               NO
+            │                 │
+            ▼                 ▼
+      Incident Response    Write Sigma Rule
+            │              (absence is evidence)
+            ▼                 │
+     Post-Incident           ▼
+     Sigma Rule         Test in staging
+            │                 │
+            └────────┬────────┘
+                     ▼
+             Production Rule Set
+                     │
+                     ▼
+        Alert fires → SOC triage → Escalate
+                     │
+           Monthly: tune false positives
+           Quarterly: review rule coverage vs ATT&amp;CK matrix</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Resources</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Resource</th><th>What It Provides</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**github.com/SigmaHQ/sigma**</td><td>The official Sigma rule repository — thousands of community-maintained rules mapped to ATT&amp;CK</td>
+                </tr>
+              
+                <tr>
+                  <td>**sigma.socprime.com**</td><td>UNCODER.IO — web-based Sigma converter, test rules against live query syntax</td>
+                </tr>
+              
+                <tr>
+                  <td>**github.com/redcanaryco/atomic-red-team**</td><td>Test framework to validate your Sigma rules fire against real techniques</td>
+                </tr>
+              
+                <tr>
+                  <td>**car.mitre.org**</td><td>MITRE Cyber Analytics Repository — analytics for ATT&amp;CK techniques, good hunting queries</td>
+                </tr>
+              
+                <tr>
+                  <td>**detection.fyi**</td><td>Aggregated Sigma rules with search, ATT&amp;CK mapping, and SIEM export</td>
+                </tr>
+              
+                <tr>
+                  <td>**github.com/The-DFIR-Report**</td><td>Real intrusion reports with detailed artefacts — the best source for technique-specific hunting hypotheses</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>The 80/20 rule for detection coverage</span>
+            </div>
+          
+          <div class="note-body"><p>You cannot write rules for every ATT&amp;CK technique simultaneously. Prioritise by: (1) techniques in the CISA KEV feed — actively exploited right now, (2) techniques in threat reports targeting your sector, (3) techniques you observed in your last red team engagement. Twenty well-tuned, low-noise rules covering your actual threat landscape beat two hundred noisy rules nobody investigates.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/home-soc-lab" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Building a Home SOC Lab — From Zero to Detection</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">Build a fully functional Security Operations Centre lab at home. Covers hardware choices, network topology, SIEM deployment, log ingestion, endpoint agents, and running your first live attack simulation to validate detections.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/red-vs-blue-eternal-game" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Red vs Blue: The Eternal Game</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">The cat-and-mouse between attackers and defenders has no finish line. A structured breakdown of every major kill-chain phase — attacker technique on the left, defender response on the right — and why purple teaming is the only way to close the loop.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/reading-malware-reports" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Reading Malware Reports — How to Extract Actionable Intel from a Threat Report PDF</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A 40-page vendor threat report is not a deliverable — it&#39;s raw material. Notes on the process of turning one into four concrete artifacts: a Sigma rule, an IoC blocklist, an ATT&amp;CK Navigator layer, and a one-paragraph management brief, with a worked example.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

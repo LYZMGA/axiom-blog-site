@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Q1 2026 Threat Landscape – Zero-Days, MDM Campaigns &amp; AD Privilege Paths — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-news">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-news">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Q1 2026 Threat Landscape – Zero-Days, MDM Campaigns &amp; AD Privilege Paths</h1>
+    <div class="post-meta">
+      <time>2026-06-03</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">4 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/news/" class="cat-badge cat-badge-link cat-news">News</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">cve</span>
+          
+            <span class="tag">zero-day</span>
+          
+            <span class="tag">active-exploitation</span>
+          
+            <span class="tag">ivanti</span>
+          
+            <span class="tag">active-directory</span>
+          
+            <span class="tag">linux</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Q1 2026 brought a wave of pre-authentication zero-days exploited before public disclosure, paired MDM campaigns against Ivanti EPMM, a critical Citrix NetScaler auth bypass, a Netlogon privilege path to domain control, and a public Linux kernel LPE. None of these overlap with the Q2 post.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What Set Q1 Apart</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Q1 2026 introduced a pattern that would define the rest of the year: <strong>vulnerabilities exploited before anyone outside the vendor knew they existed</strong>. Several CVEs entered the CISA KEV catalogue within days of first public disclosure — meaning defenders had effectively zero reaction time.</p>
+<p>The dominant campaigns were not opportunistic. Threat actors ran coordinated, multi-CVE operations against the same platform (Ivanti EPMM) using two separate zero-days in tandem, deploying web shells and backdoors before patches were available.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Theme</th><th>Q1 Signal</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Zero-day exploitation</td><td>Multiple CVEs exploited pre-disclosure</td>
+                </tr>
+              
+                <tr>
+                  <td>Paired campaign CVEs</td><td>Two Ivanti RCEs used together in same intrusions</td>
+                </tr>
+              
+                <tr>
+                  <td>Web shell persistence</td><td>Consistent post-exploitation pattern across campaigns</td>
+                </tr>
+              
+                <tr>
+                  <td>Identity infrastructure</td><td>Citrix NetScaler perimeter auth targeted</td>
+                </tr>
+              
+                <tr>
+                  <td>Post-access privilege</td><td>Netlogon path to DC; Linux kernel LPE to root</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">CVE-2026-1281 — Ivanti EPMM Pre-Auth RCE (Critical, Zero-Day)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Unauthenticated remote code execution — code injection<br>
+<strong>CVSS:</strong> 9.8 | <strong>Exploitation:</strong> Confirmed active, in KEV, exploited before disclosure<br>
+<strong>Attack chain role:</strong> Initial access → system compromise → persistence</p>
+<p>This is the first of two paired zero-days hitting Ivanti Endpoint Manager Mobile in Q1. The root cause is a code injection flaw in the In-House Application Distribution and Android File Transfer configuration features — both reachable without any credentials from the internet.</p>
+<p>What makes this particularly severe is the <strong>pre-disclosure exploitation window</strong>: threat actors had a working exploit before the vendor had issued any advisory, before any patch existed, and before any defender had reason to check. Mass internet scanning for exposed EPMM instances was observed within the same campaign window.</p>
+<p><strong>Why it matters:</strong> EPMM is the administrative control plane for every enrolled mobile device — phones, tablets, laptops. Pre-auth RCE on this platform is equivalent to handing an attacker an enterprise-wide device management console on day zero.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Identify exposed Ivanti EPMM instances (check your own assets)
+nmap -p 443,8443 --script http-title,ssl-cert &lt;target-range&gt; \
+  | grep -iE &#39;mobileiron|ivanti|mifs&#39;
+
+# Version fingerprint (unauthenticated endpoint on unpatched builds)
+curl -sk &#39;https://&lt;target&gt;/mifs/aad/rp/content/images/devices.json&#39; -I
+curl -sk &#39;https://&lt;target&gt;/api/v1/metadata/version&#39; | python3 -m json.tool
+
+# Detection: hunt for unexpected processes spawned by EPMM service
+# On the server -- look for shells launched by the Java process
+ps auxf | grep -A5 &#39;java.*epmm\|java.*mifs&#39;
+
+# Hunt web shells dropped post-exploitation
+find /opt/MobileIron /opt/mifs /usr/local/mobilemanager \
+  -name &#39;*.jsp&#39; -newer /etc/passwd -ls 2&gt;/dev/null
+
+# Check outbound connections from EPMM host (C2 indicator)
+ss -tnp | grep -v &#39;127.0.0.1&#39;
+netstat -anp | grep ESTABLISHED | grep java</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">CVE-2026-1340 — Ivanti EPMM Pre-Auth RCE (Critical, Zero-Day)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Unauthenticated remote code execution — code injection<br>
+<strong>CVSS:</strong> 9.8 | <strong>Exploitation:</strong> Confirmed active, in KEV, public PoC available<br>
+<strong>Attack chain role:</strong> Initial access (operationally paired with CVE-2026-1281)</p>
+<p>This CVE was observed <strong>within the same exploitation campaigns</strong> as CVE-2026-1281 — not as an alternative but as a complement. Attackers used both vulnerabilities against the same targets in the same intrusion windows, likely as reliability redundancy: if one payload path failed, the other succeeded.</p>
+<p>The pairing matters for detection: blocking one CVE's specific request pattern is not sufficient. Defenders who patched one but not both remained exposed.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Both CVEs share the same detection surface -- check EPMM API access logs
+# Look for unauthenticated requests to sensitive API paths:
+grep -E &#39;(POST|GET).*/mifs/aad|/api/v1/(apps|devices|users|config)&#39; \
+  /var/log/nginx/access.log 2&gt;/dev/null \
+  | grep -v &#39;200\|302&#39; | tail -50
+
+# Check for newly created admin accounts (post-exploitation persistence)
+curl -sk &#39;https://localhost/api/v2/administrators&#39; \
+  -H &#39;Authorization: Bearer &lt;admin-token&gt;&#39; | python3 -m json.tool \
+  | grep -E &#39;created_at|username|role&#39;
+
+# Hunt for backdoor installations -- unusual binaries in EPMM dirs
+find /opt /usr/local -newer /etc/passwd -type f -executable \
+  ! -path &#39;*/proc/*&#39; 2&gt;/dev/null | grep -vE &#39;\.(jar|class|war)$&#39;
+
+# Verify patch level against vendor advisory
+# Patched versions: EPMM &gt;= 11.12.0.4 / 11.11.0.6 / 11.10.0.6
+curl -sk &#39;https://&lt;target&gt;/api/v1/metadata/version&#39; \
+  | python3 -c &#34;import json,sys; d=json.load(sys.stdin); print(&#39;Version:&#39;, d.get(&#39;productVersion&#39;,&#39;unknown&#39;))&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>The MDM Campaign Pattern — Three CVEs, One Platform:</span>
+            </div>
+          
+          <div class="note-body"><p>Q1 2026 established a sustained campaign against Ivanti EPMM using CVE-2026-1281 and CVE-2026-1340 in tandem for initial access, followed later in Q2 by CVE-2026-6973 (authenticated RCE) to deepen access after credentials were stolen.</p>
+<p>This is a full attack chain built around one product: get in pre-auth → steal admin creds → exploit authenticated path for persistence and deeper control. If your organisation runs any version of Ivanti EPMM / MobileIron, treat all three CVEs as a coordinated campaign, not isolated bugs.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">CVE-2026-3055 — Citrix NetScaler ADC / Gateway (Critical)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Authentication bypass / session abuse on the NetScaler management and VPN interface<br>
+<strong>CVSS:</strong> 9.3 | <strong>Exploitation:</strong> Confirmed active, in KEV<br>
+<strong>Attack chain role:</strong> Initial access → authentication abuse → network entry</p>
+<p>NetScaler ADC and Gateway are the perimeter devices organisations trust for VPN access, SSO, and SAML-based authentication for remote workforces. This vulnerability allows an attacker to abuse the authentication flow — bypassing it or hijacking sessions — without needing valid credentials.</p>
+<p><strong>Why it matters:</strong> A NetScaler compromise happens <em>before</em> any internal control fires. Downstream SIEM rules that alert on "suspicious internal login" assume the perimeter authenticated the user correctly. When the perimeter itself is the vulnerability, that assumption breaks.</p>
+<p>Observed activity included internet-wide scanning specifically targeting unpatched NetScaler appliances, followed by perimeter reconnaissance and authentication targeting — consistent with nation-state and ransomware precursor activity.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Fingerprint exposed NetScaler instances
+curl -sk &#39;https://&lt;target&gt;/vpn/index.html&#39; | grep -iE &#39;citrix|netscaler|ns_build&#39;
+curl -sk &#39;https://&lt;target&gt;/nitro/v1/config/nsversion&#39; \
+  -H &#39;X-NITRO-USER: nsroot&#39; -H &#39;X-NITRO-PASS: nsroot&#39; 2&gt;/dev/null
+
+# Shodan query (authorised asset discovery)
+# shodan search &#39;http.title:&#34;Citrix Gateway&#34; ssl.cert.issuer.cn:Citrix&#39;
+
+# Check NS build version (via management interface, authenticated)
+ssh nsroot@&lt;netscaler&gt; &#39;show version&#39; 2&gt;/dev/null | grep &#39;NetScaler&#39;
+
+# Detection: look for abnormal session patterns in ns.log
+# Typically at /var/log/ns.log or /var/nslog/
+grep -iE &#39;(SSLVPN|AAA|SAML).*(ERROR|FAIL|bypass|invalid)&#39; /var/log/ns.log | tail -30
+
+# Hunt for unexpected admin sessions from unusual IPs
+grep &#39;Login succeeded&#39; /var/log/ns.log \
+  | awk &#39;{print $NF}&#39; | sort | uniq -c | sort -rn | head -20
+
+# Check if SAML metadata has been tampered with
+curl -sk &#39;https://&lt;target&gt;/saml/login&#39; -I | grep -i &#39;saml\|idp\|sp&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">CVE-2026-41089 — Windows Server Netlogon Privilege Escalation (Critical)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Privilege escalation in the Windows Netlogon Remote Protocol<br>
+<strong>CVSS:</strong> 9.8 | <strong>Exploitation:</strong> Observed in the wild<br>
+<strong>Attack chain role:</strong> Privilege escalation → SYSTEM access → domain control → Kerberos abuse</p>
+<p>Netlogon is the Windows protocol domain-joined machines use to authenticate against domain controllers. A flaw here means an attacker with any foothold inside the network — even a low-privilege user account — can escalate toward SYSTEM on a domain controller.</p>
+<p>From SYSTEM on a DC, the game is over: the attacker can dump the NTDS.dit (all domain password hashes), forge Kerberos tickets (Golden Ticket), create persistent backdoor domain admin accounts, and own every domain-joined machine.</p>
+<p><strong>Attack path in observed intrusions:</strong><br>
+<code>Low-priv domain user → CVE-2026-41089 → SYSTEM on DC → DCSync → full domain compromise</code></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            
+          </div>
+          <pre><code class="language-powershell"># --- Detection on Domain Controllers ---
+
+# Check Netlogon service status and version
+Get-Service -Name Netlogon | Select-Object Status, StartType
+(Get-Item &#39;C:\Windows\System32\netlogon.dll&#39;).VersionInfo.FileVersion
+
+# Hunt for exploitation artefacts: unexpected SYSTEM-level processes
+Get-Process | Where-Object {$_.SI -eq 0} | Select-Object Name, Id, Path
+
+# Check for new privileged accounts created recently (post-exploit persistence)
+Get-ADUser -Filter * -Properties WhenCreated, MemberOf |
+  Where-Object {$_.WhenCreated -gt (Get-Date).AddDays(-14)} |
+  Select-Object SamAccountName, WhenCreated, Enabled
+
+# Check Domain Admins group for unexpected members
+Get-ADGroupMember -Identity &#39;Domain Admins&#39; |
+  Select-Object SamAccountName, distinguishedName
+
+# Hunt for DCSync activity in Security event log
+# Event 4662: Operation performed on an object (look for replication rights)
+Get-WinEvent -FilterHashtable @{LogName=&#39;Security&#39;; Id=4662} |
+  Where-Object {$_.Message -match &#39;1131f968|1131f6ad|89e95b76&#39;} |
+  Select-Object TimeCreated, Message | Select-Object -First 10
+
+# Check Netlogon log for anomalous entries
+Get-Content &#39;C:\Windows\debug\netlogon.log&#39; | Select-Object -Last 100 |
+  Where-Object {$_ -match &#39;ERROR\|FAILED\|DENIED&#39;}</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># --- Red team / lab perspective (authorised AD testing) ---
+
+# Check if DC is vulnerable via version (requires domain access)
+crackmapexec smb &lt;dc-ip&gt; -u user -p pass --gen-relay-list /tmp/relay.txt
+
+# Enumerate DC via Netlogon (requires domain creds)
+python3 -c &#34;
+from impacket.dcerpc.v5 import nrpc, transport
+# Connect to Netlogon on DC
+&#34;
+
+# Post-compromise: verify domain admin access achieved
+crackmapexec smb &lt;dc-ip&gt; -u Administrator -H &lt;ntlm-hash&gt; --shares
+secretsdump.py -just-dc DOMAIN/Administrator@&lt;dc-ip&gt; -hashes :&lt;ntlm-hash&gt;
+
+# DCSync to dump all hashes (confirms domain compromise)
+secretsdump.py -just-dc-ntlm DOMAIN/Administrator@&lt;dc-ip&gt; 2&gt;/dev/null | head -20</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">CVE-2026-31431 — Linux Kernel &#34;Copy Fail&#34; Local Privilege Escalation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Local privilege escalation in the Linux kernel<br>
+<strong>Exploitation:</strong> Public exploit available<br>
+<strong>Attack chain role:</strong> Post-exploitation — converts limited user access to root<br>
+<strong>Alias:</strong> "Copy Fail"</p>
+<p>This kernel vulnerability allows a local user (including a container user with certain capabilities, or a process with limited shell access) to escalate to root. It does not provide initial access on its own — but paired with any low-privilege foothold (SSH with a weak credential, a web shell running as <code>www-data</code>, a misconfigured sudo entry), it becomes a clean root escalation.</p>
+<p>Affected distributions include Ubuntu, RHEL, SUSE, and Amazon Linux — meaning this affects both on-premise Linux servers and cloud workloads.</p>
+<p><strong>Why it matters to attackers:</strong> Web shells and initial access often land in unprivileged contexts. "Copy Fail" turns that limited foothold into full root without any network movement or credential theft.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Check kernel version (vulnerability window varies by distro/patch)
+uname -r
+cat /etc/os-release
+
+# Ubuntu patched kernel versions (example)
+# Ubuntu 22.04: 5.15.0-105+
+# Ubuntu 20.04: 5.4.0-182+
+# RHEL 9: kernel-5.14.0-427+
+
+# Check if running a vulnerable kernel (generic version check)
+kernelver=$(uname -r)
+echo &#34;Running kernel: $kernelver&#34;
+# Compare against vendor advisory for your distro
+
+# Check if public PoC applies (test in lab only)
+# PoC typically exploits copy_file_range() syscall mishandling
+# Indicator: any setuid binary writable or exploitable via the copy path
+find / -perm -4000 -type f 2&gt;/dev/null | head -20
+
+# Detection: kernel audit log for unusual privilege escalation
+ausearch -m avc,user_avc -ts recent 2&gt;/dev/null | grep -i &#39;execve\|capability&#39;
+
+# Check for exploitation artefacts: new SUID binaries
+# Baseline: run this before and after any incident
+find / -perm -4000 -type f 2&gt;/dev/null | sort &gt; /tmp/suid_now.txt
+diff /tmp/suid_baseline.txt /tmp/suid_now.txt
+
+# Monitor for unexpected root processes from web service users
+auditctl -a always,exit -F arch=b64 -S execve -F uid=33 -k www-exec  # uid 33 = www-data
+audit2allow -la | grep www-exec</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Campaign Patterns Across Q1</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Three distinct campaign patterns emerged from Q1 activity:</p>
+<p><strong>Pattern 1: MDM Platform Targeting</strong><br>
+CVE-2026-1281 and CVE-2026-1340 were not independent incidents — they were used together in the same operations. Attackers who compromised EPMM via CVE-2026-1281 often had CVE-2026-1340 payloads staged as a fallback. The goal was reliable initial access to mobile management infrastructure, followed by web shell persistence and credential harvesting for lateral movement.</p>
+<p><strong>Pattern 2: Identity &amp; Access Infrastructure</strong><br>
+CVE-2026-3055 (Citrix NetScaler) and CVE-2026-0257 (Palo Alto GlobalProtect, Q2) both target the same strategic layer — the network perimeter where authentication decisions are made. Compromising this layer means attackers arrive in the internal network <em>already authenticated</em>, making subsequent activity invisible to tools that trust perimeter decisions.</p>
+<p><strong>Pattern 3: Post-Compromise Privilege Escalation</strong><br>
+CVE-2026-41089 (Netlogon) and CVE-2026-31431 (Linux kernel) serve a different role — they are not entry points but <strong>multipliers</strong>. Once any low-privilege foothold exists, these convert it to domain admin or root. Their presence in active campaigns signals that attackers had already achieved initial access and were escalating.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">MITRE ATT&amp;CK Mapping – Q1 2026</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Technique</th><th>ID</th><th>CVE Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Exploit Public-Facing Application</td><td>T1190</td><td>CVE-2026-1281, CVE-2026-1340, CVE-2026-3055</td>
+                </tr>
+              
+                <tr>
+                  <td>Server Software Component: Web Shell</td><td>T1505.003</td><td>CVE-2026-1281, CVE-2026-1340</td>
+                </tr>
+              
+                <tr>
+                  <td>Create Account: Domain Account</td><td>T1136.002</td><td>Post-Netlogon exploitation</td>
+                </tr>
+              
+                <tr>
+                  <td>OS Credential Dumping: DCSync</td><td>T1003.006</td><td>CVE-2026-41089 post-escalation</td>
+                </tr>
+              
+                <tr>
+                  <td>Exploit for Privilege Escalation</td><td>T1068</td><td>CVE-2026-41089, CVE-2026-31431</td>
+                </tr>
+              
+                <tr>
+                  <td>Abuse Elevation Control Mechanism</td><td>T1548</td><td>CVE-2026-31431</td>
+                </tr>
+              
+                <tr>
+                  <td>Valid Accounts: Cloud Accounts</td><td>T1078.004</td><td>Post-Citrix/EPMM credential theft</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Red Team / Research Perspective</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Scan for exposed MDM and Citrix surfaces (authorised recon)
+nmap -p 443,8443,4443 --open --script http-title,http-headers &lt;ranges&gt; \
+  | grep -iE &#39;mobileiron|ivanti|mifs|netscaler|citrix|gateway&#39;
+
+# Check Citrix NetScaler version remotely
+curl -sk &#39;https://&lt;target&gt;/citrix/xenapp/auth/login.aspx&#39; \
+  | grep -i &#39;version\|build\|release&#39;
+
+# Enumerate domain Netlogon RPC endpoint
+nmap -p 135,445 --script msrpc-enum &lt;dc-target&gt;
+impacket-rpcdump @&lt;dc-ip&gt; | grep -i &#39;netlogon\|NTDS&#39;
+
+# Check if domain controller has been patched
+crackmapexec smb &lt;dc-ip&gt; --gen-relay-list /dev/null 2&gt;&amp;1 | grep -i &#39;windows\|build&#39;
+
+# Linux kernel exploit check in a lab VM
+# Check if copy_file_range syscall behaves unexpectedly
+python3 -c &#34;import ctypes; libc=ctypes.CDLL(&#39;libc.so.6&#39;); print(libc.syscall(326))&#34;
+# 326 = copy_file_range syscall number on x86_64
+
+# PoC search (research / lab only)
+searchsploit &#39;netlogon 2026&#39;
+searchsploit &#39;linux kernel copy_file_range&#39;
+exploit-db -s &#39;CVE-2026-31431&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-warning">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              
+              <span>Q1 Key Takeaways:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li><strong>Pre-disclosure zero-days are not rare anymore</strong> — CVE-2026-1281 was being exploited while the vendor was still unaware. Patch SLAs measured in days, not weeks.</li>
+<li><strong>Paired CVEs mean patching one is not enough</strong> — CVE-2026-1281 and CVE-2026-1340 were designed to be used together. Always check for sibling CVEs on the same product.</li>
+<li><strong>Web shell + backdoor = the attacker is staying</strong> — observed post-exploitation on EPMM was persistence-first, not data-first. Assume dwell time; hunt retroactively.</li>
+<li><strong>CVE-2026-31431 needs no network access</strong> — any web shell, any low-priv SSH session, any misconfigured SUID can trigger it. Patch Linux kernels across all workloads including cloud.</li>
+</ul>
+<p><strong>See also:</strong> The <a href="/axiom-blog-site/post/threat-landscape-q2-2026">Q2 2026 post</a> covers CVE-2026-0257 (GlobalProtect), CVE-2026-32201 (SharePoint), and the Microsoft Defender chain.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/threat-landscape-q2-2026" class="post-card post-card-related card-cat-news">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-news">News</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Q2 2026 Threat Landscape – Attackers Target Trust Infrastructure</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">Attackers in Q2 2026 are bypassing endpoints entirely and going straight for identity systems, VPNs, device managers, and security tools. A breakdown of actively exploited CVEs, macro trends, and what defenders should prioritise now.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ransomware-backup-infrastructure-2026" class="post-card post-card-related card-cat-news">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-news">News</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Ransomware Affiliates Are Hunting Your Backups First — The Veeam RCE Chain</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">Two critical Veeam Backup &amp; Replication CVEs (CVSS 9.4 and 9.9) let an attacker pivot from a single domain account to wiping the restore path entirely. Why backup infrastructure has become the first target in the modern ransomware kill chain, not the last.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/edge-infrastructure-perimeter-exploitation-2026" class="post-card post-card-related card-cat-news">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-news">News</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">The Edge Is the New Endpoint — Cisco SD-WAN, cPanel, and the EDR Vacuum</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">Microsoft had a historically quiet May 2026 for zero-days. Edge devices didn&#39;t: a Cisco Catalyst SD-WAN Controller flaw and a chained cPanel &amp; WHM authentication bypass gave attackers root on infrastructure that simply doesn&#39;t run EDR. Two months of active, undetected exploitation before a patch existed.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>SSH — Field Guide — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "fcieVr9ywJLQs7oD9LVxEA==", "validator": {"ciphertext": "oQlfNlFYuOdXQp5gG/W7GSVLU5wyqN6GCwg5DwmHcdTl", "iv": "2QUJd4gWjibZMKVn"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">SSH — Field Guide</h1>
+    <div class="post-meta">
+      <time>2026-06-02</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">ssh</span>
+          
+            <span class="tag">tunneling</span>
+          
+            <span class="tag">pivoting</span>
+          
+            <span class="tag">tools</span>
+          
+            <span class="tag">network</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Key auth, port forwarding, SCP, SOCKS proxying, and a CTF workflow covering key cracking, pivoting, and writing your own key to a compromised box.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What is SSH</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>SSH (<em>Secure Shell</em>) is the standard protocol for encrypted remote access. It runs on <strong>port 22</strong> by default and replaces old cleartext protocols like Telnet and rsh.</p>
+<p>Beyond remote shells, SSH is a full tunneling toolkit — it handles file transfer, port forwarding, SOCKS proxying, and agent forwarding. In CTFs it's your primary foothold tool; in real-world it's the backbone of every sysadmin workflow.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Connecting</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Basic connection syntax</span>
+          </div>
+          <pre><code class="language-bash"># Standard connection
+ssh user@10.10.10.5
+
+# Non-default port
+ssh -p 2222 user@10.10.10.5
+
+# Run a single command and exit
+ssh user@10.10.10.5 &#39;whoami &amp;&amp; id&#39;
+
+# Connect with a specific private key
+ssh -i ~/.ssh/id_rsa user@10.10.10.5
+
+# Connect with verbose output (useful for debugging auth failures)
+ssh -v user@10.10.10.5
+ssh -vvv user@10.10.10.5  # maximum verbosity
+
+# Disable host key checking (CTF/lab use only — MITM risk)
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null user@10.10.10.5</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Common Flags</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Flag</th><th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`-p &lt;port&gt;`</td><td>Connect to a non-standard port</td>
+                </tr>
+              
+                <tr>
+                  <td>`-i &lt;key&gt;`</td><td>Use a specific private key file</td>
+                </tr>
+              
+                <tr>
+                  <td>`-l &lt;user&gt;`</td><td>Login name (alternative to `user@host`)</td>
+                </tr>
+              
+                <tr>
+                  <td>`-v / -vvv`</td><td>Verbose — shows auth negotiation, useful for debugging</td>
+                </tr>
+              
+                <tr>
+                  <td>`-N`</td><td>No remote command — used with port forwards</td>
+                </tr>
+              
+                <tr>
+                  <td>`-f`</td><td>Background the SSH process after auth</td>
+                </tr>
+              
+                <tr>
+                  <td>`-T`</td><td>Disable pseudo-terminal allocation</td>
+                </tr>
+              
+                <tr>
+                  <td>`-A`</td><td>Forward SSH agent to the remote host</td>
+                </tr>
+              
+                <tr>
+                  <td>`-X`</td><td>Forward X11 display</td>
+                </tr>
+              
+                <tr>
+                  <td>`-C`</td><td>Compress traffic</td>
+                </tr>
+              
+                <tr>
+                  <td>`-o &lt;option&gt;`</td><td>Pass any `ssh_config` option inline</td>
+                </tr>
+              
+                <tr>
+                  <td>`-J &lt;jump&gt;`</td><td>Jump through a bastion host (ProxyJump)</td>
+                </tr>
+              
+                <tr>
+                  <td>`-L`</td><td>Local port forward</td>
+                </tr>
+              
+                <tr>
+                  <td>`-R`</td><td>Remote port forward</td>
+                </tr>
+              
+                <tr>
+                  <td>`-D`</td><td>Dynamic SOCKS proxy</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Key-Based Authentication</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Password auth is fine for quick access, but key pairs are the standard for production systems — no password in shell history, no brute-force surface.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">SSH key setup</span>
+          </div>
+          <pre><code class="language-bash"># Generate a key pair (Ed25519 is modern and fast)
+ssh-keygen -t ed25519 -C &#39;my-key&#39; -f ~/.ssh/id_ed25519
+
+# RSA 4096 for compatibility with older systems
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
+
+# Copy public key to a remote server
+ssh-copy-id -i ~/.ssh/id_ed25519.pub user@10.10.10.5
+
+# Manual method (if ssh-copy-id is not available)
+cat ~/.ssh/id_ed25519.pub | ssh user@10.10.10.5 \
+  &#39;mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys&#39;
+
+# Fix permissions if SSH refuses your key
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>CTF tip</span>
+            </div>
+          
+          <div class="note-body"><p>If you find an <code>id_rsa</code> file on a compromised machine, copy it locally and use it:</p>
+<pre><code class="language-bash">chmod 600 id_rsa
+ssh -i id_rsa user@10.10.10.5
+</code></pre>
+<p>If the key is <strong>password-protected</strong>, crack it with <code>ssh2john</code> + <code>john</code>:</p>
+<pre><code class="language-bash">ssh2john id_rsa &gt; id_rsa.hash
+john id_rsa.hash --wordlist=/usr/share/wordlists/rockyou.txt
+</code></pre></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">SSH Config File</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>~/.ssh/config</code> saves connection parameters so you never type long flags again. Each <code>Host</code> block defines an alias.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">~/.ssh/config example</span>
+          </div>
+          <pre><code class="language-bash">Host htb
+    HostName 10.10.10.5
+    User root
+    IdentityFile ~/.ssh/id_rsa
+    Port 22
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
+Host prod
+    HostName myserver.com
+    User deploy
+    IdentityFile ~/.ssh/deploy_key
+    Port 2222
+
+Host bastion
+    HostName bastion.internal
+    User admin
+    IdentityFile ~/.ssh/bastion_key
+
+Host internal
+    HostName 192.168.10.5
+    User root
+    ProxyJump bastion   # routes through the bastion host
+
+# Connect with just: ssh htb</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Port Forwarding</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Port forwarding is one of SSH's most powerful features — it tunnels traffic through the encrypted SSH connection, bypassing firewalls and reaching internal services.</p></div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Local forwarding</strong> (<code>-L</code>) — makes a remote port reachable on your local machine:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">ssh -L [local_port]:[remote_host]:[remote_port] user@ssh_host</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Local port forwarding examples</span>
+          </div>
+          <pre><code class="language-bash"># Access a web app on the remote server&#39;s localhost:8080 via your local port 8080
+ssh -L 8080:localhost:8080 user@10.10.10.5
+# Now browse: http://localhost:8080
+
+# Access an internal database only reachable FROM the SSH server
+ssh -L 3306:10.10.10.20:3306 user@10.10.10.5
+# Now: mysql -h 127.0.0.1 -P 3306
+
+# Background it (no shell, just the tunnel)
+ssh -fN -L 8080:localhost:8080 user@10.10.10.5</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Remote forwarding</strong> (<code>-R</code>) — exposes your local port on the remote server. Used to receive reverse shells through NAT:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Remote port forwarding</span>
+          </div>
+          <pre><code class="language-bash"># Expose your local port 4444 as port 4444 on the remote server
+ssh -R 4444:localhost:4444 user@10.10.10.5
+# On the remote machine, a process connecting to localhost:4444
+# will reach YOUR local listener
+
+# Useful for receiving a reverse shell from a box you can&#39;t reach directly
+ssh -fN -R 9001:localhost:9001 user@pivot-host</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Dynamic forwarding</strong> (<code>-D</code>) — creates a local SOCKS proxy. Route ALL traffic through the SSH server:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Dynamic SOCKS proxy</span>
+          </div>
+          <pre><code class="language-bash"># Start SOCKS5 proxy on local port 1080
+ssh -fN -D 1080 user@10.10.10.5
+
+# Use with proxychains — add to /etc/proxychains.conf:
+# socks5 127.0.0.1 1080
+proxychains nmap -sT -Pn 192.168.1.0/24
+proxychains curl http://192.168.1.10/
+
+# Use with curl directly
+curl --socks5 127.0.0.1:1080 http://192.168.1.10/</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">File Transfer — SCP &amp; SFTP</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">SCP (secure copy)</span>
+          </div>
+          <pre><code class="language-bash"># Download a file from remote to local
+scp user@10.10.10.5:/etc/passwd ./passwd
+
+# Upload a file to remote
+scp shell.php user@10.10.10.5:/var/www/html/
+
+# Recursive directory copy
+scp -r user@10.10.10.5:/home/user/data/ ./data/
+
+# Non-standard port
+scp -P 2222 user@10.10.10.5:/flag.txt ./
+
+# With a specific key
+scp -i ~/.ssh/id_rsa user@10.10.10.5:/root/root.txt ./</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">SFTP interactive session</span>
+          </div>
+          <pre><code class="language-bash">sftp user@10.10.10.5
+
+sftp&gt; ls -la
+sftp&gt; get /etc/shadow
+sftp&gt; put linpeas.sh /tmp/
+sftp&gt; bye</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Real-World Use Cases</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Jump host / bastion</strong> — access an internal server through a DMZ host:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">ProxyJump through a bastion</span>
+          </div>
+          <pre><code class="language-bash"># Single hop
+ssh -J bastion.corp.com user@192.168.10.5
+
+# Multiple hops
+ssh -J hop1,hop2 user@final-target
+
+# Or define it in ~/.ssh/config (cleaner)
+# Host internal
+#     ProxyJump bastion</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Persistent reverse tunnel</strong> — keep a remote machine reachable even when it's behind NAT:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Persistent reverse tunnel with autossh</span>
+          </div>
+          <pre><code class="language-bash"># Install autossh on the remote machine
+sudo apt install autossh
+
+# Keep a reverse tunnel alive — exposes remote&#39;s port 22 on your server&#39;s port 2222
+autossh -M 0 -fN \
+  -o &#39;ServerAliveInterval 30&#39; \
+  -o &#39;ExitOnForwardFailure yes&#39; \
+  -R 2222:localhost:22 user@your-vps.com
+
+# Now SSH into the remote machine from your VPS:
+ssh -p 2222 remote-user@localhost</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>SSH escape sequences</strong> — control a hung session without closing the terminal:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">SSH escape sequences</span>
+          </div>
+          <pre><code class="language-bash"># Press Enter, then ~ to access the escape menu:
+~.    # Kill a frozen SSH connection
+~C    # Open SSH command prompt (add port forwards mid-session)
+~#    # List forwarded connections
+~?    # Show all escape sequences
+
+# Example: add a local forward to a running session
+# Press Enter, ~C, then:
+-L 8080:localhost:80</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">CTF &amp; HackTheBox Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>SSH on a CTF box is usually the end goal of initial access — a stable shell beats a netcat reverse shell every time. Port forwarding is essential for reaching internal services.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">CTF SSH checklist</span>
+          </div>
+          <pre><code class="language-bash">export IP=10.10.10.5
+
+# 1. Check what auth methods the server accepts
+nmap --script ssh-auth-methods -p 22 $IP
+
+# 2. Try default/common credentials
+ssh root@$IP
+ssh admin@$IP
+
+# 3. If you have a key file from the box
+chmod 600 id_rsa
+ssh -i id_rsa user@$IP
+
+# 4. Crack a password-protected key
+ssh2john id_rsa &gt; id_rsa.hash
+john id_rsa.hash --wordlist=/usr/share/wordlists/rockyou.txt
+
+# 5. Enumerate users (older OpenSSH versions)
+nmap --script ssh-enum-algos,ssh2-enum-algos -p 22 $IP</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Pivot to internal services via port forward</span>
+          </div>
+          <pre><code class="language-bash"># You have SSH on the box and see internal services in netstat
+# e.g. a web app on 127.0.0.1:8080 and a DB on 127.0.0.1:3306
+
+# Forward both to your machine
+ssh -fN \
+  -L 8080:127.0.0.1:8080 \
+  -L 3306:127.0.0.1:3306 \
+  user@$IP
+
+# Now access them locally
+curl http://localhost:8080
+mysql -h 127.0.0.1 -P 3306 -u root
+
+# Reach a whole internal subnet via SOCKS proxy
+ssh -fN -D 1080 user@$IP
+proxychains nmap -sT -Pn -p 80,443,8080 10.10.10.0/24</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Write your key to a box you already have RCE on</span>
+          </div>
+          <pre><code class="language-bash"># If you have RCE (e.g. command injection, web shell) and .ssh is writable:
+# 1. Generate a key pair on your machine
+ssh-keygen -t ed25519 -f /tmp/htb_key -N &#39;&#39;
+
+# 2. Inject your public key via the RCE
+curl &#39;http://10.10.10.5/exec?cmd=mkdir+-p+/root/.ssh&#39;
+curl &#39;http://10.10.10.5/exec?cmd=echo+SSH_PUBKEY+&gt;&gt;+/root/.ssh/authorized_keys&#39;
+
+# 3. SSH in cleanly
+ssh -i /tmp/htb_key root@$IP</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Quick reference</span>
+            </div>
+          
+          <div class="note-body"><p><strong><code>-fN</code></strong> backgrounds the connection and runs no command — perfect for pure tunnels.<br>
+<strong><code>-vvv</code></strong> shows exactly why auth is failing — check it before assuming the key is wrong.<br>
+<strong><code>~.</code></strong> (Enter then <code>~.</code>) kills a frozen session cleanly.<br>
+<strong><code>chmod 600 id_rsa</code></strong> — SSH silently refuses keys with open permissions.<br>
+<strong><code>ssh2john</code> + <code>john</code></strong> — standard workflow for cracking passphrase-protected keys.<br>
+<strong>ProxyJump / <code>-J</code></strong> is cleaner than chaining multiple <code>ssh</code> commands for multi-hop pivoting.</p></div>
+        </div>
+
+      
+    
+
+      
+        <div class="block locked-block"
+             data-block-type="code"
+             data-iv="1++F94YI3R4ZbzF/"
+             data-ciphertext="+IYfp4TI5cTIOdpArOeg/HTW4wCzLBY="
+             data-language="python"
+             data-caption="I love you"
+             id="block-38">
+
+          
+            <div class="lock-skeleton code-skeleton">
+              <div class="sk-header">
+                <div class="sk-dot"></div><div class="sk-dot"></div><div class="sk-dot"></div>
+                <div class="sk-lang">python</div>
+              </div>
+              <div class="sk-lines">
+                <div class="sk-line" style="--w:72%"></div>
+                <div class="sk-line indent" style="--w:85%"></div>
+                <div class="sk-line indent" style="--w:58%"></div>
+                <div class="sk-line" style="--w:43%"></div>
+                <div class="sk-line indent" style="--w:91%"></div>
+                <div class="sk-line indent" style="--w:67%"></div>
+                <div class="sk-line" style="--w:35%"></div>
+              </div>
+            </div>
+
+          
+
+          <div class="lock-overlay">
+            <div class="lock-icon-wrap">
+              <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <span class="lock-type-label">Code</span>
+            <span class="lock-hint">Enter key to reveal</span>
+            <span class="lock-caption">I love you</span>
+          </div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/smtp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SMTP — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">Banner grabbing, user enumeration via VRFY/RCPT, open relay testing with swaks, and a CTF workflow for turning an open relay into code execution.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/nmap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Nmap — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-02</time></div>
+          <p class="post-card-summary">Scan types, essential flags, NSE scripts, and ready-to-run examples for network discovery, service enumeration, and CTF recon.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ftp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">FTP — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-02</time></div>
+          <p class="post-card-summary">Anonymous login, shell commands, curl one-liners, and a CTF workflow covering banner grabbing, shell upload, and the vsftpd backdoor.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+  
+  <button class="key-fab" id="keyFab" title="Enter decryption key" aria-label="Enter decryption key">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="7.5" cy="15.5" r="5.5"/>
+      <path d="M21 2l-9.6 9.6"/>
+      <path d="M15.5 7.5l3 3"/>
+      <path d="M18 5l2 2"/>
+    </svg>
+    <span class="key-fab-label">Unlock</span>
+  </button>
+
+  
+  <div class="modal-backdrop" id="keyModalBackdrop" hidden>
+    <div class="modal" id="keyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="7.5" cy="15.5" r="5.5"/>
+            <path d="M21 2l-9.6 9.6"/>
+            <path d="M15.5 7.5l3 3"/>
+            <path d="M18 5l2 2"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="modalTitle">Enter Blog Key</h2>
+          <p class="modal-subtitle">Decryption happens locally — your key never leaves this device.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <input type="password" id="keyInput" class="key-input"
+                 placeholder="Enter your key…"
+                 autocomplete="current-password"
+                 autofocus>
+          <button class="key-toggle-btn" id="keyToggleBtn" type="button" aria-label="Show/hide key">
+            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-error" id="modalError" hidden>Wrong key — try again.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modalCancel">Cancel</button>
+        <button class="btn btn-primary" id="modalUnlock">
+          <span class="btn-text">Unlock Content</span>
+          <span class="btn-spinner" hidden>
+            <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="32" stroke-dashoffset="32"><animate attributeName="stroke-dashoffset" values="32;0" dur="0.7s" repeatCount="indefinite"/></circle></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

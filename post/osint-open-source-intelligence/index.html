@@ -1,0 +1,3512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>OSINT — Open Source Intelligence from First Principles — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-security">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-security">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">OSINT — Open Source Intelligence from First Principles</h1>
+    <div class="post-meta">
+      <time>2026-06-04</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">4 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/security/" class="cat-badge cat-badge-link cat-security">Security</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">osint</span>
+          
+            <span class="tag">recon</span>
+          
+            <span class="tag">google-dorks</span>
+          
+            <span class="tag">shodan</span>
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">reconnaissance</span>
+          
+            <span class="tag">security</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">OSINT methodology, Google dorks, Shodan, email and username enumeration, social media investigation, domain and IP recon, image geolocation, document metadata, GitHub secrets, dark web sources, and building target profiles for red team engagements.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>OSINT — Open Source Intelligence — is the systematic collection and analysis of information from publicly available sources. It is the foundation of every engagement: reconnaissance determines your attack surface before a single packet reaches the target. Done well, OSINT tells you the employee's name, email format, password reuses, exposed admin panels, internal infrastructure details, and the pretext you need to walk in the front door.</p>
+<p>This guide covers every major technique and tool — from Google dorks to Shodan, email enumeration to image geolocation — with the red team context that turns raw data into actionable intelligence.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">The OSINT Mindset and Methodology</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>OSINT is not random Googling. It is a structured process:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">1. Define objective     — what question am I answering?
+2. Identify sources     — where is this data likely to exist?
+3. Collect passively    — no direct contact with target systems
+4. Analyse and pivot    — each piece of data opens new queries
+5. Document findings    — everything timestamped and sourced
+6. Assess confidence    — single-source vs corroborated</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Passive vs active recon:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Type</th><th>Description</th><th>Detectability</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Passive**</td><td>Public sources only — search engines, WHOIS, social media, leaked databases</td><td>Zero — target never sees you</td>
+                </tr>
+              
+                <tr>
+                  <td>**Semi-passive**</td><td>Normal-looking traffic to target — browsing the website, reading public API</td><td>Very low</td>
+                </tr>
+              
+                <tr>
+                  <td>**Active**</td><td>Direct probing — port scanning, DNS zone transfers, directory brute force</td><td>Detectable</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>OSINT is passive and semi-passive. The moment you send a packet to the target's infrastructure you cross into active reconnaissance.</p>
+<p><strong>The pivot loop:</strong></p>
+<p>Every finding enables new searches. An email address reveals a name. A name reveals a LinkedIn. LinkedIn reveals an employer history. An employer reveals a domain. A domain reveals an IP range. An IP range reveals exposed services.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">email → name → social profiles → employer → domain
+   ↓                                            ↓
+password leaks                           Shodan / Censys
+   ↓                                            ↓
+breached services                       exposed admin panels</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>OSINT frameworks:</strong></p>
+<ul>
+<li><strong>OSINT Framework</strong> — osintframework.com — interactive directory of every OSINT tool by category</li>
+<li><strong>MITRE ATT&amp;CK Reconnaissance</strong> — TA0043 — formal taxonomy of reconnaissance techniques</li>
+<li><strong>PTES (Penetration Testing Execution Standard)</strong> — intelligence gathering phase</li>
+</ul></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Google Dorking</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Google's advanced search operators let you construct precise queries that surface information the site owner didn't intend to expose. This is called <strong>Google Dorking</strong> or <strong>Google Hacking</strong>.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Core operators</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Operator</th><th>Function</th><th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`site:`</td><td>Restrict to domain</td><td>`site:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`filetype:`</td><td>Specific file extension</td><td>`filetype:pdf site:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`inurl:`</td><td>String in URL</td><td>`inurl:admin site:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`intitle:`</td><td>String in page title</td><td>`intitle:&#34;index of&#34; site:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`intext:`</td><td>String in body text</td><td>`intext:&#34;confidential&#34; site:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`cache:`</td><td>Google&#39;s cached copy</td><td>`cache:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`link:`</td><td>Pages linking to URL</td><td>`link:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`related:`</td><td>Similar sites</td><td>`related:target.com`</td>
+                </tr>
+              
+                <tr>
+                  <td>`&#34;&#34;`</td><td>Exact phrase</td><td>`&#34;john smith&#34; &#34;target corp&#34;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`-`</td><td>Exclude term</td><td>`site:target.com -www`</td>
+                </tr>
+              
+                <tr>
+                  <td>`*`</td><td>Wildcard</td><td>`&#34;target * password&#34;`</td>
+                </tr>
+              
+                <tr>
+                  <td>`OR` / `</td><td>`</td><td>Either term</td><td>`site:target.com OR site:target.net`</td>
+                </tr>
+              
+                <tr>
+                  <td>`..`</td><td>Number range</td><td>`&#34;2020..2025&#34; site:target.com`</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">High-value dorks for red team recon</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Exposed admin panels
+site:target.com inurl:admin
+site:target.com inurl:login
+site:target.com intitle:&#34;admin panel&#34;
+site:target.com inurl:wp-admin
+site:target.com inurl:phpmyadmin
+
+# Config and credential files
+site:target.com filetype:env
+site:target.com filetype:cfg
+site:target.com filetype:conf
+site:target.com filetype:xml inurl:config
+site:target.com ext:sql
+site:target.com ext:bak
+site:target.com ext:log
+
+# Directory listings
+site:target.com intitle:&#34;index of&#34;
+site:target.com intitle:&#34;index of&#34; &#34;parent directory&#34;
+site:target.com intitle:&#34;index of&#34; passwd
+
+# Exposed documents with sensitive content
+site:target.com filetype:pdf &#34;confidential&#34;
+site:target.com filetype:xlsx
+site:target.com filetype:docx
+
+# Subdomains discovery
+site:*.target.com
+site:*.target.com -site:www.target.com
+
+# Error messages disclosing info
+site:target.com &#34;SQL syntax&#34;
+site:target.com &#34;Warning: mysql_&#34;
+site:target.com &#34;Fatal error&#34;
+
+# VPN / remote access
+site:target.com inurl:vpn
+site:target.com inurl:remote
+site:target.com intitle:&#34;Citrix&#34;
+site:target.com intitle:&#34;SSL VPN&#34;
+
+# Email addresses
+site:target.com &#34;@target.com&#34;
+site:target.com intext:&#34;@target.com&#34; filetype:pdf
+
+# Passwords in plaintext
+site:target.com intext:password filetype:log
+site:target.com intext:&#34;password&#34; filetype:txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Google Hacking Database (GHDB)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Exploit-DB maintains a searchable database of thousands of proven dorks:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">https://www.exploit-db.com/google-hacking-database</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Filter by category: Sensitive Directories, Files Containing Passwords, Vulnerable Files, Error Messages, Web Server Detection, etc.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Other search engines worth dorking</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Bing — sometimes indexes things Google doesn&#39;t
+site:target.com filetype:pdf
+
+# DuckDuckGo — no personalisation, cleaner results
+site:target.com
+
+# Yandex — excellent for image reverse search and Russian-language sources
+
+# Baidu — Chinese domains/content
+
+# Shodan — not a web search engine but indispensable (covered separately)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">Shodan — The Search Engine for Devices</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Shodan continuously scans the internet and indexes the banners returned by every open port on every IP address. It is the single most powerful passive reconnaissance tool against infrastructure.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Account and API setup</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install CLI
+pip3 install shodan
+
+# Initialise with your API key (free account: 100 queries/month)
+shodan init YOUR_API_KEY
+
+# Test
+shodan info</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Web interface queries (shodan.io)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Find everything for an organisation
+org:&#34;Target Corporation&#34;
+
+# Find by domain
+hostname:target.com
+
+# Find by IP range (your own / authorised)
+net:10.10.10.0/24
+
+# Find specific products
+product:&#34;Apache httpd&#34;
+product:&#34;nginx&#34;
+product:&#34;Microsoft IIS&#34;
+
+# Find by port
+port:3389 org:&#34;Target&#34;
+port:22 org:&#34;Target&#34;
+port:5900 org:&#34;Target&#34;   # VNC
+
+# Find exposed industrial control systems
+port:102 product:&#34;Siemens&#34;   # S7
+country:US port:44818         # EtherNet/IP (Rockwell)
+port:2404                     # IEC 60870
+
+# Find specific services
+product:&#34;Elasticsearch&#34; port:9200
+product:&#34;MongoDB&#34; port:27017
+product:&#34;Redis&#34; port:6379
+
+# Find login pages / admin panels
+http.title:&#34;Admin&#34;
+http.title:&#34;Login&#34;
+http.title:&#34;phpMyAdmin&#34;
+
+# Find by SSL certificate
+ssl.cert.subject.CN:&#34;*.target.com&#34;
+ssl:&#34;target.com&#34;
+
+# Find by specific header or content
+http.html:&#34;target.com&#34;
+http.favicon.hash:-1555085002   # Favicon hash (find same software)
+
+# Find default credentials
+http.title:&#34;router&#34; default password</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">CLI usage</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Search and get summary
+shodan search &#39;org:&#34;Target&#34; port:443&#39;
+
+# Get detailed host info
+shodan host 192.168.1.1
+
+# Download all results
+shodan download results &#39;org:&#34;Target&#34;&#39;
+shodan parse --fields ip_str,port,transport results.json.gz
+
+# Count results
+shodan count &#39;org:&#34;Target&#34;&#39;
+
+# Find IPs for a domain
+shodan domain target.com
+
+# Monitor your own assets
+shodan alert create mynetwork 192.168.1.0/24
+
+# myip
+shodan myip</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Shodan filters reference</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Filter</th><th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`org:`</td><td>Organisation / ISP name</td>
+                </tr>
+              
+                <tr>
+                  <td>`hostname:`</td><td>Hostname contains string</td>
+                </tr>
+              
+                <tr>
+                  <td>`net:`</td><td>CIDR range</td>
+                </tr>
+              
+                <tr>
+                  <td>`port:`</td><td>Specific port</td>
+                </tr>
+              
+                <tr>
+                  <td>`country:`</td><td>2-letter country code</td>
+                </tr>
+              
+                <tr>
+                  <td>`city:`</td><td>City name</td>
+                </tr>
+              
+                <tr>
+                  <td>`product:`</td><td>Software product name</td>
+                </tr>
+              
+                <tr>
+                  <td>`version:`</td><td>Software version</td>
+                </tr>
+              
+                <tr>
+                  <td>`os:`</td><td>Operating system</td>
+                </tr>
+              
+                <tr>
+                  <td>`http.title:`</td><td>HTTP response title</td>
+                </tr>
+              
+                <tr>
+                  <td>`http.html:`</td><td>HTML content</td>
+                </tr>
+              
+                <tr>
+                  <td>`ssl.cert.subject.CN:`</td><td>SSL CN field</td>
+                </tr>
+              
+                <tr>
+                  <td>`http.favicon.hash:`</td><td>Favicon murmur3 hash</td>
+                </tr>
+              
+                <tr>
+                  <td>`before:` / `after:`</td><td>Date range</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Censys — Shodan alternative</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">https://search.censys.io
+
+# More detailed TLS/certificate data
+# Free tier: 250 queries/month
+
+same query syntax:
+services.http.response.html_title: &#34;admin&#34;
+parsed.names: target.com   # SSL cert SAN entries
+autonomous_system.organization: &#34;Target Corp&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">FOFA, ZoomEye, Hunter.io (Shodan alternatives)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">https://fofa.info       # Chinese-operated, strong coverage of Asian infrastructure
+https://www.zoomeye.org # Chinese-operated
+https://hunter.how     # newer, good coverage</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Domain and DNS Reconnaissance</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A domain name is the starting point for infrastructure mapping. Extract every piece of data associated with it before touching active tools.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">WHOIS</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Basic WHOIS
+whois target.com
+whois 192.168.1.1
+
+# Registrar, registration date, expiry, registrant contact (if not privacy-protected)
+# Key fields: Registrant Name, Email, Organisation, Name Servers
+
+# Online WHOIS with history
+# https://lookup.icann.org
+# https://www.whois.com
+# https://whoishistory.com   (historical — pivotal for finding old emails)
+# https://domaintools.com    (paid, best for pivot)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">DNS enumeration</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Basic DNS lookup
+nslookup target.com
+nslookup -type=MX target.com
+nslookup -type=NS target.com
+nslookup -type=TXT target.com  # SPF, DKIM, verification tokens — leaks service providers
+nslookup -type=ANY target.com
+
+# dig
+dig target.com A
+dig target.com MX
+dig target.com NS
+dig target.com TXT
+dig target.com AAAA     # IPv6
+dig target.com SOA      # Start of Authority — primary nameserver + admin email
+dig target.com CNAME
+
+# Reverse DNS
+dig -x 192.168.1.1
+
+# DNS zone transfer (if misconfigured — gold mine)
+dig @ns1.target.com target.com AXFR
+nslookup -type=AXFR target.com ns1.target.com
+
+# Zone transfer exposes ALL DNS records — subdomains, internal hosts, mail servers
+# Rare on modern infrastructure but common in older organisations</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">SPF/DKIM/DMARC — intelligence from mail records</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># SPF record — lists every mail service used
+dig target.com TXT | grep spf
+# Example: v=spf1 include:_spf.google.com include:sendgrid.net include:mailchimp.com ~all
+# Reveals: Google Workspace, SendGrid for marketing, Mailchimp for newsletters
+
+# DMARC
+dig _dmarc.target.com TXT
+# p=none means no enforcement — phishing from @target.com is harder to auto-reject
+
+# DKIM selector discovery
+dig google._domainkey.target.com TXT
+dig mail._domainkey.target.com TXT</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Subdomain enumeration</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Passive — no DNS queries to target
+# crt.sh (Certificate Transparency logs)
+curl -s &#34;https://crt.sh/?q=%.target.com&amp;output=json&#34; | jq -r &#39;.[].name_value&#39; | sort -u
+
+# subfinder (passive, aggregates multiple sources)
+subfinder -d target.com
+subfinder -d target.com -all -o subdomains.txt
+
+# amass (passive + active, most comprehensive)
+amass enum -passive -d target.com
+amass enum -d target.com -o subdomains.txt
+
+# theHarvester (passive, also gets emails)
+theHarvester -d target.com -b all
+theHarvester -d target.com -b google,bing,shodan,certspotter
+
+# Active DNS brute force (crosses into active recon)
+gobuster dns -d target.com -w /opt/SecLists/Discovery/DNS/subdomains-top1million-5000.txt
+ffuf -u http://FUZZ.target.com -w /opt/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -mc 200,301,302
+
+# dnsrecon
+dnsrecon -d target.com -t std      # standard records
+dnsrecon -d target.com -t brt -D subdomains.txt  # brute force
+dnsrecon -d target.com -t axfr     # zone transfer attempt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Certificate Transparency (crt.sh)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every SSL certificate issued by a public CA is logged in Certificate Transparency logs. This reveals subdomains the organisation never intended to make public:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Web
+https://crt.sh/?q=%.target.com
+
+# API
+curl -s &#39;https://crt.sh/?q=%.target.com&amp;output=json&#39; | \
+  jq -r &#39;.[].name_value&#39; | \
+  sed &#39;s/\*\.//g&#39; | \
+  sort -u | \
+  grep -v &#39;^\.&#39; &gt; crt_subdomains.txt
+
+# What you find: dev.target.com, staging.target.com, vpn.target.com,
+#               jira.target.com, jenkins.target.com, old.target.com</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">ASN and IP range enumeration</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Find ASN for organisation
+whois -h whois.radb.net target.com
+bgp.he.net/search?search[search]=Target+Corp
+
+# Get all IP ranges for an ASN
+whois -h whois.radb.net -- &#39;-i origin AS12345&#39; | grep -E &#39;^route:&#39;
+
+# Or use amass
+amass intel -org &#34;Target Corporation&#34;
+amass intel -asn 12345</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Email OSINT</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Email addresses are pivot points: they reveal identity, corporate format, accounts on other services, and membership in breach databases.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Discovering email format</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Hunter.io — infers email format from known addresses
+https://hunter.io/domain-search?domain=target.com
+# Reports: {first}.{last}@target.com (87% confidence)
+# Lists known addresses found publicly
+
+# phonebook.cz
+https://phonebook.cz/   # paste domain, get all known emails
+
+# LinkedIn (manual)
+# Company page → People → filter by department → note full names
+# Cross-reference with hunter.io format
+
+# theHarvester
+theHarvester -d target.com -b google,bing,yahoo,linkedin
+theHarvester -d target.com -b hunter
+
+# From Google dorks
+site:target.com &#34;@target.com&#34;
+site:linkedin.com &#34;@target.com&#34;
+site:github.com &#34;@target.com&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Email validation</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># SMTP verification (manual)
+telnet mail.target.com 25
+HELO test.com
+VRFY john.smith@target.com
+RCPT TO: john.smith@target.com
+# Response 250 = valid, 550 = invalid
+
+# hunter.io email verifier
+https://hunter.io/email-verifier
+
+# Email-checker.net, verify-email.org
+
+# emailhippo
+https://tools.emailhippo.com</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Breach database lookups</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Have I Been Pwned (free, email query)
+https://haveibeenpwned.com
+
+# HIBP API
+curl &#39;https://haveibeenpwned.com/api/v3/breachedaccount/john.smith@target.com&#39; \
+  -H &#39;hibp-api-key: YOUR_KEY&#39;
+
+# DeHashed — most comprehensive, paid
+https://dehashed.com
+# Query: email:&#34;@target.com&#34; — returns all breached records for domain
+# Returns: email, username, password (hashed or plain), IP, phone, address
+
+# IntelligenceX
+https://intelx.io
+# Searches email, domain, IP across leaked databases and dark web dumps
+
+# Snusbase (paid)
+https://snusbase.com
+
+# LeakCheck
+https://leakcheck.io</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Red team application:</strong> If any employee's password appears in a breach database, check if they reused it on corporate systems. Password reuse across personal and work accounts is extremely common.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Email header analysis</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># When you receive an email (phishing pretext or client comms)
+# Read headers to identify:
+# - Sending mail server IP (may be internal infrastructure)
+# - Email service provider (MailGun, SendGrid, G Suite)
+# - Authentication results (SPF pass/fail)
+# - Timezone (reveals location)
+
+# Tools:
+https://mxtoolbox.com/EmailHeaders.aspx
+https://toolbox.googleapps.com/apps/messageheader/</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">Username Enumeration</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A username recovered from LinkedIn, email, or a breach database can be tracked across dozens of platforms.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Sherlock</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">git clone https://github.com/sherlock-project/sherlock
+pip3 install sherlock-project
+
+# Search for username across 300+ platforms
+sherlock jsmith
+sherlock john.smith
+sherlock john_smith
+
+# Multiple usernames
+sherlock jsmith johnsmith j.smith
+
+# Output to file
+sherlock jsmith --output jsmith_results.txt
+sherlock jsmith --csv
+
+# Only show found accounts
+sherlock jsmith --print-found</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Maigret (sherlock successor)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">pip3 install maigret
+maigret jsmith
+maigret jsmith --html   # generate HTML report with screenshots</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">WhatsMyName</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># https://whatsmyname.app (web)
+# or
+git clone https://github.com/WebBreacher/WhatsMyName
+python3 whats_my_name.py -u jsmith</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Manual platform checks</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">https://github.com/USERNAME
+https://gitlab.com/USERNAME
+https://twitter.com/USERNAME
+https://instagram.com/USERNAME
+https://reddit.com/u/USERNAME
+https://keybase.io/USERNAME
+https://steamcommunity.com/id/USERNAME
+https://www.twitch.tv/USERNAME
+https://www.youtube.com/@USERNAME
+https://medium.com/@USERNAME
+https://dev.to/USERNAME
+https://about.me/USERNAME</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Deriving usernames from names</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Given a target's full name, generate all common username formats:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># namemash.py
+python3 namemash.py &#39;John Smith&#39; &gt; john_usernames.txt
+# Outputs: jsmith, smithj, john.smith, johnsmith, smith.john, j.smith...
+
+# Manual patterns
+name=&#34;john&#34; surname=&#34;smith&#34;
+for u in &#34;$name$surname&#34; &#34;$surname$name&#34; &#34;${name:0:1}$surname&#34; &#34;$name.${surname:0:1}&#34; \
+  &#34;${name:0:1}.$surname&#34; &#34;$name.$surname&#34; &#34;$surname.$name&#34; \
+  &#34;$name\_$surname&#34; &#34;$name${surname:0:1}&#34;; do
+  echo &#34;$u&#34;
+done</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Social Media OSINT</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Social media is a treasure chest of personal information, location data, relationships, and operational security mistakes.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">LinkedIn</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>LinkedIn is the most valuable OSINT source for corporate targeting:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># What to extract:
+- Employee names, titles, departments
+- Tech stack from job postings (&#34;AWS&#34;, &#34;Jenkins&#34;, &#34;Splunk&#34; → confirms technology)
+- Org chart / reporting structure
+- Email format (often in certificates or publications listed)
+- Former employees (may still have access, know security gaps)
+- Contractors and third parties
+- Security team members (defenders to be aware of)
+- Recent hires in IT/security (indicates new tooling)
+
+# Without an account:
+https://www.linkedin.com/pub/dir/?first=john&amp;last=smith&amp;search=
+site:linkedin.com/in &#34;target corporation&#34;
+site:linkedin.com/in &#34;target.com&#34; engineer
+
+# LinkedIn OSINT tools
+https://www.linkedin.com/search/results/people/?company=TARGET
+LinkedIn Sales Navigator (paid but very powerful)
+ContactOut (browser extension, reveals contact info)
+RocketReach</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Twitter / X</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Search operators
+from:username keyword
+to:username
+&#34;company name&#34; since:2024-01-01 until:2024-06-01
+&#34;target.com&#34; filter:links
+&#34;target corp&#34; filter:media
+
+# Tools
+# TWINT (offline)
+git clone https://github.com/twintproject/twint
+twint -u username --email --phone
+twint -u username -s &#34;password&#34; --output results.csv --csv
+
+# Twitter Advanced Search
+https://twitter.com/search-advanced</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Facebook</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Facebook Graph Search (limited since privacy changes)
+https://www.facebook.com/search/people/?q=john+smith+target+corp
+
+# Tools
+https://sowdust.github.io/fb-search/   # Facebook search filters
+IntelligenceX
+
+# Extract: profile photo for reverse image, employment, location check-ins, relationships</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Instagram</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Location-tagged photos leak physical locations
+# Exif data (when not stripped) reveals GPS coordinates
+# Background details reveal office/home layout, security measures
+
+# osintgram
+git clone https://github.com/Datalux/Osintgram
+python3 main.py TARGET_USERNAME
+# Commands: followers, followings, addrs, captions, comments, hashtags,
+#           mediatype, photos, stories, tagged, wcommented, wtagged</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Reddit</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">https://www.reddit.com/search/?q=site%3Atarget.com
+https://www.reddit.com/search/?q=%22target+corp%22+breach
+https://old.reddit.com/user/USERNAME/submitted/
+
+# Pushshift (archive, when available)
+https://redditsearch.io</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Metadata from social media images</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Most platforms strip EXIF from photos now, but older posts may still contain it:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Extract EXIF
+exiftool image.jpg
+
+# Key fields: GPS coordinates, device make/model, timestamp, software
+# GPS → Google Maps → physical location
+
+# Online
+https://www.metadata2go.com
+https://exifdata.com</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Image OSINT and Geolocation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A single photograph can reveal location, identity, internal infrastructure details, or physical security measures.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Reverse image search</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Google Images
+https://images.google.com  → click camera icon → upload/paste URL
+
+# TinEye — best for finding exact duplicates
+https://tineye.com
+
+# Yandex — best for facial recognition (searches Russian social media too)
+https://yandex.com/images/
+
+# Bing Visual Search
+https://www.bing.com/visualsearch
+
+# PimEyes — face-focused reverse search
+https://pimeyes.com
+
+# FaceCheckID
+https://facecheck.id
+
+# Workflow: grab profile photo → reverse search all engines → find same photo
+# on forums, older accounts, dating profiles → reveal real name / location</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Image geolocation</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Geolocating a photo without GPS metadata:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Techniques:
+1. Look for text (signs, licence plates, storefronts)
+2. Architecture style narrows country/region
+3. Vegetation species narrows climate zone
+4. Shadow angle + length reveals time of year and latitude
+5. Street markings (road paint patterns differ by country)
+6. Power line / infrastructure style
+7. Vehicle types and licence plate formats
+8. Search Google Street View for matching locations</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Tools for geolocation challenges
+https://www.geoguessr.com    # practice geolocation
+https://suncalc.org          # sun position analysis
+https://www.wolframalpha.com # shadow calculations
+https://map.snapchat.com     # real-time location posts
+https://maps.google.com      # Street View verification
+
+# Satellite imagery
+https://www.google.com/maps/
+https://www.bing.com/maps/
+https://maps.esri.com        # often higher resolution
+https://www.planet.com       # frequent updates (paid)</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">EXIF analysis</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># exiftool (comprehensive)
+exiftool photo.jpg
+exiftool -gps* photo.jpg     # only GPS fields
+exiftool -r directory/       # recursive directory
+
+# Key fields to check
+GPS Latitude / GPS Longitude  → convert to decimal degrees for Maps
+Create Date                   → when was it taken
+Make / Model                  → device identification
+Software                      → editing software, may reveal OS
+Serial Number                 → camera serial (unique identifier)
+
+# Convert GPS to decimal degrees
+# DMS: 51° 30&#39; 26&#34; N → 51 + 30/60 + 26/3600 = 51.507222
+
+# Bulk EXIF from a directory of downloaded social media images
+exiftool -csv directory/ &gt; exif_results.csv
+
+# Remove all EXIF (for your own images before publishing)
+exiftool -all= photo.jpg</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Document and Metadata OSINT</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Documents published by an organisation often contain hidden metadata revealing internal structure, software versions, and employee names.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">FOCA — Fingerprinting Organisations with Collected Archives</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>FOCA (Windows tool) automatically downloads and extracts metadata from documents found on a domain:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">- Authors, editors, last-modified-by
+- Software versions (Office 2013, Adobe Acrobat 9)
+- Internal hostnames (saved path: \\FILESERVER01\docs\report.docx)
+- Printer names
+- Internal email addresses
+- Operating system versions</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Manual metadata extraction</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># exiftool on Office/PDF/images
+exiftool document.docx
+exiftool report.pdf
+exiftool presentation.pptx
+
+# Key fields in Office docs:
+Author          → person who created it
+Last Saved By   → last person to edit
+Revision Number → number of times saved
+Company         → org name
+Content-Status  → sometimes &#34;Confidential&#34;, &#34;Draft&#34;
+Application     → exact Office version (e.g., &#34;Microsoft Office Word 14.0&#34;) → reveals old Office
+
+# Key fields in PDFs:
+Creator         → application that created it
+Producer        → PDF renderer (often reveals old Acrobat → patching gaps)
+Author
+Keywords        → sometimes internal classification terms
+
+# Bulk download and analyse
+# metagoofil — Google dork + download + FOCA-style extract
+metagoofil -d target.com -t pdf,doc,xls,ppt,docx,xlsx -l 100 -o metadata/</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">What metadata reveals in practice</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Metadata finding</th><th>What it tells you</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Author: `jsmith`</td><td>Username format for the organisation</td>
+                </tr>
+              
+                <tr>
+                  <td>Last Saved By: `john.smith@target.com`</td><td>Email format confirmed</td>
+                </tr>
+              
+                <tr>
+                  <td>Saved path: `\\DC01\share\HR\`</td><td>Internal hostname DC01, share named &#39;share&#39;</td>
+                </tr>
+              
+                <tr>
+                  <td>Application: `Microsoft Office Word 2010`</td><td>Outdated software — unpatched vulnerabilities</td>
+                </tr>
+              
+                <tr>
+                  <td>Creator: `Adobe Acrobat 8.0`</td><td>Very old software — high CVE exposure</td>
+                </tr>
+              
+                <tr>
+                  <td>Company: `Target Corp`</td><td>Confirms organisation</td>
+                </tr>
+              
+                <tr>
+                  <td>GPS in photo: `51.507, -0.128`</td><td>London — office physical location</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">GitHub OSINT</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>GitHub is one of the richest OSINT sources against technical organisations. Developers accidentally commit credentials, internal hostnames, API keys, and architecture details.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Searching GitHub for secrets</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># GitHub search operators
+org:target-corp password
+org:target-corp secret
+org:target-corp API_KEY
+org:target-corp internal
+org:target-corp confidential
+
+# In URL:
+https://github.com/search?q=org%3Atarget-corp+password&amp;type=code
+https://github.com/search?q=%22target.com%22+password&amp;type=code
+https://github.com/search?q=%22@target.com%22+password&amp;type=code
+
+# High-value patterns to search
+&#34;target.com&#34; password
+&#34;target.com&#34; secret
+&#34;@target.com&#34; token
+&#34;target.com&#34; AWS_SECRET
+&#34;target.com&#34; BEGIN RSA PRIVATE KEY
+&#34;target.com&#34; api_key
+&#34;target.com&#34; smtp
+&#34;target.com&#34; jdbc</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Automated secret scanning tools</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># trufflehog — scans git history for high-entropy strings and known secret patterns
+trufflehog git https://github.com/target-corp/repo
+trufflehog github --org=target-corp
+
+# gitleaks
+git clone https://github.com/zricethezav/gitleaks
+gitleaks detect --source . --report-format json --report-path results.json
+
+# Scan an entire GitHub organisation
+gitleaks detect -s https://github.com/target-corp
+
+# gitrob — maps org repos and flags sensitive files
+gem install gitrob
+gitrob analyze target-corp
+
+# shhgit — real-time GitHub secret monitoring
+git clone https://github.com/eth0izzle/shhgit</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Git history analysis</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Clone and check all commits
+git clone https://github.com/target-corp/repo
+cd repo
+
+# Search all commits for secrets
+git log --all --full-history --diff-filter=D -- &#39;*.env&#39;
+git log -p --all | grep -i password
+git log -p --all | grep -i api_key
+git log -p --all | grep -i secret
+
+# Find deleted files
+git log --all --full-history -- &#39;*.pem&#39;
+git log --all --full-history -- &#39;*.key&#39;
+
+# Extract a deleted file from history
+git show COMMITHASH:filename.env
+
+# gitjacker — automated deleted file recovery
+gitjacker</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">User OSINT via GitHub</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Find email from commits (even if profile is private)
+git log --format=&#39;%ae&#39; | sort -u
+
+# Or via API
+curl &#39;https://api.github.com/repos/target-corp/repo/commits&#39; | \
+  jq &#39;.[].commit.author.email&#39; | sort -u
+
+# Find all repos for an org
+curl &#39;https://api.github.com/orgs/target-corp/repos?per_page=100&#39; | \
+  jq &#39;.[].clone_url&#39;
+
+# Find contributors
+curl &#39;https://api.github.com/repos/target-corp/repo/contributors&#39; | \
+  jq &#39;.[].login&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">What to look for</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">.env files                    — DB passwords, API keys, SMTP credentials
+*.pem / *.key / id_rsa        — private keys
+config.php / settings.py      — hardcoded credentials
+docker-compose.yml            — service passwords
+.aws/credentials              — AWS access keys
+kubernetes/secrets.yaml       — K8s secrets
+Jenkinsfile                   — CI/CD pipeline, internal URLs
+.travis.yml / .github/        — CI secrets, deployment keys
+Readme.md                     — internal URLs, architecture hints
+Comments in code               — TODO: remove password before commit</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">People OSINT</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Building a profile on a specific individual — a target employee, a social engineering mark, or a person of interest.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Data aggregator sites</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>These aggregate public records (US-centric):</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">https://www.spokeo.com
+https://pipl.com         (professional, paid)
+https://intelius.com
+https://whitepages.com
+https://truepeoplesearch.com
+https://fastpeoplesearch.com
+https://radaris.com
+https://beenverified.com</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Typically reveal: full name, age, address history, relatives, phone numbers, email addresses, social media profiles.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Phone number OSINT</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Caller ID lookup
+https://www.truecaller.com
+https://www.spokeo.com/phone-number
+
+# Carrier and location
+https://www.carrierlookup.com
+https://www.twilio.com/lookup    (free API, returns carrier, line type)
+
+# PhoneInfoga
+git clone https://github.com/sundowndev/phoneinfoga
+phoneinfoga scan -n +1XXXXXXXXXXXXX
+phoneinfoga serve   # web interface</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Company registration / beneficial ownership</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># UK Companies House (free, excellent)
+https://find-and-update.company-information.service.gov.uk
+# Full filing history, directors, registered addresses, financial accounts
+
+# US SEC EDGAR
+https://www.sec.gov/cgi-bin/browse-edgar
+
+# OpenCorporates — global database
+https://opencorporates.com
+
+# Offshore Leaks (Panama Papers, Pandora Papers)
+https://offshoreleaks.icij.org
+
+# Reveals: directors, shareholders, registered addresses, filing history</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Building a target profile</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A complete target profile for social engineering pretext:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Full name
+Job title and department
+Direct manager name
+Direct reports
+Phone number (desk + mobile)
+Email address
+LinkedIn profile and connections
+Recent activity / posts (what they&#39;re working on)
+Tech stack they use (from job posts, GitHub, blog posts)
+Conferences attended / talks given
+Publications or contributions
+Personal interests (from social media)
+Home address / general location
+Family members (for pretext)
+Breached passwords</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>With this profile you can build a highly credible pretext: impersonating their IT helpdesk, a vendor they work with, a recruiter, or crafting a spear-phishing email that references their current projects.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">Dark Web and Breach Data</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The dark web contains forum discussions, leak dumps, and marketplace listings that are often directly relevant to a target.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Tor browser setup</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install Tor
+apt install tor torbrowser-launcher
+torbrowser-launcher
+
+# Or use ProxyChains
+apt install proxychains
+service tor start
+proxychains firefox</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Dark web OSINT sources</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Search engines for .onion sites
+http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion  (Ahmia)
+https://ahmia.fi/   (clearnet version)
+
+# IntelligenceX — indexes dark web too
+https://intelx.io
+
+# Recon-ng dark web module
+recon-ng &gt; modules load recon/domains-vulnerabilities/ghdb</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Breach data sources</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text"># Free / low-cost:
+https://haveibeenpwned.com       — email breach check
+https://hashes.com               — hash lookup
+https://dehashed.com             — full breach records (paid subscription)
+https://snusbase.com             — breach records
+https://leakcheck.io             — breach records
+https://intelx.io                — indexed breach files, dark web
+https://breachforums.com         — (clearnet breach forum)
+
+# For bulk domain searches
+# dehashed.com allows: email:@target.com — returns ALL records for the domain
+# This reveals: every employee email + their breached passwords</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Using breach data offensively</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># From dehashed or similar — you get:
+# email: john.smith@target.com
+# password: Summer2023!
+# source: LinkedIn breach 2021
+
+# Step 1 — Check if password is still valid (password spraying)
+kerbrute passwordspray -d target.local --dc DC_IP users.txt &#39;Summer2023!&#39;
+
+# Step 2 — Check variations
+hashcat --stdout -r best64.rule &lt;&lt;&lt; &#39;Summer2023!&#39; | head -20
+# Generates: Summer2023!!, summer2023!, SUMMER2023!, Summer2023@, etc.
+
+# Step 3 — Credential stuff against public-facing services
+crackmapexec smb target-vpn.com -u john.smith -p &#39;Summer2023!&#39;
+# OWA, Citrix, VPN login pages</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">OSINT Automation Tools</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">theHarvester</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Aggregates emails, hostnames, and IP addresses from multiple sources:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install
+pip3 install theHarvester
+# or: apt install theharvester
+
+# Basic
+theHarvester -d target.com -b google
+
+# All sources
+theHarvester -d target.com -b all
+
+# Specific sources
+theHarvester -d target.com -b google,bing,shodan,certspotter,hunter,linkedin
+
+# Save output
+theHarvester -d target.com -b all -f output
+# Generates output.html and output.xml
+
+# With proxies (for OPSEC)
+theHarvester -d target.com -b google --proxy http://127.0.0.1:8080</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Maltego</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Maltego is the premium OSINT graph tool — visualises relationships between entities:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">apt install maltego
+maltego
+
+# Entities: domain, person, email, phone, company, IP, document
+# Transforms: run automated lookups against external data sources
+# Result: a graph showing relationships
+
+# Free transforms available for:
+# - WHOIS, DNS, Shodan
+# - HaveIBeenPwned
+# - VirusTotal
+# - Social Links (paid)
+# - Pipl (paid)
+
+# Key workflow:
+# Domain → DNS → IP → ASN → Netblock → Hosts
+# Email → Person → Social Profiles → Related Emails → Breaches</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Recon-ng</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A full-featured OSINT framework modelled after Metasploit:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">recon-ng
+
+# Workspace management
+workspaces create target
+workspaces select target
+
+# Add seed data
+db insert domains name=target.com
+
+# Install and load modules
+marketplace install all
+modules load recon/domains-hosts/hackertarget
+run
+
+# Key module categories:
+recon/domains-hosts/         — subdomain discovery
+recon/hosts-hosts/           — DNS forward/reverse
+recon/domains-contacts/      — email harvesting
+recon/contacts-credentials/  — breach lookups
+recon/companies-contacts/    — person discovery
+
+# Show collected data
+show hosts
+show contacts
+show credentials
+
+# Generate report
+modules load reporting/html
+options set FILENAME /tmp/report.html
+run</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">SpiderFoot</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Fully automated OSINT — point at a target, get hundreds of correlated findings:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">pip3 install spiderfoot
+spiderfoot -l 127.0.0.1:5001   # web UI at http://127.0.0.1:5001
+
+# Or CLI
+spiderfoot -s target.com -t INTERNET_NAME -m all
+
+# Modules include:
+# DNS, WHOIS, Shodan, HaveIBeenPwned, VirusTotal, SecurityTrails,
+# GitHub, LinkedIn, DarkWeb sources, Malware checks, etc.</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Amass</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The most thorough subdomain and ASN enumeration tool:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install
+go install -v github.com/owasp-amass/amass/v4/...@master
+
+# Passive enum
+amass enum -passive -d target.com
+
+# Active enum (with DNS resolution and brute force)
+amass enum -active -d target.com -brute
+
+# Config file (add API keys for more sources)
+cat ~/.config/amass/config.yaml
+
+# Intel — find related domains / ASNs
+amass intel -d target.com
+amass intel -org &#34;Target Corporation&#34;
+amass intel -asn 12345
+
+# Viz
+amass viz -d3 -d target.com -o graph.html</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">OSINT for Red Team Engagements</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>In a red team context, OSINT output directly feeds attack planning.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Reconnaissance-to-attack mapping</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>OSINT finding</th><th>Attack vector</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>VPN portal identified</td><td>Password spray with breach data</td>
+                </tr>
+              
+                <tr>
+                  <td>OWA / Outlook Web App found</td><td>Password spray, credential stuffing</td>
+                </tr>
+              
+                <tr>
+                  <td>Exposed admin panel</td><td>Default credentials, brute force</td>
+                </tr>
+              
+                <tr>
+                  <td>Employee emails + password breach</td><td>Credential stuffing all services</td>
+                </tr>
+              
+                <tr>
+                  <td>Outdated software version (Shodan)</td><td>CVE research, known exploit</td>
+                </tr>
+              
+                <tr>
+                  <td>Exposed .git repository</td><td>Source code review, embedded secrets</td>
+                </tr>
+              
+                <tr>
+                  <td>API keys in GitHub</td><td>Direct cloud access, data exfiltration</td>
+                </tr>
+              
+                <tr>
+                  <td>SSH key in public repo</td><td>Direct shell access</td>
+                </tr>
+              
+                <tr>
+                  <td>SPF p=none DMARC</td><td>Spoof @target.com for phishing</td>
+                </tr>
+              
+                <tr>
+                  <td>Employee tech stack from LinkedIn</td><td>Targeted spear phishing pretext</td>
+                </tr>
+              
+                <tr>
+                  <td>Company events from social media</td><td>Physical access timing, pretext</td>
+                </tr>
+              
+                <tr>
+                  <td>Badge visible in photo</td><td>Clone access badge</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Pretext development</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Goal: Call the helpdesk as john.smith and request a password reset
+
+OSINT inputs:
+- Full name: John Smith (LinkedIn)
+- Employee ID format: first 6 of surname + 3 digits (guessed from naming convention)
+- Manager name: Sarah Jones (LinkedIn)
+- Recent project: Salesforce migration (LinkedIn post last week)
+- Direct dial: +1-555-0123 (company website)
+- Email: j.smith@target.com (Hunter.io)
+- Helpdesk number: found via Google dork site:target.com &#34;helpdesk&#34;
+
+Pretext:
+&#34;Hi, this is John Smith from the Sales Engineering team. I&#39;m at a client
+site in New York and my Salesforce access just dropped — Sarah Jones asked
+me to call in urgently because we have a demo in 20 minutes. Can you do
+a quick password reset on j.smith@target.com?&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Spear phishing email construction</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">OSINT inputs:
+- Target name and title from LinkedIn
+- Current project from recent LinkedIn post or tweet
+- Manager&#39;s name from org chart
+- Email format confirmed from Hunter.io
+- DMARC p=none (can spoof sending address)
+
+Email template:
+From: sarah.jones@target.com (spoofed — DMARC allows it)
+To: john.smith@target.com
+Subject: Salesforce Migration — Action Required
+
+John,
+
+Could you review the updated migration timeline document? I need your
+sign-off before the call with the vendor tomorrow.
+
+[Review Document] ← links to credential-harvesting phishing page
+
+Thanks,
+Sarah</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">15</span>
+            <span class="heading-text">OPSEC for OSINT Operators</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Your OSINT activity can expose your identity or tip off the target. Managing your own operational security during reconnaissance is essential.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Protecting your identity</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Dedicated VM for OSINT (no personal data)
+# Separate browser profiles per target
+# Disable JavaScript when visiting target sites (JS can fingerprint you)
+# Use a VPN or Tor for all queries
+
+# Tor for anonymous browsing
+torbrowser-launcher
+
+# ProxyChains for tools
+service tor start
+proxychains theHarvester -d target.com -b google
+
+# VPN — choose a no-log provider, pay anonymously</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">What can expose you</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Action</th><th>How it exposes you</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Visiting target website</td><td>Server logs your IP</td>
+                </tr>
+              
+                <tr>
+                  <td>LinkedIn profile views</td><td>Target&#39;s security team reviews profile viewers</td>
+                </tr>
+              
+                <tr>
+                  <td>Google searches from your IP</td><td>Queries logged, correlatable</td>
+                </tr>
+              
+                <tr>
+                  <td>Running active scans</td><td>IDS alerts, IP logged</td>
+                </tr>
+              
+                <tr>
+                  <td>Downloading documents from target site</td><td>IP logged</td>
+                </tr>
+              
+                <tr>
+                  <td>Email validation via SMTP VRFY</td><td>Connects to target mail server</td>
+                </tr>
+              
+                <tr>
+                  <td>Submitting hashes to online crackers</td><td>Breach Intel firms track submission patterns</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Passive only — zero footprint</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># These leave NO trace at the target:
+- Google cache pages (not live site)
+- crt.sh, Shodan, Censys (they scanned, you just query their db)
+- WHOIS databases
+- Archive.org / Wayback Machine
+- Breach databases (dehashed, etc.)
+- Social media public posts (without logging in)
+- theHarvester (uses search engines as proxies)
+- GitHub public repos</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Wayback Machine — historical recon</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">https://web.archive.org/web/*/target.com
+
+# Find old staff directories, leaked pages, old configs
+# Useful for: employee emails before privacy was added, old subdomains,
+#             pages that were &#34;deleted&#34; but are still indexed
+
+# Wayback CDX API — enumerate all archived URLs
+curl &#39;http://web.archive.org/cdx/search/cdx?url=*.target.com&amp;output=text&amp;fl=original&amp;collapse=urlkey&#39; \
+  | sort -u &gt; archived_urls.txt
+
+# Look for: /admin, /config, /backup, /api, /old, /.git
+grep -E &#39;/(admin|config|backup|api|old|git)&#39; archived_urls.txt</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">16</span>
+            <span class="heading-text">Putting It All Together — OSINT Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A structured recon workflow for an external red team engagement:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash">### Phase 1 — Seed data
+TARGET=&#34;target.com&#34;
+ORG=&#34;Target Corporation&#34;
+
+### Phase 2 — Domain and infrastructure
+whois $TARGET
+dig $TARGET ANY
+curl -s &#34;https://crt.sh/?q=%.$TARGET&amp;output=json&#34; | jq -r &#39;.[].name_value&#39; | sort -u
+subfinder -d $TARGET -all -o subdomains.txt
+theHarvester -d $TARGET -b all -f harvest
+shodan search &#34;org:\&#34;$ORG\&#34;&#34; --fields ip_str,port,transport,product
+
+### Phase 3 — Email and personnel
+# Hunter.io: find email format for $TARGET
+# LinkedIn: enumerate employees by company
+# theHarvester output: extract email list
+grep &#39;@&#39; harvest.txt | sort -u &gt; emails.txt
+
+### Phase 4 — Breach data
+# dehashed.com: search email:@$TARGET → export all records
+# intelx.io: search $TARGET
+# Check HIBP for each email
+
+### Phase 5 — Code and documents
+theHarvester -d $TARGET -b github
+# GitHub: search org:target-corp secret password API
+trufflehog github --org=target-org
+metagoofil -d $TARGET -t pdf,doc,xlsx -o metadata/
+
+### Phase 6 — Profile and plan
+# Build list of:
+# - External services (VPN, OWA, Citrix, Jenkins, Jira) from Shodan + subdomains
+# - Confirmed employees + emails + breach passwords
+# - Technology stack (from Shodan, LinkedIn job posts, document metadata)
+# - Attack paths: spray, stuff, phish, exposed service exploit
+
+### Document everything with timestamps
+# Maintain an engagement notes file:
+# date | finding | source | confidence | attack path</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">17</span>
+            <span class="heading-text">Legal and Ethical Boundaries</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>OSINT uses only public data — but that doesn't mean all OSINT is legal or ethical in all contexts.</p>
+<p><strong>What is clearly legal:</strong><br>
+- Searching public websites, social media, company filings<br>
+- Using public databases (WHOIS, crt.sh, Shodan)<br>
+- Reading publicly available breach data for defensive purposes<br>
+- Conducting authorised red team reconnaissance within scope</p>
+<p><strong>What requires explicit authorisation:</strong><br>
+- Any reconnaissance against a client's systems (written scope of work)<br>
+- Using breach data to attempt authentication against live systems<br>
+- Social engineering employees<br>
+- Physical reconnaissance of premises</p>
+<p><strong>Jurisdiction matters:</strong><br>
+- GDPR (EU) — personal data of EU residents has protections even when publicly available<br>
+- CFAA (US) — accessing systems without authorisation, even for OSINT, can violate the act<br>
+- UK Computer Misuse Act — similar to CFAA</p>
+<p><strong>Always have written authorisation before starting any recon against a real target.</strong></p>
+<p>In authorised engagements, document every finding with source and timestamp. This protects both you and your client if findings become part of legal proceedings or regulatory review.</p></div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/red-vs-blue-eternal-game" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Red vs Blue: The Eternal Game</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">The cat-and-mouse between attackers and defenders has no finish line. A structured breakdown of every major kill-chain phase — attacker technique on the left, defender response on the right — and why purple teaming is the only way to close the loop.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/physical-security-testing-methodology" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Physical Security Testing — From Badge Clone to Domain Admin</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A red team physical assessment methodology, start to finish: the pretexts that get a door opened before you touch a lock, badge cloning with a Proxmark3, mechanical bypass, and turning thirty seconds of physical access into a persistent foothold via a dropped implant.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/opsec-for-pentesters" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">OPSEC for Pentesters — Don&#39;t Be the Noise You&#39;re Hunting</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">Operational security is not paranoia — it is discipline. Covers the five-step OPSEC process, infrastructure setup, redirectors, avoiding attribution, communication hygiene, and the mistakes that burn engagements and operators alike.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

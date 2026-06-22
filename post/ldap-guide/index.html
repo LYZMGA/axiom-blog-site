@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>LDAP – Directory Enumeration &amp; Active Directory Recon — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-tools">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-tools">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">LDAP – Directory Enumeration &amp; Active Directory Recon</h1>
+    <div class="post-meta">
+      <time>2026-06-03</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">1 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/tools/" class="cat-badge cat-badge-link cat-tools">Tools</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">ldap</span>
+          
+            <span class="tag">active-directory</span>
+          
+            <span class="tag">enumeration</span>
+          
+            <span class="tag">pentesting</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">LDAP is the backbone of Active Directory. Learn to query it anonymously and with credentials to extract users, groups, computers, and policies — essential for both AD administration and offensive enumeration.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">What is LDAP?</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Lightweight Directory Access Protocol (LDAP)</strong> is a protocol for reading and writing directory services — most commonly <strong>Microsoft Active Directory</strong>. It organises objects (users, groups, computers, OUs) in a hierarchical tree.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Port</th><th>Protocol</th><th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>389</td><td>LDAP (plaintext)</td><td>Standard queries</td>
+                </tr>
+              
+                <tr>
+                  <td>636</td><td>LDAPS (TLS)</td><td>Encrypted</td>
+                </tr>
+              
+                <tr>
+                  <td>3268</td><td>Global Catalog</td><td>Forest-wide searches</td>
+                </tr>
+              
+                <tr>
+                  <td>3269</td><td>GC over TLS</td><td>Encrypted GC</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">LDAP Structure</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every object has a <strong>Distinguished Name (DN)</strong> that describes its full path:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">CN=John Smith,OU=Sales,DC=corp,DC=local</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Component</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`DC`</td><td>Domain Component (`corp.local` → `DC=corp,DC=local`)</td>
+                </tr>
+              
+                <tr>
+                  <td>`OU`</td><td>Organisational Unit (like a folder)</td>
+                </tr>
+              
+                <tr>
+                  <td>`CN`</td><td>Common Name (object name)</td>
+                </tr>
+              
+                <tr>
+                  <td>`DN`</td><td>Full distinguished name (path to object)</td>
+                </tr>
+              
+                <tr>
+                  <td>`RDN`</td><td>Relative DN (just the final component)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">ldapsearch – The Core Tool</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>ldapsearch</code> queries an LDAP server directly from the command line. Syntax: <code>ldapsearch [options] [filter] [attributes]</code></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Anonymous bind -- check if null session is allowed
+ldapsearch -x -H ldap://192.168.1.10 -b &#39;&#39; -s base &#39;(objectclass=*)&#39; namingContexts
+
+# Get base DN of the domain
+ldapsearch -x -H ldap://192.168.1.10 -b &#39;&#39; -s base namingContexts
+
+# Authenticated query (plaintext credentials)
+ldapsearch -x -H ldap://192.168.1.10 -D &#39;CN=jsmith,DC=corp,DC=local&#39; -w &#39;Password123&#39; \
+  -b &#39;DC=corp,DC=local&#39; &#39;(objectClass=user)&#39;
+
+# Shorthand with UPN-style bind DN
+ldapsearch -x -H ldap://192.168.1.10 -D &#39;jsmith@corp.local&#39; -w &#39;Password123&#39; \
+  -b &#39;DC=corp,DC=local&#39; &#39;(objectClass=user)&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Anonymous / Null Bind Enumeration</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Many older or misconfigured LDAP servers allow queries without credentials — a <strong>null bind</strong>. This is a critical misconfiguration in AD environments.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Test for anonymous bind
+ldapsearch -x -H ldap://192.168.1.10 -b &#39;DC=corp,DC=local&#39;
+
+# Dump all users anonymously
+ldapsearch -x -H ldap://192.168.1.10 -b &#39;DC=corp,DC=local&#39; &#39;(objectClass=person)&#39; \
+  cn sAMAccountName mail userPrincipalName
+
+# Dump all groups
+ldapsearch -x -H ldap://192.168.1.10 -b &#39;DC=corp,DC=local&#39; &#39;(objectClass=group)&#39; \
+  cn member description
+
+# Dump all computers
+ldapsearch -x -H ldap://192.168.1.10 -b &#39;DC=corp,DC=local&#39; &#39;(objectClass=computer)&#39; \
+  cn dNSHostName operatingSystem</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Useful LDAP Filters</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Filter</th><th>Returns</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`(objectClass=user)`</td><td>All user objects</td>
+                </tr>
+              
+                <tr>
+                  <td>`(objectClass=computer)`</td><td>All computer objects</td>
+                </tr>
+              
+                <tr>
+                  <td>`(objectClass=group)`</td><td>All groups</td>
+                </tr>
+              
+                <tr>
+                  <td>`(objectClass=organizationalUnit)`</td><td>All OUs</td>
+                </tr>
+              
+                <tr>
+                  <td>`(objectCategory=person)`</td><td>People (users + contacts)</td>
+                </tr>
+              
+                <tr>
+                  <td>`(memberOf=CN=Domain Admins,CN=Users,DC=corp,DC=local)`</td><td>Members of Domain Admins</td>
+                </tr>
+              
+                <tr>
+                  <td>`(userAccountControl:1.2.840.113556.1.4.803:=2)`</td><td>Disabled accounts</td>
+                </tr>
+              
+                <tr>
+                  <td>`(userAccountControl:1.2.840.113556.1.4.803:=65536)`</td><td>Password never expires</td>
+                </tr>
+              
+                <tr>
+                  <td>`(badPwdCount&gt;=1)`</td><td>Accounts with failed logins</td>
+                </tr>
+              
+                <tr>
+                  <td>`(adminCount=1)`</td><td>Privileged / protected accounts</td>
+                </tr>
+              
+                <tr>
+                  <td>`(servicePrincipalName=*)`</td><td>Kerberoastable accounts</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Find Domain Admins members
+ldapsearch -x -H ldap://dc01 -D &#39;user@corp.local&#39; -w &#39;pass&#39; \
+  -b &#39;DC=corp,DC=local&#39; \
+  &#39;(memberOf=CN=Domain Admins,CN=Users,DC=corp,DC=local)&#39; \
+  cn sAMAccountName
+
+# Find Kerberoastable accounts (have SPN set)
+ldapsearch -x -H ldap://dc01 -D &#39;user@corp.local&#39; -w &#39;pass&#39; \
+  -b &#39;DC=corp,DC=local&#39; \
+  &#39;(&amp;(objectClass=user)(servicePrincipalName=*))&#39; \
+  cn sAMAccountName servicePrincipalName
+
+# Find accounts with password never expires
+ldapsearch -x -H ldap://dc01 -D &#39;user@corp.local&#39; -w &#39;pass&#39; \
+  -b &#39;DC=corp,DC=local&#39; \
+  &#39;(userAccountControl:1.2.840.113556.1.4.803:=65536)&#39; \
+  cn sAMAccountName
+
+# Find description fields (often contain passwords)
+ldapsearch -x -H ldap://dc01 -D &#39;user@corp.local&#39; -w &#39;pass&#39; \
+  -b &#39;DC=corp,DC=local&#39; \
+  &#39;(&amp;(objectClass=user)(description=*))&#39; \
+  cn description sAMAccountName</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">ldapdomaindump – Structured AD Dump</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>ldapdomaindump</code> extracts the entire domain structure and outputs HTML/JSON/CSV reports — ideal for a quick overview.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install
+pip3 install ldapdomaindump
+
+# Dump with credentials
+ldapdomaindump -u &#39;corp.local\jsmith&#39; -p &#39;Password123&#39; 192.168.1.10
+
+# Dump with UPN format
+ldapdomaindump -u &#39;jsmith@corp.local&#39; -p &#39;Password123&#39; ldap://192.168.1.10 -o ./ldap-dump/
+
+# Anonymous (if null bind allowed)
+ldapdomaindump 192.168.1.10 -o ./ldap-anon/
+
+# Output files created:
+# domain_users.html / .json / .grep
+# domain_groups.html / .json / .grep
+# domain_computers.html / .json / .grep
+# domain_policy.html / .json / .grep</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">windapsearch – Fast AD Enumeration</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>windapsearch</code> is a Go tool built specifically for AD LDAP enumeration with pre-built query modules.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Install
+git clone https://github.com/ropnop/windapsearch &amp;&amp; cd windapsearch
+go build -o windapsearch cmd/windapsearch/main.go
+
+# Enumerate all users
+./windapsearch -d corp.local -u jsmith@corp.local -p &#39;Password123&#39; -m users
+
+# Enumerate Domain Admins
+./windapsearch -d corp.local -u jsmith@corp.local -p &#39;Password123&#39; -m privileged-users
+
+# Enumerate computers
+./windapsearch -d corp.local -u jsmith@corp.local -p &#39;Password123&#39; -m computers
+
+# Find unconstrained delegation accounts
+./windapsearch -d corp.local -u jsmith@corp.local -p &#39;Password123&#39; -m unconstrained
+
+# Custom LDAP filter
+./windapsearch -d corp.local -u jsmith@corp.local -p &#39;Password123&#39; \
+  --filter &#39;(adminCount=1)&#39; --attrs cn,sAMAccountName</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">Nmap NSE Scripts</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Check if anonymous bind is allowed
+nmap -p 389 --script ldap-rootdse 192.168.1.10
+
+# Brute-force credentials
+nmap -p 389 --script ldap-brute --script-args ldap.base=&#39;DC=corp,DC=local&#39; 192.168.1.10
+
+# Search with credentials
+nmap -p 389 --script ldap-search \
+  --script-args ldap.username=&#39;CN=jsmith,DC=corp,DC=local&#39;,ldap.password=&#39;Password123&#39;,\
+ldap.qfilter=&#39;users&#39;,ldap.attrib=&#39;sAMAccountName&#39; 192.168.1.10</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Python ldap3 – Scripted Queries</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">python</span>
+            
+          </div>
+          <pre><code class="language-python">from ldap3 import Server, Connection, ALL, NTLM
+
+server = Server(&#39;192.168.1.10&#39;, get_info=ALL)
+
+# Bind with credentials
+conn = Connection(server, user=&#39;CORP\\jsmith&#39;, password=&#39;Password123&#39;, authentication=NTLM)
+conn.bind()
+
+# Search for all users
+conn.search(
+    search_base=&#39;DC=corp,DC=local&#39;,
+    search_filter=&#39;(objectClass=user)&#39;,
+    attributes=[&#39;cn&#39;, &#39;sAMAccountName&#39;, &#39;mail&#39;, &#39;description&#39;]
+)
+
+for entry in conn.entries:
+    print(entry.sAMAccountName, entry.description)
+
+# Anonymous bind attempt
+conn_anon = Connection(server)
+print(&#39;Anonymous bind:&#39;, conn_anon.bind())</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">Real-World Use Cases</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>IT Administration / Identity Management</strong><br>
+- Query AD to generate user reports, audit group memberships, or find stale accounts for cleanup<br>
+- Automate user provisioning scripts using <code>ldap3</code> — create, modify, and disable accounts programmatically<br>
+- Find all accounts with passwords set to never expire for a security compliance audit<br>
+- Integrate applications with AD authentication using LDAP bind for SSO</p></div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Penetration Testing / Red Team</strong><br>
+- After gaining a domain foothold, enumerate users and groups to identify high-value targets<br>
+- Find service accounts with SPNs set — prime targets for Kerberoasting<br>
+- Check <code>description</code> fields — admins frequently store temporary passwords there<br>
+- Map group memberships to understand privilege paths: who can become Domain Admin?<br>
+- Find computers with unconstrained delegation — a classic privilege escalation route<br>
+- Dump the entire domain to JSON with <code>ldapdomaindump</code> and analyse offline</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">CTF / HTB Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Step 1: Discover LDAP
+nmap -p 389,636,3268 --open &lt;target&gt;
+
+# Step 2: Get base DN (works without credentials)
+ldapsearch -x -H ldap://&lt;target&gt; -b &#39;&#39; -s base namingContexts
+
+# Step 3: Try anonymous bind
+ldapsearch -x -H ldap://&lt;target&gt; -b &#39;DC=corp,DC=local&#39; &#39;(objectClass=*)&#39; | head -50
+
+# Step 4: With creds -- dump everything
+ldapdomaindump -u &#39;corp.local\&lt;user&gt;&#39; -p &#39;&lt;pass&gt;&#39; &lt;target&gt; -o ./dump/
+
+# Step 5: Hunt for credentials in description fields
+ldapsearch -x -H ldap://&lt;target&gt; -D &#39;&lt;user&gt;@corp.local&#39; -w &#39;&lt;pass&gt;&#39; \
+  -b &#39;DC=corp,DC=local&#39; &#39;(description=*)&#39; cn sAMAccountName description \
+  | grep -i &#39;description\|cn:&#39;
+
+# Step 6: Find SPNs for Kerberoasting
+ldapsearch -x -H ldap://&lt;target&gt; -D &#39;&lt;user&gt;@corp.local&#39; -w &#39;&lt;pass&gt;&#39; \
+  -b &#39;DC=corp,DC=local&#39; &#39;(servicePrincipalName=*)&#39; sAMAccountName servicePrincipalName
+
+# Step 7: Find AS-REP roastable users (no preauth required)
+ldapsearch -x -H ldap://&lt;target&gt; -D &#39;&lt;user&gt;@corp.local&#39; -w &#39;&lt;pass&gt;&#39; \
+  -b &#39;DC=corp,DC=local&#39; \
+  &#39;(userAccountControl:1.2.840.113556.1.4.803:=4194304)&#39; \
+  sAMAccountName</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>CTF Tips:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li>Anonymous bind on port 389 is a common first-blood path on HTB Windows machines</li>
+<li>The <code>description</code> attribute is a goldmine — filter with <code>(description=*)</code> and grep for <code>pass</code>, <code>temp</code>, <code>cred</code></li>
+<li><code>adminCount=1</code> finds accounts that are (or were) in privileged groups</li>
+<li>If you have any valid domain creds, <code>ldapdomaindump</code> gives you a full HTML report in seconds</li>
+<li>LDAP port 389 open but 636 closed? Try plaintext — credentials in the clear may be captured by other challenges on the network</li>
+</ul></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">Quick Reference</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-info">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              
+              <span>Key ldapsearch Flags:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li><code>-x</code> — simple authentication (not SASL)</li>
+<li><code>-H ldap://&lt;host&gt;</code> — server URI</li>
+<li><code>-D '&lt;bind DN&gt;'</code> — bind as this identity</li>
+<li><code>-w '&lt;password&gt;'</code> — password (use <code>-W</code> to prompt)</li>
+<li><code>-b '&lt;base DN&gt;'</code> — where to start searching</li>
+<li><code>-s base|one|sub</code> — search scope</li>
+<li><code>-L</code> / <code>-LL</code> / <code>-LLL</code> — progressively cleaner output</li>
+</ul>
+<p><strong>Default Ports:</strong> 389 (LDAP), 636 (LDAPS), 3268 (Global Catalog)</p>
+<p><strong>One-liner user dump:</strong><br>
+<code>ldapsearch -x -H ldap://&lt;dc&gt; -D 'user@corp.local' -w 'pass' -b 'DC=corp,DC=local' '(objectClass=user)' sAMAccountName | grep sAMAccountName</code></p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/snmp-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SNMP – Network Intelligence &amp; Enumeration</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">SNMP exposes a wealth of device info — system details, interfaces, running processes, installed software. Learn to query it, brute-force community strings, and extract data for both ops and offensive use.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/smb-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SMB — Field Guide</h2>
+          <div class="post-card-meta"><time>2026-06-02</time></div>
+          <p class="post-card-summary">Null sessions, share enumeration, pass-the-hash, and a full CTF workflow covering smbclient, smbmap, enum4linux, CrackMapExec, Impacket, EternalBlue, and Responder.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ffuf-gobuster-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">ffuf &amp; Gobuster – Web Fuzzing &amp; Directory Enumeration</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">ffuf and Gobuster are the go-to tools for discovering hidden directories, subdomains, virtual hosts, and parameters. Learn their flags, filtering tricks, and the right tool for each job.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

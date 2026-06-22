@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Purple Team Exercise — Planning and Running a Full Scenario — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-security">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-security">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Purple Team Exercise — Planning and Running a Full Scenario</h1>
+    <div class="post-meta">
+      <time>2026-06-17</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">2 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/security/" class="cat-badge cat-badge-link cat-security">Security</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">purple-team</span>
+          
+            <span class="tag">detection-engineering</span>
+          
+            <span class="tag">atomic-red-team</span>
+          
+            <span class="tag">mitre-attack</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">A step-by-step guide to running a structured purple team exercise: choosing a threat scenario that matches real risk, defining success criteria up front, executing the kill chain in coordination with the blue team, and converting the results into a lasting detection programme.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>A purple team exercise isn't a pentest with a defender in the room, and it isn't a tabletop. It's a structured, collaborative test of detection and response capability against specific, agreed techniques — with the explicit goal of leaving the defensive programme measurably better than it started. That goal shapes every decision below.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Step 1 — Choosing a Threat Scenario</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The scenario should be the threat actually relevant to the organisation, not the most interesting one to run. Three sources, in priority order:</p>
+<p><strong>1. Threat intelligence specific to the organisation's sector.</strong> If ransomware affiliates targeting your industry are documented as exploiting backup infrastructure or harvesting infostealer logs for initial access, that's the scenario — not because it's novel, but because it's what's actually being used against peers.</p>
+<p><strong>2. Gaps surfaced by a recent incident or near-miss</strong>, internal or industry-wide. A purple team exercise that re-creates a recent real incident under controlled conditions validates whether the fix actually closed the gap, which a post-incident report alone can't prove.</p>
+<p><strong>3. Known coverage gaps from prior exercises or assessments.</strong> If the last purple team round found that lateral movement detection was weak, this round's scenario should specifically exercise lateral movement techniques again, post-remediation — not move on to an unrelated kill chain stage.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            <span class="code-caption">Example scenario definition</span>
+          </div>
+          <pre><code class="language-text">Scenario: &#34;Ransomware affiliate, initial access via phished credentials,
+           targeting backup infrastructure before encryption&#34;
+
+Kill chain stages in scope:
+  1. Initial access      -- T1566.001 (spearphishing attachment)
+  2. Execution            -- T1059.001 (PowerShell)
+  3. Persistence          -- T1547.001 (registry run key)
+  4. Credential access     -- T1003.001 (LSASS memory)
+  5. Lateral movement      -- T1021.002 (SMB/admin shares)
+  6. Discovery             -- T1018 (remote system discovery, targeting backup infra)
+  7. Impact (simulated only) -- T1490 (inhibit system recovery -- backup deletion)
+
+Explicitly out of scope: actual encryption, actual data exfiltration</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Step 2 — Defining Success Criteria Before Execution</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Agree on what "detected" and "responded" mean, in writing, before the first technique runs — not in the after-action review when it's convenient to redefine them. Vague criteria produce a debate about scoring instead of a measurement of capability.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Criterion</th><th>Bad definition</th><th>Good definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Detected</td><td>&#34;The SOC noticed something&#34;</td><td>&#34;An alert fired in the SIEM, mapped to the specific technique executed, within an agreed time window (e.g. 15 minutes)&#34;</td>
+                </tr>
+              
+                <tr>
+                  <td>Responded</td><td>&#34;Someone looked at it&#34;</td><td>&#34;A documented triage action was taken — ticket created, analyst assigned, and an investigative action logged — within the agreed SLA for that alert&#39;s severity&#34;</td>
+                </tr>
+              
+                <tr>
+                  <td>Contained</td><td>&#34;It would have been stopped eventually&#34;</td><td>&#34;A specific containment action (isolate host, disable account, block IOC) was executed, and the red team&#39;s follow-on action was demonstrably blocked by it&#34;</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>Score per technique, not per exercise</span>
+            </div>
+          
+          <div class="note-body"><p>A single pass/fail for the whole exercise hides where the actual gap is. Score detected/responded/contained independently for every technique in the kill chain — this is what makes the after-action report actionable instead of a single disappointing or falsely reassuring grade.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Step 3 — Executing the Kill Chain in Coordination</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Purple team execution differs from a red team engagement specifically in the coordination model: the blue team knows an exercise is happening (even if not the exact techniques or timing), and there's a live communication channel open throughout — typically a dedicated chat channel — so the red team can confirm "technique X just executed" immediately after each step, enabling real-time correlation against what the blue team's tooling actually caught.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Executing scenario techniques with Atomic Red Team, technique by technique</span>
+          </div>
+          <pre><code class="language-bash"># Each technique run is logged with a timestamp posted to the shared channel
+# immediately before execution, enabling precise blue-team correlation
+
+Invoke-AtomicTest T1566.001 -ShowDetailsBrief
+Invoke-AtomicTest T1566.001
+
+Invoke-AtomicTest T1059.001
+Invoke-AtomicTest T1547.001
+Invoke-AtomicTest T1003.001
+Invoke-AtomicTest T1021.002
+Invoke-AtomicTest T1018</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>After each technique executes, the blue team independently checks their tooling (SIEM, EDR console) for a corresponding alert and records, against the success criteria from Step 2: did it fire, how long did it take, and what action followed. This happens <strong>live</strong>, technique by technique — not as a single retrospective log review at the end, which loses the timing data that's often the most useful signal.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Step 4 — Converting Findings Into a Detection Programme</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The exercise itself is not the deliverable — the detection improvements that outlive it are. For every technique that scored "not detected" or "detected but not responded to within SLA," the output is a concrete artifact, not a recommendation to "improve monitoring":</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Gap found</th><th>Concrete artifact produced</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>T1547.001 (registry run key persistence) — not detected</td><td>New Sigma rule targeting the specific persistence pattern observed, validated by re-running the same atomic test against it before closing the gap</td>
+                </tr>
+              
+                <tr>
+                  <td>T1003.001 (LSASS memory access) — detected, but response exceeded SLA</td><td>Updated SOAR playbook auto-isolating the host and disabling the account on this specific alert category, removing the manual triage delay</td>
+                </tr>
+              
+                <tr>
+                  <td>T1018 (remote system discovery targeting backup infra) — not detected</td><td>New detection rule plus a network segmentation finding escalated separately — backup infrastructure should not have been reachable for this discovery technique to succeed at all</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-danger">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>
+              
+              <span>Close the loop — re-test the same techniques next cycle</span>
+            </div>
+          
+          <div class="note-body"><p>The single most common purple-team failure mode is treating each exercise as a standalone event. Schedule the next purple team round to specifically re-run the techniques that scored poorly this time, <em>first</em>, before introducing new scenario coverage — proving the new Sigma rule and SOAR playbook actually work against a live re-run is the only way to confirm the gap is closed rather than just documented.</p></div>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>Map results to an ATT&amp;CK Navigator layer</span>
+            </div>
+          
+          <div class="note-body"><p>Maintain a living Navigator layer scored by detection confidence per technique (the same approach covered in the companion notes on reading malware reports), updated after every purple team cycle. Over several quarters this becomes the most honest picture of actual detection coverage the organisation has — far more reliable than a tool vendor's claimed coverage matrix, because every cell is backed by a real, timestamped test.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/red-vs-blue-eternal-game" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Red vs Blue: The Eternal Game</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">The cat-and-mouse between attackers and defenders has no finish line. A structured breakdown of every major kill-chain phase — attacker technique on the left, defender response on the right — and why purple teaming is the only way to close the loop.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/threat-hunting-sigma-rules" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Threat Hunting with Sigma Rules — Writing Detections That Actually Work</h2>
+          <div class="post-card-meta"><time>2026-06-16</time></div>
+          <p class="post-card-summary">Sigma is the vendor-neutral standard for writing detection rules that compile to any SIEM. Covers the Sigma format in depth, writing rules for real ATT&amp;CK techniques, converting to Splunk/Elastic/QRadar queries, hunting methodologies, and building a detection pipeline that keeps pace with evolving adversaries.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ad-privilege-escalation-user-to-da" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Active Directory Privilege Escalation — From User to Domain Admin</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A structured walkthrough of the most common path from a single standard domain account to Domain Admin: Kerberoasting, AS-REP roasting, ACL abuse, and the three delegation attacks. Every step paired with the detection and hardening that closes it.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

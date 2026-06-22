@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Tags — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+</head>
+<body class="">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+<section class="posts-section">
+  <div class="section-header">
+    <span class="section-label">// tags</span>
+    <span class="section-line"></span>
+  </div>
+
+  
+    <div class="tag-cloud">
+      
+        <a href="/axiom-blog-site/tagged/red-team/" class="tag-cloud-item" style="font-size: 22.0px">
+          red-team<span class="tag-cloud-count">17</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/active-directory/" class="tag-cloud-item" style="font-size: 17.9px">
+          active-directory<span class="tag-cloud-count">10</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/tools/" class="tag-cloud-item" style="font-size: 17.3px">
+          tools<span class="tag-cloud-count">9</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/network/" class="tag-cloud-item" style="font-size: 16.1px">
+          network<span class="tag-cloud-count">7</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pentesting/" class="tag-cloud-item" style="font-size: 16.1px">
+          pentesting<span class="tag-cloud-count">7</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/enumeration/" class="tag-cloud-item" style="font-size: 15.5px">
+          enumeration<span class="tag-cloud-count">6</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/privesc/" class="tag-cloud-item" style="font-size: 15.5px">
+          privesc<span class="tag-cloud-count">6</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/web/" class="tag-cloud-item" style="font-size: 15.5px">
+          web<span class="tag-cloud-count">6</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/blue-team/" class="tag-cloud-item" style="font-size: 14.9px">
+          blue-team<span class="tag-cloud-count">5</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/detection/" class="tag-cloud-item" style="font-size: 14.9px">
+          detection<span class="tag-cloud-count">5</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/fundamentals/" class="tag-cloud-item" style="font-size: 14.9px">
+          fundamentals<span class="tag-cloud-count">5</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/linux/" class="tag-cloud-item" style="font-size: 14.9px">
+          linux<span class="tag-cloud-count">5</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/windows/" class="tag-cloud-item" style="font-size: 14.9px">
+          windows<span class="tag-cloud-count">5</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cve/" class="tag-cloud-item" style="font-size: 14.4px">
+          cve<span class="tag-cloud-count">4</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/detection-engineering/" class="tag-cloud-item" style="font-size: 14.4px">
+          detection-engineering<span class="tag-cloud-count">4</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/kerberos/" class="tag-cloud-item" style="font-size: 14.4px">
+          kerberos<span class="tag-cloud-count">4</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/mitre-attack/" class="tag-cloud-item" style="font-size: 14.4px">
+          mitre-attack<span class="tag-cloud-count">4</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/recon/" class="tag-cloud-item" style="font-size: 14.4px">
+          recon<span class="tag-cloud-count">4</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/active-exploitation/" class="tag-cloud-item" style="font-size: 13.8px">
+          active-exploitation<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/bloodhound/" class="tag-cloud-item" style="font-size: 13.8px">
+          bloodhound<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/dfir/" class="tag-cloud-item" style="font-size: 13.8px">
+          dfir<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pentest/" class="tag-cloud-item" style="font-size: 13.8px">
+          pentest<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/siem/" class="tag-cloud-item" style="font-size: 13.8px">
+          siem<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/soc/" class="tag-cloud-item" style="font-size: 13.8px">
+          soc<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/sqli/" class="tag-cloud-item" style="font-size: 13.8px">
+          sqli<span class="tag-cloud-count">3</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/c2/" class="tag-cloud-item" style="font-size: 13.2px">
+          c2<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cheatsheet/" class="tag-cloud-item" style="font-size: 13.2px">
+          cheatsheet<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ctf/" class="tag-cloud-item" style="font-size: 13.2px">
+          ctf<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cti/" class="tag-cloud-item" style="font-size: 13.2px">
+          cti<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/exploit-dev/" class="tag-cloud-item" style="font-size: 13.2px">
+          exploit-dev<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/file-transfer/" class="tag-cloud-item" style="font-size: 13.2px">
+          file-transfer<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/forensics/" class="tag-cloud-item" style="font-size: 13.2px">
+          forensics<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ioc/" class="tag-cloud-item" style="font-size: 13.2px">
+          ioc<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/lfi/" class="tag-cloud-item" style="font-size: 13.2px">
+          lfi<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/notes/" class="tag-cloud-item" style="font-size: 13.2px">
+          notes<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ntlm/" class="tag-cloud-item" style="font-size: 13.2px">
+          ntlm<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/osint/" class="tag-cloud-item" style="font-size: 13.2px">
+          osint<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/purple-team/" class="tag-cloud-item" style="font-size: 13.2px">
+          purple-team<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/shellcode/" class="tag-cloud-item" style="font-size: 13.2px">
+          shellcode<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/sigma/" class="tag-cloud-item" style="font-size: 13.2px">
+          sigma<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/smb/" class="tag-cloud-item" style="font-size: 13.2px">
+          smb<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/sql/" class="tag-cloud-item" style="font-size: 13.2px">
+          sql<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ssrf/" class="tag-cloud-item" style="font-size: 13.2px">
+          ssrf<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/threat-hunting/" class="tag-cloud-item" style="font-size: 13.2px">
+          threat-hunting<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/threat-intel/" class="tag-cloud-item" style="font-size: 13.2px">
+          threat-intel<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/zero-day/" class="tag-cloud-item" style="font-size: 13.2px">
+          zero-day<span class="tag-cloud-count">2</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ad/" class="tag-cloud-item" style="font-size: 12.6px">
+          AD<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/adversary-simulation/" class="tag-cloud-item" style="font-size: 12.6px">
+          adversary-simulation<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/assembly/" class="tag-cloud-item" style="font-size: 12.6px">
+          assembly<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/atomic-red-team/" class="tag-cloud-item" style="font-size: 12.6px">
+          atomic-red-team<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/attack-defense/" class="tag-cloud-item" style="font-size: 12.6px">
+          attack-defense<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/attribution/" class="tag-cloud-item" style="font-size: 12.6px">
+          attribution<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/autopsy/" class="tag-cloud-item" style="font-size: 12.6px">
+          autopsy<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/aws/" class="tag-cloud-item" style="font-size: 12.6px">
+          aws<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/azure/" class="tag-cloud-item" style="font-size: 12.6px">
+          azure<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/backup/" class="tag-cloud-item" style="font-size: 12.6px">
+          backup<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/bash/" class="tag-cloud-item" style="font-size: 12.6px">
+          bash<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/binary-analysis/" class="tag-cloud-item" style="font-size: 12.6px">
+          binary-analysis<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/binary-exploitation/" class="tag-cloud-item" style="font-size: 12.6px">
+          binary-exploitation<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/buffer-overflow/" class="tag-cloud-item" style="font-size: 12.6px">
+          buffer-overflow<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/burp-suite/" class="tag-cloud-item" style="font-size: 12.6px">
+          burp suite<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/career/" class="tag-cloud-item" style="font-size: 12.6px">
+          career<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ci-cd/" class="tag-cloud-item" style="font-size: 12.6px">
+          ci-cd<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cisco/" class="tag-cloud-item" style="font-size: 12.6px">
+          cisco<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cloud/" class="tag-cloud-item" style="font-size: 12.6px">
+          cloud<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cpanel/" class="tag-cloud-item" style="font-size: 12.6px">
+          cpanel<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/crackmapexec/" class="tag-cloud-item" style="font-size: 12.6px">
+          crackmapexec<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/crypto/" class="tag-cloud-item" style="font-size: 12.6px">
+          crypto<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/cypher/" class="tag-cloud-item" style="font-size: 12.6px">
+          cypher<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/databases/" class="tag-cloud-item" style="font-size: 12.6px">
+          databases<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/defense-evasion/" class="tag-cloud-item" style="font-size: 12.6px">
+          defense-evasion<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/deserialization/" class="tag-cloud-item" style="font-size: 12.6px">
+          deserialization<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/disk/" class="tag-cloud-item" style="font-size: 12.6px">
+          disk<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/dns/" class="tag-cloud-item" style="font-size: 12.6px">
+          dns<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/domain/" class="tag-cloud-item" style="font-size: 12.6px">
+          domain<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/edge-devices/" class="tag-cloud-item" style="font-size: 12.6px">
+          edge-devices<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/edr/" class="tag-cloud-item" style="font-size: 12.6px">
+          edr<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/elk/" class="tag-cloud-item" style="font-size: 12.6px">
+          elk<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/email/" class="tag-cloud-item" style="font-size: 12.6px">
+          email<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/evasion/" class="tag-cloud-item" style="font-size: 12.6px">
+          evasion<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/exploitation/" class="tag-cloud-item" style="font-size: 12.6px">
+          exploitation<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ffuf/" class="tag-cloud-item" style="font-size: 12.6px">
+          ffuf<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ftp/" class="tag-cloud-item" style="font-size: 12.6px">
+          ftp<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/fuzzing/" class="tag-cloud-item" style="font-size: 12.6px">
+          fuzzing<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/gcp/" class="tag-cloud-item" style="font-size: 12.6px">
+          gcp<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ghidra/" class="tag-cloud-item" style="font-size: 12.6px">
+          ghidra<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/github-actions/" class="tag-cloud-item" style="font-size: 12.6px">
+          github-actions<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/gobuster/" class="tag-cloud-item" style="font-size: 12.6px">
+          gobuster<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/google-dorks/" class="tag-cloud-item" style="font-size: 12.6px">
+          google-dorks<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/gtfobins/" class="tag-cloud-item" style="font-size: 12.6px">
+          gtfobins<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/habits/" class="tag-cloud-item" style="font-size: 12.6px">
+          habits<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/hashcat/" class="tag-cloud-item" style="font-size: 12.6px">
+          hashcat<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/home-lab/" class="tag-cloud-item" style="font-size: 12.6px">
+          home-lab<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/homelab/" class="tag-cloud-item" style="font-size: 12.6px">
+          homelab<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/htb/" class="tag-cloud-item" style="font-size: 12.6px">
+          HTB<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/htb/" class="tag-cloud-item" style="font-size: 12.6px">
+          htb<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/iam/" class="tag-cloud-item" style="font-size: 12.6px">
+          iam<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ida/" class="tag-cloud-item" style="font-size: 12.6px">
+          ida<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/identity/" class="tag-cloud-item" style="font-size: 12.6px">
+          identity<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/idor/" class="tag-cloud-item" style="font-size: 12.6px">
+          idor<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/incident-response/" class="tag-cloud-item" style="font-size: 12.6px">
+          incident-response<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/infostealer/" class="tag-cloud-item" style="font-size: 12.6px">
+          infostealer<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/infrastructure/" class="tag-cloud-item" style="font-size: 12.6px">
+          infrastructure<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/initial-access/" class="tag-cloud-item" style="font-size: 12.6px">
+          initial-access<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ivanti/" class="tag-cloud-item" style="font-size: 12.6px">
+          ivanti<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/john/" class="tag-cloud-item" style="font-size: 12.6px">
+          john<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/lateral-movement/" class="tag-cloud-item" style="font-size: 12.6px">
+          lateral-movement<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ldap/" class="tag-cloud-item" style="font-size: 12.6px">
+          ldap<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/learning/" class="tag-cloud-item" style="font-size: 12.6px">
+          learning<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/lessons-learned/" class="tag-cloud-item" style="font-size: 12.6px">
+          lessons-learned<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/log-analysis/" class="tag-cloud-item" style="font-size: 12.6px">
+          log-analysis<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/lolbas/" class="tag-cloud-item" style="font-size: 12.6px">
+          lolbas<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/lolbins/" class="tag-cloud-item" style="font-size: 12.6px">
+          lolbins<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/lumma/" class="tag-cloud-item" style="font-size: 12.6px">
+          lumma<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/malware/" class="tag-cloud-item" style="font-size: 12.6px">
+          malware<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/malware-analysis/" class="tag-cloud-item" style="font-size: 12.6px">
+          malware-analysis<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/medium/" class="tag-cloud-item" style="font-size: 12.6px">
+          medium<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/memory/" class="tag-cloud-item" style="font-size: 12.6px">
+          memory<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/metasploit/" class="tag-cloud-item" style="font-size: 12.6px">
+          metasploit<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/methodology/" class="tag-cloud-item" style="font-size: 12.6px">
+          methodology<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/mfa-bypass/" class="tag-cloud-item" style="font-size: 12.6px">
+          mfa-bypass<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/mongodb/" class="tag-cloud-item" style="font-size: 12.6px">
+          mongodb<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/msfconsole/" class="tag-cloud-item" style="font-size: 12.6px">
+          msfconsole<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/msfvenom/" class="tag-cloud-item" style="font-size: 12.6px">
+          msfvenom<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/mssql/" class="tag-cloud-item" style="font-size: 12.6px">
+          mssql<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/mysql/" class="tag-cloud-item" style="font-size: 12.6px">
+          mysql<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/neo4j/" class="tag-cloud-item" style="font-size: 12.6px">
+          neo4j<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/netexec/" class="tag-cloud-item" style="font-size: 12.6px">
+          netexec<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/networking/" class="tag-cloud-item" style="font-size: 12.6px">
+          networking<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/nmap/" class="tag-cloud-item" style="font-size: 12.6px">
+          nmap<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/npm/" class="tag-cloud-item" style="font-size: 12.6px">
+          npm<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/oidc/" class="tag-cloud-item" style="font-size: 12.6px">
+          oidc<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/opsec/" class="tag-cloud-item" style="font-size: 12.6px">
+          opsec<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/osi/" class="tag-cloud-item" style="font-size: 12.6px">
+          osi<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/owasp/" class="tag-cloud-item" style="font-size: 12.6px">
+          owasp<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/owasp/" class="tag-cloud-item" style="font-size: 12.6px">
+          OWASP<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pass-the-hash/" class="tag-cloud-item" style="font-size: 12.6px">
+          pass-the-hash<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/password-cracking/" class="tag-cloud-item" style="font-size: 12.6px">
+          password-cracking<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/path-traversal/" class="tag-cloud-item" style="font-size: 12.6px">
+          path-traversal<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pcap/" class="tag-cloud-item" style="font-size: 12.6px">
+          pcap<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/perimeter/" class="tag-cloud-item" style="font-size: 12.6px">
+          perimeter<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/permissions/" class="tag-cloud-item" style="font-size: 12.6px">
+          permissions<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/persistence/" class="tag-cloud-item" style="font-size: 12.6px">
+          persistence<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/php/" class="tag-cloud-item" style="font-size: 12.6px">
+          php<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/physical-security/" class="tag-cloud-item" style="font-size: 12.6px">
+          physical-security<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pivoting/" class="tag-cloud-item" style="font-size: 12.6px">
+          pivoting<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/postgresql/" class="tag-cloud-item" style="font-size: 12.6px">
+          postgresql<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/powershell/" class="tag-cloud-item" style="font-size: 12.6px">
+          powershell<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/prototype-pollution/" class="tag-cloud-item" style="font-size: 12.6px">
+          prototype-pollution<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/proxy/" class="tag-cloud-item" style="font-size: 12.6px">
+          proxy<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pwn/" class="tag-cloud-item" style="font-size: 12.6px">
+          pwn<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pwntools/" class="tag-cloud-item" style="font-size: 12.6px">
+          pwntools<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/pypi/" class="tag-cloud-item" style="font-size: 12.6px">
+          pypi<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ransomware/" class="tag-cloud-item" style="font-size: 12.6px">
+          ransomware<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/rce/" class="tag-cloud-item" style="font-size: 12.6px">
+          rce<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/reconnaissance/" class="tag-cloud-item" style="font-size: 12.6px">
+          reconnaissance<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/redis/" class="tag-cloud-item" style="font-size: 12.6px">
+          redis<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/regex/" class="tag-cloud-item" style="font-size: 12.6px">
+          regex<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/reporting/" class="tag-cloud-item" style="font-size: 12.6px">
+          reporting<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/reverse-engineering/" class="tag-cloud-item" style="font-size: 12.6px">
+          reverse-engineering<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/rfid/" class="tag-cloud-item" style="font-size: 12.6px">
+          rfid<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/rogue-device/" class="tag-cloud-item" style="font-size: 12.6px">
+          rogue-device<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/rop/" class="tag-cloud-item" style="font-size: 12.6px">
+          rop<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/scanning/" class="tag-cloud-item" style="font-size: 12.6px">
+          scanning<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/security/" class="tag-cloud-item" style="font-size: 12.6px">
+          security<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/session-hijacking/" class="tag-cloud-item" style="font-size: 12.6px">
+          session-hijacking<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/shodan/" class="tag-cloud-item" style="font-size: 12.6px">
+          shodan<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/smtp/" class="tag-cloud-item" style="font-size: 12.6px">
+          smtp<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/snmp/" class="tag-cloud-item" style="font-size: 12.6px">
+          snmp<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/social-engineering/" class="tag-cloud-item" style="font-size: 12.6px">
+          social-engineering<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/sqlmap/" class="tag-cloud-item" style="font-size: 12.6px">
+          sqlmap<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/ssh/" class="tag-cloud-item" style="font-size: 12.6px">
+          ssh<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/subnetting/" class="tag-cloud-item" style="font-size: 12.6px">
+          subnetting<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/supply-chain/" class="tag-cloud-item" style="font-size: 12.6px">
+          supply-chain<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/tcp-ip/" class="tag-cloud-item" style="font-size: 12.6px">
+          tcp-ip<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/tradecraft/" class="tag-cloud-item" style="font-size: 12.6px">
+          tradecraft<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/traffic-analysis/" class="tag-cloud-item" style="font-size: 12.6px">
+          traffic analysis<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/tunneling/" class="tag-cloud-item" style="font-size: 12.6px">
+          tunneling<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/veeam/" class="tag-cloud-item" style="font-size: 12.6px">
+          veeam<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/volatility/" class="tag-cloud-item" style="font-size: 12.6px">
+          volatility<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/wazuh/" class="tag-cloud-item" style="font-size: 12.6px">
+          wazuh<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/wireshark/" class="tag-cloud-item" style="font-size: 12.6px">
+          wireshark<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/wordlists/" class="tag-cloud-item" style="font-size: 12.6px">
+          wordlists<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/workflow/" class="tag-cloud-item" style="font-size: 12.6px">
+          workflow<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/writeup/" class="tag-cloud-item" style="font-size: 12.6px">
+          writeup<span class="tag-cloud-count">1</span>
+        </a>
+      
+        <a href="/axiom-blog-site/tagged/x64dbg/" class="tag-cloud-item" style="font-size: 12.6px">
+          x64dbg<span class="tag-cloud-count">1</span>
+        </a>
+      
+    </div>
+  
+</section>
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+</body>
+</html>

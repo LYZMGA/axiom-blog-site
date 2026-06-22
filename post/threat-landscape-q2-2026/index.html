@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Q2 2026 Threat Landscape – Attackers Target Trust Infrastructure — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-news">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-news">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Q2 2026 Threat Landscape – Attackers Target Trust Infrastructure</h1>
+    <div class="post-meta">
+      <time>2026-06-03</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">3 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/news/" class="cat-badge cat-badge-link cat-news">News</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">cve</span>
+          
+            <span class="tag">zero-day</span>
+          
+            <span class="tag">active-exploitation</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">Attackers in Q2 2026 are bypassing endpoints entirely and going straight for identity systems, VPNs, device managers, and security tools. A breakdown of actively exploited CVEs, macro trends, and what defenders should prioritise now.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">The Theme: Hit the Trust Layer, Not the Endpoint</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The defining pattern of Q2 2026 is not novel malware or exotic techniques — it is <strong>target selection</strong>. Threat actors are consistently choosing systems that other systems inherently trust: VPN gateways, identity providers, MDM platforms, collaboration hubs, and the security products meant to detect them.</p>
+<p>Compromise one of these and you do not need a foothold on every workstation. You have the keys to the domain.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Attack Chain Phase</th><th>Preferred Target Class</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Initial Access</td><td>VPN / remote-access gateways</td>
+                </tr>
+              
+                <tr>
+                  <td>Auth Bypass</td><td>Identity providers, SSO, MFA infrastructure</td>
+                </tr>
+              
+                <tr>
+                  <td>Privilege Escalation</td><td>Security products (EDR/AV)</td>
+                </tr>
+              
+                <tr>
+                  <td>Lateral Movement</td><td>Collaboration platforms (SharePoint, Teams)</td>
+                </tr>
+              
+                <tr>
+                  <td>Persistence</td><td>MDM / device management platforms</td>
+                </tr>
+              
+                <tr>
+                  <td>Defense Evasion</td><td>Security controls themselves</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">Actively Exploited CVEs</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The following vulnerabilities have confirmed in-the-wild exploitation as of Q2 2026. Severity scores are listed but should not be the primary driver for prioritisation — <strong>attack chain placement and blast radius matter more</strong>.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">CVE-2026-0257 — Palo Alto GlobalProtect (Critical)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Authentication bypass in the GlobalProtect SSL-VPN portal<br>
+<strong>Exploitation:</strong> Confirmed — weaponised within days of disclosure<br>
+<strong>Attack chain role:</strong> Initial access → direct network entry</p>
+<p>An unauthenticated attacker can bypass the VPN authentication layer entirely, gaining access to the internal network without credentials. Because GlobalProtect is an internet-facing trust boundary, successful exploitation grants the same network position as a legitimate remote employee — before a single endpoint is touched.</p>
+<p><strong>Why it matters:</strong> VPNs sit at the outer trust perimeter. Credential-based controls downstream assume the perimeter held. Once bypassed, SIEM alerts based on "unusual login location" are silent.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Check exposure -- identify GlobalProtect portals in your asset inventory
+nmap -p 443 --script ssl-cert,http-title &lt;target-range&gt; | grep -i &#39;globalprotect\|palo alto&#39;
+
+# Shodan query for exposed instances (for authorised asset discovery)
+# shodan search &#39;http.title:&#34;GlobalProtect&#34; http.component:&#34;Palo Alto&#34;&#39;
+
+# Check installed PAN-OS version via API (with credentials)
+curl -k &#39;https://&lt;firewall&gt;/api/?type=version&#39;
+
+# CISA KEV check -- pull current Known Exploited Vulnerabilities catalogue
+curl -s https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json \
+  | python3 -c &#34;import json,sys; [print(e[&#39;cveID&#39;],e[&#39;vendorProject&#39;]) for e in json.load(sys.stdin)[&#39;vulnerabilities&#39;] if &#39;Palo&#39; in e.get(&#39;vendorProject&#39;,&#39;&#39;)]&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">CVE-2026-32201 — Microsoft SharePoint (High)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Remote code execution via malicious page/web part deserialization<br>
+<strong>Exploitation:</strong> Confirmed — observed in targeted intrusions against enterprise environments<br>
+<strong>Attack chain role:</strong> Initial access → internal reconnaissance → lateral movement</p>
+<p>SharePoint is not just a file server — it is the organisational memory of most enterprises: org charts, project documents, finance workflows, HR records, IT run-books. Exploitation grants an attacker authenticated read/write access to this intelligence before any EDR on a workstation fires.</p>
+<p><strong>Why it matters:</strong> Post-exploitation data harvesting from SharePoint is virtually indistinguishable from legitimate user activity at the network level. Exfiltration blends into normal SharePoint traffic.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Identify exposed SharePoint instances
+nmap -p 443 --script http-title,http-headers &lt;target&gt; | grep -i sharepoint
+
+# Check SharePoint version (on-prem, authenticated)
+curl -s -k &#39;https://&lt;sharepoint&gt;/_vti_pvt/service.cnf&#39; | grep vti_extenderversion
+
+# Hunt for evidence of exploitation in SharePoint ULS logs
+# On SharePoint server:
+Get-SPLogEvent -StartTime (Get-Date).AddDays(-7) | Where-Object {$_.Message -match &#39;deserialization|exception|error&#39;}
+
+# Check for suspicious web parts added recently
+Get-SPWeb -Limit all | Get-SPWebPart | Where-Object {$_.Created -gt (Get-Date).AddDays(-14)}</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">CVE-2026-33825 &amp; CVE-2026-45498 — Microsoft Defender (High)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Two separate vulnerabilities — privilege escalation (33825) and security disruption / tamper protection bypass (45498)<br>
+<strong>Exploitation:</strong> Both confirmed in-the-wild<br>
+<strong>Attack chain role:</strong> Privilege escalation, defense evasion, visibility reduction</p>
+<p>These are chained in observed intrusions: 33825 escalates a low-privilege process to SYSTEM, then 45498 disables Defender's tamper protection and real-time monitoring without triggering standard alerts. The result is a machine that appears protected but is not.</p>
+<p><strong>This is a two-stage blind:</strong> the attacker first gains elevation, then silences the only tool monitoring the escalation.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">powershell</span>
+            
+          </div>
+          <pre><code class="language-powershell"># Check if Defender tamper protection is still enabled
+Get-MpComputerStatus | Select-Object -Property IsTamperProtected, RealTimeProtectionEnabled, AMServiceEnabled
+
+# Check Defender service state and last update
+Get-Service -Name WinDefend | Select-Object Status, StartType
+Get-MpComputerStatus | Select-Object AntivirusSignatureLastUpdated
+
+# Hunt for tamper protection changes in Windows Event Log
+Get-WinEvent -LogName &#39;Microsoft-Windows-Windows Defender/Operational&#39; |
+  Where-Object {$_.Id -in @(5001,5007,5010,5012)} |
+  Select-Object TimeCreated, Id, Message
+
+# Event IDs of interest:
+# 5001 - Real-time protection disabled
+# 5007 - Configuration changed
+# 5010 - Antimalware disabled
+# 5012 - On-access scanning disabled</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">CVE-2026-6973 — Ivanti EPMM (Critical)</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Type:</strong> Unauthenticated remote code execution in Ivanti Endpoint Manager Mobile (formerly MobileIron)<br>
+<strong>Exploitation:</strong> Confirmed — nation-state and ransomware actors both observed<br>
+<strong>Attack chain role:</strong> Enterprise access → device control → policy manipulation</p>
+<p>EPMM manages every enrolled mobile device in an organisation: push configurations, enforce policies, wipe devices, deploy apps, and access corporate email. Exploitation gives an attacker the ability to push malicious configuration profiles to thousands of managed devices silently.</p>
+<p><strong>Why it matters:</strong> A compromised MDM is a force-multiplier. It turns one server breach into fleet-wide compromise of every enrolled phone, tablet, and laptop.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Identify exposed Ivanti EPMM / MobileIron instances
+curl -sk https://&lt;target&gt;/mifs/user/login.jsp -I | grep -i &#39;server\|x-powered-by\|mobileiron&#39;
+
+# Check version from API endpoint (no auth required on unpatched)
+curl -sk &#39;https://&lt;target&gt;/api/v1/metadata/version&#39;
+
+# Shodan dork (authorised recon)
+# shodan search &#39;http.favicon.hash:&lt;ivanti_hash&gt; country:US&#39;
+
+# Check EPMM access logs for exploitation indicators
+# Look for unauthenticated API calls to sensitive endpoints:
+grep -E &#39;POST.*/api/v1/(user|device|config).*401|403&#39; /var/log/mi*.log | tail -50</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">Macro Trends</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>1. Patch-to-Exploit Compression</strong><br>
+The window between public CVE disclosure and mass exploitation is shrinking measurably. Several Q2 2026 CVEs saw weaponised PoCs within 48–72 hours of NVD publication. Patch SLAs of 30 days are no longer adequate for critical internet-facing systems — target 24–48 hours for CVSS ≥9 on perimeter assets.</p>
+<p><strong>2. Security Tools as Attack Surface</strong><br>
+Defender (twice), CrowdStrike, SentinelOne, and Tenable products all had CVEs with confirmed exploitation in the past 12 months. The implicit assumption that security products are hardened and trusted deserves re-examination. Apply vendor patches for security software <em>first</em>, not last.</p>
+<p><strong>3. Identity-First Intrusions</strong><br>
+Malware deployment is frequently the <em>last</em> step, not the first. Observed kill-chains increasingly show: VPN bypass → credential harvest → lateral movement via legitimate auth → data exfil → ransomware only if prior objectives failed. Standard AV/EDR detects none of the first four phases.</p>
+<p><strong>4. AI-Assisted Weaponisation</strong><br>
+PoC-to-production exploit timelines are compressing in part because LLMs lower the barrier to patch diffing and variant generation. Expect this trend to accelerate.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">MITRE ATT&amp;CK Mapping – Q2 2026 Activity</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Observed techniques mapped to ATT&amp;CK for the CVEs above:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Technique</th><th>ID</th><th>CVE Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Exploit Public-Facing Application</td><td>T1190</td><td>CVE-2026-0257, CVE-2026-6973, CVE-2026-32201</td>
+                </tr>
+              
+                <tr>
+                  <td>Valid Accounts (Domain Accounts)</td><td>T1078.002</td><td>All — post-auth-bypass</td>
+                </tr>
+              
+                <tr>
+                  <td>Impair Defenses: Disable or Modify Tools</td><td>T1562.001</td><td>CVE-2026-45498</td>
+                </tr>
+              
+                <tr>
+                  <td>Abuse Elevation Control Mechanism</td><td>T1548</td><td>CVE-2026-33825</td>
+                </tr>
+              
+                <tr>
+                  <td>Remote Services: SMB/Windows Admin Shares</td><td>T1021.002</td><td>Post-SharePoint lateral movement</td>
+                </tr>
+              
+                <tr>
+                  <td>Data from Information Repositories</td><td>T1213</td><td>SharePoint document exfil</td>
+                </tr>
+              
+                <tr>
+                  <td>Mobile Device Management Compromise</td><td>T1634</td><td>CVE-2026-6973</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Query ATT&amp;CK STIX data for a technique (requires mitreattack-python)
+pip3 install mitreattack-python -q
+python3 - &lt;&lt;&#39;EOF&#39;
+from mitreattack.stix20 import MitreAttackData
+ma = MitreAttackData(&#34;enterprise-attack.json&#34;)  # download from github.com/mitre/cti
+techs = ma.get_techniques_used_by_group_with_id(&#34;G0096&#34;)  # APT41 as example
+for t in techs[:5]:
+    print(t[&#39;technique&#39;].name, t[&#39;technique&#39;].external_id)
+EOF
+
+# Alternatively: use the ATT&amp;CK Navigator JSON layers for visualisation
+# https://mitre-attack.github.io/attack-navigator/</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Defender Priorities</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Based on Q2 2026 exploitation patterns, the highest-impact defensive actions in order:</p>
+<ol>
+<li><strong>Patch internet-facing auth/VPN first</strong> — GlobalProtect, Pulse, Fortinet, Cisco AnyConnect. These are where intrusions start. 24-hour patch SLA.</li>
+<li><strong>Audit MDM platform access</strong> — Who can call the Ivanti/JAMF/Intune API? Enable MFA on admin consoles. Log all device config push events.</li>
+<li><strong>Monitor security tool health</strong> — Alert on Defender tamper protection changes. Verify EDR agent status from the management console, not from the endpoint itself.</li>
+<li><strong>SharePoint anomaly detection</strong> — Baseline normal access patterns; alert on bulk document downloads, off-hours access, and new web part deployments.</li>
+<li><strong>Credential hygiene</strong> — Identity-first intrusions succeed because credentials are reused or weakly protected. Enforce phishing-resistant MFA (FIDO2/passkeys) on all admin accounts.</li>
+<li><strong>Threat hunt retroactively</strong> — Search logs for known C2 IPs/domains from the past 90 days. Attackers may have been present long before detection.</li>
+</ol></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">Red Team / Research Perspective</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            
+          </div>
+          <pre><code class="language-bash"># Check your own perimeter exposure (authorised recon)
+# Find internet-facing VPN/auth portals in your IP space
+nmap -p 443,4443,8443,10443 --open --script http-title &lt;your-ranges&gt; \
+  | grep -iE &#39;vpn|globalprotect|pulse|fortinet|anyconnect|ivanti|mobileiron&#39;
+
+# Enumerate SharePoint version on an authorised target
+curl -sk &#39;https://&lt;sharepoint&gt;/_layouts/15/start.aspx&#39; -I
+curl -sk &#39;https://&lt;sharepoint&gt;/_vti_bin/shtml.exe/test.htm&#39; | grep &#39;vti&#39;
+
+# Check if a CVE-2026-0257 patch was applied (example version check)
+curl -sk &#39;https://&lt;gp-portal&gt;/global-protect/login.esp&#39; \
+  | grep -i &#39;version\|pan-os&#39;
+
+# Validate MDM exposure
+curl -sk &#39;https://&lt;epmm&gt;/api/v1/metadata&#39; | python3 -m json.tool
+
+# CVE PoC search (for research/lab environments only)
+searchsploit &#39;sharepoint 2026&#39;
+searchsploit &#39;palo alto globalprotect&#39;
+git clone https://github.com/trickest/cve 2&gt;/dev/null; grep -r &#39;CVE-2026&#39; cve/ 2&gt;/dev/null | head</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-note-block note-danger">
+          
+            <div class="note-label">
+              
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>
+              
+              <span>Key Takeaways:</span>
+            </div>
+          
+          <div class="note-body"><ul>
+<li>The biggest Q2 2026 risk is not malware — it is attackers moving through your network using <strong>legitimate trust mechanisms</strong> after bypassing the perimeter</li>
+<li>CVSS scores alone do not reflect operational risk; <strong>attack chain placement</strong> (initial access vs. post-exploitation) changes everything</li>
+<li>If you can only do one thing: <strong>pull the CISA KEV feed weekly</strong> and treat every entry as actively exploited against something you own</li>
+</ul>
+<p><strong>Vendor Advisories:</strong><br>
+- Palo Alto PSIRT: <code>security.paloaltonetworks.com</code><br>
+- Microsoft MSRC: <code>msrc.microsoft.com</code><br>
+- Ivanti Security: <code>forums.ivanti.com/s/topic/0TO4400000009CTGAY</code><br>
+- NVD: <code>nvd.nist.gov</code></p></div>
+        </div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/threat-landscape-q1-2026" class="post-card post-card-related card-cat-news">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-news">News</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Q1 2026 Threat Landscape – Zero-Days, MDM Campaigns &amp; AD Privilege Paths</h2>
+          <div class="post-card-meta"><time>2026-06-03</time></div>
+          <p class="post-card-summary">Q1 2026 brought a wave of pre-authentication zero-days exploited before public disclosure, paired MDM campaigns against Ivanti EPMM, a critical Citrix NetScaler auth bypass, a Netlogon privilege path to domain control, and a public Linux kernel LPE. None of these overlap with the Q2 post.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/ransomware-backup-infrastructure-2026" class="post-card post-card-related card-cat-news">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-news">News</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Ransomware Affiliates Are Hunting Your Backups First — The Veeam RCE Chain</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">Two critical Veeam Backup &amp; Replication CVEs (CVSS 9.4 and 9.9) let an attacker pivot from a single domain account to wiping the restore path entirely. Why backup infrastructure has become the first target in the modern ransomware kill chain, not the last.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/edge-infrastructure-perimeter-exploitation-2026" class="post-card post-card-related card-cat-news">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-news">News</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">The Edge Is the New Endpoint — Cisco SD-WAN, cPanel, and the EDR Vacuum</h2>
+          <div class="post-card-meta"><time>2026-06-17</time></div>
+          <p class="post-card-summary">Microsoft had a historically quiet May 2026 for zero-days. Edge devices didn&#39;t: a Cisco Catalyst SD-WAN Controller flaw and a chained cPanel &amp; WHM authentication bypass gave attackers root on infrastructure that simply doesn&#39;t run EDR. Two months of active, undetected exploitation before a patch existed.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>

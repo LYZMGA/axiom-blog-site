@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="view-transition" content="same-origin">
+  <title>Networking &amp; Subnetting — The Complete Foundation — Axiom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="/axiom-blog-site/static/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/style.css?v=37">
+  <link rel="stylesheet" href="/axiom-blog-site/cats.css">
+  <link rel="stylesheet" href="/axiom-blog-site/static/css/hljs.min.css?v=2">
+  <link rel="alternate" type="application/atom+xml" title="Axiom" href="/axiom-blog-site/feed.xml">
+  
+  
+  <script type="application/json" id="crypto-config">{"iterations": 200000, "salt": "Hs5vGSmGG9SrSvdivb1KMQ==", "validator": {"ciphertext": "qc5l/aTsWWRNo4f5E4/mEvP5on0aI+iozmsqvajrAwNS", "iv": "HdtYEOAFH1dyaFcb"}}</script>
+
+</head>
+<body class="cat-context-learn">
+  <header class="site-header">
+    <div class="container">
+      <a href="/axiom-blog-site/" class="site-brand">
+        <span class="brand-name">Axiom</span>
+      </a>
+      <nav class="site-nav">
+        
+  <a href="/axiom-blog-site/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    All posts
+  </a>
+
+        <button class="search-trigger" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="search-trigger" id="searchTrigger" aria-label="Search posts" title="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" id="searchInput"
+               type="search"
+               placeholder="Search titles, tags, content…"
+               autocomplete="off"
+               spellcheck="false"
+               maxlength="100"
+               aria-label="Search posts">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop" id="shortcutsModalBackdrop" hidden>
+    <div class="modal" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h2>
+          <p class="modal-subtitle">Navigate this site faster.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="shortcuts-list">
+          <div class="shortcuts-row">
+            <span>Open search</span>
+            <span class="shortcuts-keys"><span class="key">/</span><span class="key">s</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Close dialog</span>
+            <span class="shortcuts-keys"><span class="key">Esc</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Go home</span>
+            <span class="shortcuts-keys"><span class="key">g</span><span class="key">h</span></span>
+          </div>
+          <div class="shortcuts-row">
+            <span>Show this help</span>
+            <span class="shortcuts-keys"><span class="key">?</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="shortcutsClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="site-main">
+    <div class="container">
+      
+
+<div id="readingProgress" hidden></div>
+
+<article class="post-article has-toc cat-context-learn">
+
+  <div class="post-main">
+
+  <header class="post-header">
+    <h1 class="post-title">Networking &amp; Subnetting — The Complete Foundation</h1>
+    <div class="post-meta">
+      <time>2026-06-04</time>
+      
+        <span class="meta-sep">·</span>
+        <span class="reading-time">9 min read</span>
+      
+      
+        <span class="meta-sep">·</span>
+        <a href="/axiom-blog-site/cat/learn/" class="cat-badge cat-badge-link cat-learn">Learn</a>
+      
+      
+        <span class="meta-sep">·</span>
+        <span class="tag-list">
+          
+            <span class="tag">networking</span>
+          
+            <span class="tag">subnetting</span>
+          
+            <span class="tag">tcp-ip</span>
+          
+            <span class="tag">osi</span>
+          
+            <span class="tag">red-team</span>
+          
+            <span class="tag">fundamentals</span>
+          
+        </span>
+      
+    </div>
+    
+      <p class="post-summary">OSI model, TCP/IP stack, IPv4 addressing, CIDR subnetting, protocols, ARP, routing, NAT, VLANs, and a red team lens on every layer.</p>
+    
+  </header>
+
+  
+  
+
+
+  <div class="post-body">
+    
+
+      
+        <div class="block text-block"><p>Networking is the invisible foundation underneath every engagement, CTF, and piece of infrastructure. You cannot do meaningful reconnaissance, exploitation, or lateral movement without understanding how data actually travels between machines.</p>
+<p>This guide builds from zero — OSI layers, IP addresses, subnets — up through the concepts that directly matter in practice: reading a CIDR range, understanding a TCP handshake, spotting a misconfigured network. Red team notes are woven throughout, not bolted on at the end.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">01</span>
+            <span class="heading-text">The OSI Model</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <strong>OSI (Open Systems Interconnection)</strong> model is a conceptual framework that divides network communication into seven layers. Every real protocol lives at one or more of these layers, and understanding the stack is essential for knowing <em>where</em> something can go wrong — or be attacked.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Layer</th><th>Name</th><th>What it does</th><th>Examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>7</td><td>**Application**</td><td>User-facing protocols, data formats</td><td>HTTP, DNS, FTP, SMTP, SSH</td>
+                </tr>
+              
+                <tr>
+                  <td>6</td><td>**Presentation**</td><td>Encoding, encryption, compression</td><td>TLS/SSL, JPEG, ASCII</td>
+                </tr>
+              
+                <tr>
+                  <td>5</td><td>**Session**</td><td>Managing sessions between hosts</td><td>SMB sessions, NetBIOS, RPC</td>
+                </tr>
+              
+                <tr>
+                  <td>4</td><td>**Transport**</td><td>End-to-end delivery, ports</td><td>TCP, UDP</td>
+                </tr>
+              
+                <tr>
+                  <td>3</td><td>**Network**</td><td>Logical addressing and routing</td><td>IP, ICMP, ARP</td>
+                </tr>
+              
+                <tr>
+                  <td>2</td><td>**Data Link**</td><td>Physical addressing on a local segment</td><td>Ethernet, MAC addresses, VLANs</td>
+                </tr>
+              
+                <tr>
+                  <td>1</td><td>**Physical**</td><td>Raw bits over a medium</td><td>Cables, radio, fiber</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Mnemonic:</strong> <em>Please Do Not Throw Sausage Pizza Away</em> (layers 1→7).</p>
+<p><strong>Why it matters for attackers:</strong><br>
+- Layer 2 attacks: ARP poisoning, MAC flooding, VLAN hopping<br>
+- Layer 3 attacks: IP spoofing, ICMP redirects, route injection<br>
+- Layer 4 attacks: TCP SYN floods, port scanning, session hijacking<br>
+- Layer 7 attacks: SQLi, XSS, SSRF, every web vulnerability you know</p>
+<p>When you run <code>nmap</code>, you're operating at layers 3–4. When you intercept with Burp Suite, you're at layer 7. Knowing which layer you're touching changes what tools you use and what defenses exist.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">02</span>
+            <span class="heading-text">The TCP/IP Model</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>The <strong>TCP/IP model</strong> (also called the Internet model) is the practical implementation — four layers that map to the OSI seven. This is what real operating systems implement.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>TCP/IP Layer</th><th>Maps to OSI</th><th>Protocols</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**Application**</td><td>5, 6, 7</td><td>HTTP, HTTPS, DNS, FTP, SSH, SMTP, SNMP</td>
+                </tr>
+              
+                <tr>
+                  <td>**Transport**</td><td>4</td><td>TCP, UDP</td>
+                </tr>
+              
+                <tr>
+                  <td>**Internet**</td><td>3</td><td>IP, ICMP, ARP</td>
+                </tr>
+              
+                <tr>
+                  <td>**Network Access**</td><td>1, 2</td><td>Ethernet, Wi-Fi, PPP</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Data travels <em>down</em> the stack on the sender (encapsulation) and <em>up</em> on the receiver (decapsulation). Each layer wraps the data from the layer above with its own header:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Application data
+  → [TCP header] + data          (segment)
+  → [IP header] + segment         (packet)
+  → [Ethernet header] + packet    (frame)
+  → bits on the wire</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>This is called <strong>encapsulation</strong>. When you capture with Wireshark you're reading these headers at every layer simultaneously.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">03</span>
+            <span class="heading-text">IPv4 Addressing</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every device on a network needs a unique logical address — the <strong>IP address</strong>. IPv4 uses 32 bits, written as four octets (groups of 8 bits) in dotted decimal.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">192.168.1.100
+│   │   │ │
+│   │   │ └─ 4th octet  (0–255)
+│   │   └─── 3rd octet  (0–255)
+│   └─────── 2nd octet  (0–255)
+└─────────── 1st octet  (0–255)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>In binary:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">192     .168     .1       .100
+11000000.10101000.00000001.01100100</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every IPv4 address has two parts: the <strong>network portion</strong> and the <strong>host portion</strong>. The subnet mask defines where the split is.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Address Classes (historical, mostly replaced by CIDR)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Class</th><th>Range</th><th>Default Mask</th><th>Usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>A</td><td>1.0.0.0 – 126.255.255.255</td><td>/8</td><td>Large networks</td>
+                </tr>
+              
+                <tr>
+                  <td>B</td><td>128.0.0.0 – 191.255.255.255</td><td>/16</td><td>Medium networks</td>
+                </tr>
+              
+                <tr>
+                  <td>C</td><td>192.0.0.0 – 223.255.255.255</td><td>/24</td><td>Small networks</td>
+                </tr>
+              
+                <tr>
+                  <td>D</td><td>224.0.0.0 – 239.255.255.255</td><td>—</td><td>Multicast</td>
+                </tr>
+              
+                <tr>
+                  <td>E</td><td>240.0.0.0 – 255.255.255.255</td><td>—</td><td>Reserved/Experimental</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Private (RFC 1918) Ranges</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>These are non-routable on the public internet — you'll see them constantly on internal networks and in CTFs:</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Range</th><th>CIDR</th><th>Typical use</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>10.0.0.0 – 10.255.255.255</td><td>10.0.0.0/8</td><td>Large internal networks, VPNs</td>
+                </tr>
+              
+                <tr>
+                  <td>172.16.0.0 – 172.31.255.255</td><td>172.16.0.0/12</td><td>Docker, VMs, corporate</td>
+                </tr>
+              
+                <tr>
+                  <td>192.168.0.0 – 192.168.255.255</td><td>192.168.0.0/16</td><td>Home/small office networks</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Special addresses:</strong><br>
+- <code>127.0.0.1</code> — loopback (localhost)<br>
+- <code>169.254.x.x</code> — APIPA (link-local, no DHCP response)<br>
+- <code>0.0.0.0</code> — unspecified / wildcard listener<br>
+- <code>255.255.255.255</code> — limited broadcast</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">04</span>
+            <span class="heading-text">Subnet Masks &amp; CIDR Notation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A <strong>subnet mask</strong> is a 32-bit number where all network bits are <code>1</code> and all host bits are <code>0</code>. It tells you which part of an IP address is the network address.</p>
+<p><strong>CIDR (Classless Inter-Domain Routing)</strong> notation writes the mask as a prefix length — the count of leading 1 bits.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>CIDR</th><th>Subnet Mask</th><th>Binary</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>/8</td><td>255.0.0.0</td><td>11111111.00000000.00000000.00000000</td>
+                </tr>
+              
+                <tr>
+                  <td>/16</td><td>255.255.0.0</td><td>11111111.11111111.00000000.00000000</td>
+                </tr>
+              
+                <tr>
+                  <td>/24</td><td>255.255.255.0</td><td>11111111.11111111.11111111.00000000</td>
+                </tr>
+              
+                <tr>
+                  <td>/25</td><td>255.255.255.128</td><td>11111111.11111111.11111111.10000000</td>
+                </tr>
+              
+                <tr>
+                  <td>/26</td><td>255.255.255.192</td><td>11111111.11111111.11111111.11000000</td>
+                </tr>
+              
+                <tr>
+                  <td>/27</td><td>255.255.255.224</td><td>11111111.11111111.11111111.11100000</td>
+                </tr>
+              
+                <tr>
+                  <td>/28</td><td>255.255.255.240</td><td>11111111.11111111.11111111.11110000</td>
+                </tr>
+              
+                <tr>
+                  <td>/29</td><td>255.255.255.248</td><td>11111111.11111111.11111111.11111000</td>
+                </tr>
+              
+                <tr>
+                  <td>/30</td><td>255.255.255.252</td><td>11111111.11111111.11111111.11111100</td>
+                </tr>
+              
+                <tr>
+                  <td>/32</td><td>255.255.255.255</td><td>11111111.11111111.11111111.11111111</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><code>/30</code> is common for point-to-point links (2 usable hosts). <code>/32</code> means a single host — you'll see this in routing tables and firewall rules.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">05</span>
+            <span class="heading-text">Subnet Math — Step by Step</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Given <code>192.168.10.75/26</code>, find the network address, broadcast, usable range, and number of hosts.</p>
+<p><strong>Step 1 — Find the block size</strong><br>
+The last octet mask bits: <code>/26</code> means 26 bits total, the last octet contributes <code>26 - 24 = 2</code> bits. So the mask in the last octet is <code>11000000</code> = <strong>192</strong>. Block size = <code>256 - 192 = 64</code>.</p>
+<p><strong>Step 2 — Find the network address</strong><br>
+Divide the host octet (75) by the block size (64): <code>75 / 64 = 1</code> remainder 11. The network starts at <code>1 × 64 = 64</code>.<br>
+→ Network: <code>192.168.10.64</code></p>
+<p><strong>Step 3 — Broadcast address</strong><br>
+Network address + block size - 1: <code>64 + 64 - 1 = 127</code><br>
+→ Broadcast: <code>192.168.10.127</code></p>
+<p><strong>Step 4 — Usable host range</strong><br>
+First usable: network + 1 → <code>192.168.10.65</code><br>
+Last usable: broadcast - 1 → <code>192.168.10.126</code></p>
+<p><strong>Step 5 — Number of hosts</strong><br>
+Host bits = <code>32 - 26 = 6</code>. Hosts = <code>2^6 - 2 = 62</code> usable.</p>
+<p><strong>Summary for .75/26:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th></th><th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Network</td><td>192.168.10.64</td>
+                </tr>
+              
+                <tr>
+                  <td>Broadcast</td><td>192.168.10.127</td>
+                </tr>
+              
+                <tr>
+                  <td>First host</td><td>192.168.10.65</td>
+                </tr>
+              
+                <tr>
+                  <td>Last host</td><td>192.168.10.126</td>
+                </tr>
+              
+                <tr>
+                  <td>Usable hosts</td><td>62</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">Quick Reference: Hosts per prefix</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>CIDR</th><th>Host bits</th><th>Usable hosts</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>/24</td><td>8</td><td>254</td>
+                </tr>
+              
+                <tr>
+                  <td>/25</td><td>7</td><td>126</td>
+                </tr>
+              
+                <tr>
+                  <td>/26</td><td>6</td><td>62</td>
+                </tr>
+              
+                <tr>
+                  <td>/27</td><td>5</td><td>30</td>
+                </tr>
+              
+                <tr>
+                  <td>/28</td><td>4</td><td>14</td>
+                </tr>
+              
+                <tr>
+                  <td>/29</td><td>3</td><td>6</td>
+                </tr>
+              
+                <tr>
+                  <td>/30</td><td>2</td><td>2</td>
+                </tr>
+              
+                <tr>
+                  <td>/32</td><td>0</td><td>1 (host route)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Subnet calculation tools</span>
+          </div>
+          <pre><code class="language-bash"># ipcalc — fast subnet breakdown
+ipcalc 192.168.10.75/26
+ipcalc 10.0.0.0/8
+
+# sipcalc — detailed info
+sipcalc 172.16.0.0/12
+
+# Python one-liner
+python3 -c &#34;import ipaddress; n=ipaddress.ip_network(&#39;192.168.10.64/26&#39;,strict=False); print(n.network_address, n.broadcast_address, list(n.hosts())[0], list(n.hosts())[-1], n.num_addresses-2)&#34;
+
+# Python — iterate all subnets in a block
+python3 -c &#34;
+import ipaddress
+net = ipaddress.ip_network(&#39;10.0.0.0/16&#39;)
+for sub in net.subnets(new_prefix=24):
+    print(sub)
+&#34;
+
+# Check if an IP is in a subnet
+python3 -c &#34;import ipaddress; print(ipaddress.ip_address(&#39;10.10.10.50&#39;) in ipaddress.ip_network(&#39;10.10.10.0/24&#39;))&#34;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">06</span>
+            <span class="heading-text">TCP — Transmission Control Protocol</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>TCP</strong> is connection-oriented, reliable, and ordered. It guarantees that data arrives in the right order and retransmits lost segments. Used by HTTP, HTTPS, SSH, FTP, SMTP — anything where reliability matters.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">The Three-Way Handshake</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Before any data is exchanged, TCP establishes a connection:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Client                          Server
+  │──── SYN (seq=x) ──────────────▶│   &#34;I want to connect&#34;
+  │◀─── SYN-ACK (seq=y, ack=x+1) ─│   &#34;OK, and I&#39;m ready&#34;
+  │──── ACK (ack=y+1) ────────────▶│   &#34;Acknowledged&#34;
+  │                                 │
+  │══════ data flows both ways ═════│</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">TCP Flags</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Flag</th><th>Meaning</th><th>Attacker use</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>**SYN**</td><td>Synchronize / initiate</td><td>Port scanning, SYN flood DoS</td>
+                </tr>
+              
+                <tr>
+                  <td>**ACK**</td><td>Acknowledge received data</td><td>ACK scan (pass stateless firewalls)</td>
+                </tr>
+              
+                <tr>
+                  <td>**FIN**</td><td>Finish, close connection gracefully</td><td>FIN scan, evasion</td>
+                </tr>
+              
+                <tr>
+                  <td>**RST**</td><td>Reset, abort connection</td><td>RST injection, TCP hijack detection</td>
+                </tr>
+              
+                <tr>
+                  <td>**PSH**</td><td>Push data immediately to application</td><td>—</td>
+                </tr>
+              
+                <tr>
+                  <td>**URG**</td><td>Urgent pointer is valid</td><td>Rarely used</td>
+                </tr>
+              
+                <tr>
+                  <td>**NULL**</td><td>No flags set</td><td>NULL scan (RFC 793 evasion)</td>
+                </tr>
+              
+                <tr>
+                  <td>**XMAS**</td><td>FIN+PSH+URG set</td><td>XMAS scan (RFC 793 evasion)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">TCP Connection Teardown</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Client                          Server
+  │──── FIN ──────────────────────▶│
+  │◀─── ACK ───────────────────────│
+  │◀─── FIN ───────────────────────│
+  │──── ACK ──────────────────────▶│</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>RST</strong> immediately terminates without the four-way close. Firewalls inject RSTs to kill disallowed connections. Nmap uses RST responses to detect closed ports.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">07</span>
+            <span class="heading-text">UDP — User Datagram Protocol</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>UDP</strong> is connectionless and unreliable — fire and forget. No handshake, no retransmit, no ordering guarantee. Much faster overhead than TCP. Used by DNS (port 53), DHCP (67/68), SNMP (161), NTP (123), and any application that tolerates loss (video streams, VoIP, games).</p>
+<p><strong>From an attacker perspective:</strong><br>
+- UDP services are slower to scan (no RST on closed ports — just ICMP unreachable or silence)<br>
+- UDP often has less visibility in logs<br>
+- SNMP on UDP 161 is frequently misconfigured with default community strings (<code>public</code>, <code>private</code>)<br>
+- DNS on UDP 53 can be abused for amplification DDoS and tunneling<br>
+- TFTP (UDP 69) sometimes left open on network devices — no authentication</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">08</span>
+            <span class="heading-text">ICMP — Internet Control Message Protocol</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>ICMP</strong> is the network's diagnostic protocol — it carries error messages and operational information. It has no ports; it uses type and code numbers instead.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Type</th><th>Meaning</th><th>Common use</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>0</td><td>Echo Reply</td><td>ping response</td>
+                </tr>
+              
+                <tr>
+                  <td>3</td><td>Destination Unreachable</td><td>port/host not reachable</td>
+                </tr>
+              
+                <tr>
+                  <td>8</td><td>Echo Request</td><td>ping</td>
+                </tr>
+              
+                <tr>
+                  <td>11</td><td>Time Exceeded</td><td>TTL expired — used by `traceroute`</td>
+                </tr>
+              
+                <tr>
+                  <td>5</td><td>Redirect</td><td>Routing redirect (can be abused)</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Red team uses of ICMP:</strong><br>
+- <code>ping</code> for host discovery when TCP/UDP is filtered<br>
+- <code>traceroute</code> / <code>tracert</code> maps network hops to reveal routers and segmentation<br>
+- ICMP tunneling (<code>ptunnel</code>, <code>icmptunnel</code>) — exfiltrate data or C2 through firewalls that allow ICMP<br>
+- ICMP type 3 code 3 (port unreachable) confirms a host is up but port is closed</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">ICMP / ping / traceroute</span>
+          </div>
+          <pre><code class="language-bash"># Basic ping
+ping -c 4 10.10.10.1
+
+# Ping sweep a /24 (bash)
+for i in $(seq 1 254); do
+  ping -c1 -W1 192.168.1.$i &amp;&gt;/dev/null &amp;&amp; echo &#34;192.168.1.$i UP&#34; &amp;
+done; wait
+
+# fping — fast concurrent ping sweep
+fping -ag 10.10.10.0/24 2&gt;/dev/null
+
+# Traceroute (Linux)
+traceroute 8.8.8.8
+traceroute -T -p 80 8.8.8.8   # TCP SYN traceroute (bypasses ICMP blocks)
+
+# MTR — live traceroute
+mtr --report 8.8.8.8
+
+# ICMP tunnel (data exfiltration channel)
+# Server side
+ptunnel-ng -v 5
+# Client side
+ptunnel-ng -p &lt;server_ip&gt; -lp 8080 -da &lt;destination&gt; -dp 22</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">09</span>
+            <span class="heading-text">Common Ports — Cheat Sheet</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Memorise these. You will see them every single engagement.</p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Port</th><th>Protocol</th><th>Service</th><th>Red team notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>21</td><td>TCP</td><td>FTP</td><td>Anon login, clear-text creds, bounce attacks</td>
+                </tr>
+              
+                <tr>
+                  <td>22</td><td>TCP</td><td>SSH</td><td>Brute force, key reuse, old versions (CVEs)</td>
+                </tr>
+              
+                <tr>
+                  <td>23</td><td>TCP</td><td>Telnet</td><td>Clear-text, almost always a finding</td>
+                </tr>
+              
+                <tr>
+                  <td>25</td><td>TCP</td><td>SMTP</td><td>Open relay, user enumeration (VRFY/EXPN)</td>
+                </tr>
+              
+                <tr>
+                  <td>53</td><td>TCP/UDP</td><td>DNS</td><td>Zone transfer, subdomain enum, tunneling</td>
+                </tr>
+              
+                <tr>
+                  <td>67/68</td><td>UDP</td><td>DHCP</td><td>Rogue DHCP, starvation</td>
+                </tr>
+              
+                <tr>
+                  <td>80</td><td>TCP</td><td>HTTP</td><td>Everything web</td>
+                </tr>
+              
+                <tr>
+                  <td>110</td><td>TCP</td><td>POP3</td><td>Clear-text email</td>
+                </tr>
+              
+                <tr>
+                  <td>111</td><td>TCP</td><td>RPCbind</td><td>NFS enumeration pivot</td>
+                </tr>
+              
+                <tr>
+                  <td>135</td><td>TCP</td><td>MSRPC</td><td>Windows RPC, DCE/RPC enumeration</td>
+                </tr>
+              
+                <tr>
+                  <td>139</td><td>TCP</td><td>NetBIOS</td><td>SMB over NetBIOS, legacy Windows</td>
+                </tr>
+              
+                <tr>
+                  <td>143</td><td>TCP</td><td>IMAP</td><td>Clear-text email</td>
+                </tr>
+              
+                <tr>
+                  <td>161/162</td><td>UDP</td><td>SNMP</td><td>Default community strings, device configs</td>
+                </tr>
+              
+                <tr>
+                  <td>389</td><td>TCP</td><td>LDAP</td><td>AD enumeration, anonymous bind</td>
+                </tr>
+              
+                <tr>
+                  <td>443</td><td>TCP</td><td>HTTPS</td><td>Web + TLS — check cert for hostnames</td>
+                </tr>
+              
+                <tr>
+                  <td>445</td><td>TCP</td><td>SMB</td><td>EternalBlue, pass-the-hash, relay attacks</td>
+                </tr>
+              
+                <tr>
+                  <td>512/513/514</td><td>TCP</td><td>r-services</td><td>rexec/rlogin/rsh — trust-based, no auth</td>
+                </tr>
+              
+                <tr>
+                  <td>873</td><td>TCP</td><td>rsync</td><td>Unauth file read/write</td>
+                </tr>
+              
+                <tr>
+                  <td>1433</td><td>TCP</td><td>MSSQL</td><td>xp_cmdshell, linked servers</td>
+                </tr>
+              
+                <tr>
+                  <td>1521</td><td>TCP</td><td>Oracle DB</td><td>SID brute force, TNS poison</td>
+                </tr>
+              
+                <tr>
+                  <td>2049</td><td>TCP</td><td>NFS</td><td>World-readable exports, UID spoofing</td>
+                </tr>
+              
+                <tr>
+                  <td>3306</td><td>TCP</td><td>MySQL</td><td>Weak creds, UDF privilege escalation</td>
+                </tr>
+              
+                <tr>
+                  <td>3389</td><td>TCP</td><td>RDP</td><td>BlueKeep, brute force, NLA bypass</td>
+                </tr>
+              
+                <tr>
+                  <td>4444</td><td>TCP</td><td>—</td><td>Common Metasploit reverse shell port</td>
+                </tr>
+              
+                <tr>
+                  <td>5985/5986</td><td>TCP</td><td>WinRM</td><td>Remote PS, lateral movement</td>
+                </tr>
+              
+                <tr>
+                  <td>6379</td><td>TCP</td><td>Redis</td><td>Unauth, RCE via config write</td>
+                </tr>
+              
+                <tr>
+                  <td>8080/8443</td><td>TCP</td><td>HTTP-alt</td><td>Dev servers, admin panels, Tomcat</td>
+                </tr>
+              
+                <tr>
+                  <td>27017</td><td>TCP</td><td>MongoDB</td><td>Unauth access, no-auth default</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">10</span>
+            <span class="heading-text">ARP — Address Resolution Protocol</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>When a device knows the <strong>IP address</strong> of the next hop but needs the <strong>MAC address</strong> to actually send a frame on Ethernet, it uses <strong>ARP</strong>.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Host A wants to reach 192.168.1.5
+
+A → (broadcast) &#34;Who has 192.168.1.5? Tell 192.168.1.1&#34;
+B ← (unicast)   &#34;192.168.1.5 is at aa:bb:cc:dd:ee:ff&#34;
+
+A caches: 192.168.1.5 → aa:bb:cc:dd:ee:ff  (ARP table / ARP cache)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>ARP has <strong>no authentication</strong>. Any host can reply to any ARP request — or send <strong>gratuitous ARPs</strong> unprompted to overwrite entries.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">ARP Poisoning (ARP Spoofing)</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Send forged ARP replies to two targets, telling each that <em>you</em> are the other:</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Attacker tells Victim:  &#34;The gateway (192.168.1.1) is at MY MAC&#34;
+Attacker tells Gateway: &#34;Victim (192.168.1.100) is at MY MAC&#34;
+
+Result: all traffic routes through attacker → Man-in-the-Middle</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Tools: <strong>arpspoof</strong> (dsniff), <strong>Ettercap</strong>, <strong>Bettercap</strong>, <strong>scapy</strong>.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">ARP enumeration and attack</span>
+          </div>
+          <pre><code class="language-bash"># View your ARP cache
+arp -n
+ip neigh
+
+# ARP scan — discover hosts on local segment (faster than ping sweep)
+arp-scan --localnet
+arp-scan 192.168.1.0/24 -I eth0
+
+# Nmap ARP discovery (requires root)
+nmap -sn 192.168.1.0/24 --send-ip
+
+# ARP poisoning with arpspoof (enable IP forwarding first!)
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+arpspoof -i eth0 -t 192.168.1.100 192.168.1.1   # tell victim attacker = gateway
+arpspoof -i eth0 -t 192.168.1.1 192.168.1.100   # tell gateway attacker = victim
+
+# Bettercap — ARP spoof + sniff
+bettercap -iface eth0
+# In bettercap:
+# net.probe on
+# set arp.spoof.targets 192.168.1.100
+# arp.spoof on
+# net.sniff on</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">11</span>
+            <span class="heading-text">Routing &amp; the Default Gateway</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>A <strong>router</strong> connects networks. When a packet's destination is outside the local subnet, the sender forwards it to the <strong>default gateway</strong> — the router's IP on the local segment.</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">How a host decides where to send a packet</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><ol>
+<li>Is the destination in the same subnet? → Send directly (ARP for MAC, then Ethernet frame)</li>
+<li>Not in the same subnet? → Send to default gateway (router handles it from there)</li>
+</ol></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">The Routing Table</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Every device (host or router) has a routing table. Routers match the most specific (longest prefix) route.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Destination      Gateway       Mask        Interface
+0.0.0.0          192.168.1.1   0.0.0.0     eth0     ← default route
+192.168.1.0      0.0.0.0       /24         eth0     ← local subnet (direct)
+10.0.0.0         192.168.1.254 /8          eth0     ← static route to 10.x.x.x</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Routing table commands</span>
+          </div>
+          <pre><code class="language-bash"># Linux — view routing table
+ip route show
+route -n
+
+# Windows
+route print
+ipconfig /all         # includes default gateway
+
+# Add a static route (Linux)
+ip route add 10.10.0.0/16 via 192.168.1.254 dev eth0
+
+# Add a static route (Windows)
+route add 10.10.0.0 mask 255.255.0.0 192.168.1.254
+
+# Trace the path a packet takes
+traceroute 8.8.8.8
+
+# Red team: read routes on a compromised host to map internal segments
+# Found 10.0.0.0/8 via a pivot? That&#39;s your lateral movement target</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">12</span>
+            <span class="heading-text">NAT — Network Address Translation</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>NAT</strong> allows many devices with private (RFC 1918) addresses to share a single public IP. The router rewrites source IPs and tracks state in a NAT table.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Internal:  192.168.1.50:4231  ──→  NAT router  ──→  Public: 203.0.113.1:4231
+                                    (rewrites src IP)
+Response:  203.0.113.1:4231  ──→  NAT router  ──→  192.168.1.50:4231
+                                    (looks up state, rewrites dst)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Types of NAT:</strong><br>
+- <strong>SNAT (Source NAT / Masquerade)</strong> — outbound traffic; your home router does this<br>
+- <strong>DNAT (Destination NAT / Port Forwarding)</strong> — inbound, maps external port to internal host<br>
+- <strong>PAT (Port Address Translation)</strong> — many-to-one, uses port numbers to track flows</p>
+<p><strong>Red team implications:</strong><br>
+- Hosts behind NAT are not directly reachable from the internet — you need a pivot or DNAT entry<br>
+- Port forwarding rules expose internal services: find these in router configs<br>
+- NAT can hide internal network topology, but routes and ARP tables on a pivot reveal it<br>
+- Double NAT (NAT inside NAT) is common in cloud environments and VMs</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">13</span>
+            <span class="heading-text">VLANs — Virtual Local Area Networks</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>VLANs</strong> segment a physical network into isolated logical networks at Layer 2. Devices on VLAN 10 cannot directly communicate with devices on VLAN 20 without a router (or Layer 3 switch) — even if they share the same physical switch.</p>
+<p><strong>802.1Q Tagging</strong> — switches insert a 4-byte tag into the Ethernet frame header containing the VLAN ID (1–4094).</p>
+<p><strong>Trunk ports</strong> carry multiple VLANs (tagged). <strong>Access ports</strong> belong to a single VLAN (untagged to the device).</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-3">
+          <h3 class="section-heading">
+            
+            <span class="heading-text">VLAN Hopping</span>
+          </h3>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Two main techniques to jump between VLANs without going through a router:</p>
+<p><strong>1. Switch Spoofing</strong> — trick the switch into forming a trunk link with your machine by sending DTP (Dynamic Trunking Protocol) frames. Once trunking, you send/receive tagged frames for any VLAN.</p>
+<p><strong>2. Double Tagging</strong> — embed two 802.1Q tags. The outer tag matches the native VLAN (stripped by the first switch). The inner tag targets the victim VLAN (forwarded by the second switch). Only works one-way.</p>
+<p><strong>Mitigations:</strong> Disable DTP (<code>switchport nonegotiate</code>), set native VLAN to an unused ID, disable unused ports, use port security.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">VLAN enumeration and hopping</span>
+          </div>
+          <pre><code class="language-bash"># Create a VLAN interface on Linux (for testing/pivoting)
+modprobe 8021q
+ip link add link eth0 name eth0.20 type vlan id 20
+ip addr add 10.20.0.100/24 dev eth0.20
+ip link set eth0.20 up
+
+# Enumerate VLANs via CDP/LLDP on a trunk port
+yersinia -G   # GUI — sends DTP, CDP, LLDP frames
+
+# VLAN hopping with yersinia (switch spoofing attack)
+yersinia dtp -attack 1 -interface eth0
+
+# Scapy — manual double-tag packet
+python3 -c &#34;
+from scapy.all import *
+pkt = Ether()/Dot1Q(vlan=1)/Dot1Q(vlan=20)/IP(dst=&#39;10.20.0.1&#39;)/ICMP()
+sendp(pkt, iface=&#39;eth0&#39;)
+&#34;
+
+# After gaining trunk access — scan a target VLAN
+nmap -e eth0.20 -sn 10.20.0.0/24</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">14</span>
+            <span class="heading-text">IPv6 Basics</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>IPv6 uses 128-bit addresses written as eight groups of four hex digits separated by colons. Double colon <code>::</code> compresses consecutive all-zero groups.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">2001:0db8:0000:0000:0000:ff00:0042:8329
+→ 2001:db8::ff00:42:8329  (compressed)</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Important IPv6 address types:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Address</th><th>Range</th><th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Loopback</td><td>`::1`</td><td>localhost</td>
+                </tr>
+              
+                <tr>
+                  <td>Link-local</td><td>`fe80::/10`</td><td>Auto-configured, local segment only</td>
+                </tr>
+              
+                <tr>
+                  <td>Global unicast</td><td>`2000::/3`</td><td>Publicly routable</td>
+                </tr>
+              
+                <tr>
+                  <td>Multicast</td><td>`ff00::/8`</td><td>One-to-many</td>
+                </tr>
+              
+                <tr>
+                  <td>`::ffff:x.x.x.x`</td><td>—</td><td>IPv4-mapped IPv6</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Link-local addresses</strong> (<code>fe80::</code>) are automatically assigned to every IPv6-capable interface using the EUI-64 algorithm (derived from the MAC address). This is significant: you can often determine a device's MAC from its link-local address.</p>
+<p><strong>Red team notes:</strong><br>
+- IPv6 is often overlooked in firewalls and monitoring — separate rulesets required<br>
+- IPv6 is enabled by default on modern Windows/Linux even on IPv4-only networks<br>
+- <strong>NDP (Neighbour Discovery Protocol)</strong> replaces ARP — same poisoning attacks apply (<code>radvd</code>, <code>THC-IPv6</code>, fake RA messages)<br>
+- Tools: <code>ping6</code>, <code>nmap -6</code>, <code>thc-ipv6</code> suite</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">IPv6 enumeration</span>
+          </div>
+          <pre><code class="language-bash"># View IPv6 addresses
+ip -6 addr show
+
+# Ping6
+ping6 -c 3 ::1
+ping6 -c 3 fe80::1%eth0   # link-local requires interface scope
+
+# Nmap IPv6 scan
+nmap -6 -sV fe80::a00:27ff:fe4e:66a1%eth0
+nmap -6 -sn 2001:db8::/32
+
+# Discover neighbours (replaces ARP)
+ip -6 neigh show
+
+# Router Advertisement flood (fake IPv6 router — causes client misconfiguration)
+thc-ipv6 fake_router6 eth0 2001:db8::/64
+
+# Rogue RA — redirect IPv6 traffic through attacker
+# (can bypass IPv4-only firewall rules entirely)
+fake_router26 eth0</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">15</span>
+            <span class="heading-text">DHCP — Dynamic Host Configuration Protocol</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>DHCP</strong> automatically assigns IP addresses to hosts on a network. Four-step process (DORA):</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">text</span>
+            
+          </div>
+          <pre><code class="language-text">Client  ──── DHCPDISCOVER (broadcast) ────────▶  (all servers)
+Server  ◀─── DHCPOFFER ──────────────────────────
+Client  ──── DHCPREQUEST (I&#39;ll take that offer) ▶
+Server  ◀─── DHCPACK (confirmed) ────────────────</code></pre>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>DHCP also delivers: subnet mask, default gateway, DNS servers, domain name, NTP servers, WINS servers.</p>
+<p><strong>Red team attacks:</strong><br>
+- <strong>Rogue DHCP</strong> — spin up a fake DHCP server faster than the real one. Set yourself as the default gateway or DNS server → MitM all traffic on the segment<br>
+- <strong>DHCP starvation</strong> — flood with DHCPDISCOVER using spoofed MACs, exhaust the IP pool, then bring up rogue DHCP<br>
+- <strong>Info gathering</strong> — DHCP ACK packets leak internal domain name, gateway, DNS — capture with Wireshark on a new connection</p></div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">16</span>
+            <span class="heading-text">Red Team Network Recon Workflow</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Put it all together. When you land on a network (fresh shell, new VPN, physical access), this is the mental model:</p>
+<ol>
+<li><strong>Where am I?</strong> — Get your IP, subnet, gateway, DNS</li>
+<li><strong>What's on this segment?</strong> — ARP scan, ping sweep, passive listening</li>
+<li><strong>What segments exist?</strong> — Read the routing table, check for VLANs</li>
+<li><strong>What's reachable?</strong> — Port scan the live hosts</li>
+<li><strong>What's interesting?</strong> — Identify services, grab banners, check for defaults</li>
+</ol></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">Full local network recon workflow</span>
+          </div>
+          <pre><code class="language-bash"># 1. Where am I?
+ip addr show
+ip route show
+cat /etc/resolv.conf
+hostname -I
+
+# Windows equivalent
+ipconfig /all
+route print
+
+# 2. Passive — listen for traffic before making noise
+tcpdump -i eth0 -nn -c 200 2&gt;/dev/null   # see what&#39;s broadcasting/talking
+
+# 3. Host discovery — ARP (LAN) then ICMP (routed)
+arp-scan --localnet
+nmap -sn 192.168.1.0/24                  # ping scan
+nmap -sn 192.168.1.0/24 -PE -PP -PS21,22,80,443  # aggressive discovery
+
+# 4. Quick port scan on live hosts
+nmap -T4 -F 192.168.1.0/24              # fast top-100 ports
+nmap -T4 --open -p- 192.168.1.10       # all ports on single host
+
+# 5. Service/version scan on interesting hosts
+nmap -sV -sC -p 22,80,443,445,3389 192.168.1.10
+
+# 6. Banner grabbing
+nc -nv 192.168.1.10 80
+openssl s_client -connect 192.168.1.10:443 2&gt;/dev/null | head -20
+
+# 7. Check for common misconfigs
+nmap --script smb-vuln* -p 445 192.168.1.0/24
+nmap --script ftp-anon -p 21 192.168.1.0/24
+nmap --script snmp-info -sU -p 161 192.168.1.0/24</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">17</span>
+            <span class="heading-text">Wireshark — Reading the Wire</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p>Wireshark is the standard packet analyser. Understanding packet captures ties together everything above — you see the actual handshakes, ARP requests, DNS queries, and plaintext credentials in real time.</p>
+<p><strong>Essential display filters:</strong></p></div>
+
+      
+    
+
+      
+        <div class="block table-wrap">
+          <table class="table-block">
+            <thead>
+              <tr>
+                <th>Filter</th><th>What it shows</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>`ip.addr == 192.168.1.50`</td><td>All traffic to/from that IP</td>
+                </tr>
+              
+                <tr>
+                  <td>`tcp.port == 80`</td><td>HTTP traffic</td>
+                </tr>
+              
+                <tr>
+                  <td>`dns`</td><td>All DNS queries and responses</td>
+                </tr>
+              
+                <tr>
+                  <td>`arp`</td><td>ARP requests and replies</td>
+                </tr>
+              
+                <tr>
+                  <td>`icmp`</td><td>All ICMP (ping, traceroute, unreachables)</td>
+                </tr>
+              
+                <tr>
+                  <td>`tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0`</td><td>SYN packets (new connections / scans)</td>
+                </tr>
+              
+                <tr>
+                  <td>`http.request.method == &#34;POST&#34;`</td><td>Form submissions, login attempts</td>
+                </tr>
+              
+                <tr>
+                  <td>`ftp`</td><td>FTP commands (credentials in clear)</td>
+                </tr>
+              
+                <tr>
+                  <td>`smtp`</td><td>Email in transit</td>
+                </tr>
+              
+                <tr>
+                  <td>`!(arp or dns or icmp)`</td><td>Hide noise, show real traffic</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Follow a stream:</strong> Right-click a packet → Follow → TCP Stream. Reconstructs the full conversation as text — essential for reading HTTP sessions, FTP commands, or anything plaintext.</p></div>
+
+      
+    
+
+      
+        <div class="block api-code-block">
+          <div class="code-header">
+            <span class="lang-badge">bash</span>
+            <span class="code-caption">tcpdump — command-line packet capture</span>
+          </div>
+          <pre><code class="language-bash"># Capture all traffic on eth0
+tcpdump -i eth0
+
+# Capture with full packet content (hex + ASCII)
+tcpdump -i eth0 -XX
+
+# Filter by host
+tcpdump -i eth0 host 192.168.1.50
+
+# Filter by port
+tcpdump -i eth0 port 80
+tcpdump -i eth0 port 53
+
+# Capture SYN packets only (new connections)
+tcpdump -i eth0 &#39;tcp[tcpflags] &amp; tcp-syn != 0&#39;
+
+# Save to file, open in Wireshark later
+tcpdump -i eth0 -w capture.pcap
+
+# Read a pcap
+tcpdump -r capture.pcap
+
+# Strip DNS/ARP noise and show only real traffic
+tcpdump -i eth0 not arp and not port 53
+
+# Capture credentials from FTP / Telnet / HTTP
+tcpdump -i eth0 -A -s0 port 21 or port 23 or port 80 | grep -iE &#39;user|pass|login|password&#39;</code></pre>
+        </div>
+
+      
+    
+
+      
+        
+        
+        <div class="block heading-block heading-level-2">
+          <h2 class="section-heading">
+            <span class="heading-index">18</span>
+            <span class="heading-text">Key Takeaways</span>
+          </h2>
+        </div>
+
+      
+    
+
+      
+        <div class="block text-block"><p><strong>Concepts to have cold:</strong></p>
+<ul>
+<li>OSI layers 1–7 and where each attack class lives</li>
+<li>IPv4 binary → decimal conversion and subnet math without a calculator</li>
+<li>CIDR prefix → number of hosts: <code>/24</code>=254, <code>/25</code>=126, <code>/26</code>=62, <code>/30</code>=2</li>
+<li>Private ranges: <code>10/8</code>, <code>172.16/12</code>, <code>192.168/16</code></li>
+<li>TCP three-way handshake and what each flag means</li>
+<li>ARP is unauthenticated — always a MitM vector on a local segment</li>
+<li>Default gateway is the escape hatch from the subnet — compromise it and you see everything</li>
+<li>VLANs provide logical segmentation but can be hopped if DTP is enabled or native VLAN is misconfigured</li>
+<li>IPv6 is enabled by default and often unmonitored — a parallel network to audit separately</li>
+</ul>
+<p><strong>Tools to know:</strong><br>
+<code>ipcalc</code>, <code>nmap</code>, <code>arp-scan</code>, <code>wireshark</code>, <code>tcpdump</code>, <code>bettercap</code>, <code>ip</code>, <code>traceroute</code>, <code>scapy</code></p>
+<p>Networking fundamentals don't expire. The TCP/IP stack that existed in 1981 still underlies every HTTP request, every reverse shell, every LDAP query. Building a solid mental model here makes every layer above it faster to learn and easier to break.</p></div>
+
+      
+    
+  </div>
+
+  
+  
+
+
+  </div>
+
+  <nav id="tocBar" class="toc-bar" hidden></nav>
+
+</article>
+
+<button id="backToTop" hidden aria-label="Back to top">
+  <svg class="bt-ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="bt-ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="2"/>
+    <circle class="bt-ring-fg" cx="20" cy="20" r="17" fill="none" stroke-width="2"
+            stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+  </svg>
+  <svg class="bt-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+
+
+
+<section class="related-posts">
+  <div class="section-header">
+    <span class="section-label">// related</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="related-grid">
+    
+      
+      <a href="/axiom-blog-site/post/windows-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Windows Fundamentals — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Architecture, filesystem, registry, users, NTFS permissions, processes, services, PowerShell, Active Directory, event logs, and a red team lens on every layer.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/linux-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Linux Fundamentals — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Filesystem, permissions, users, processes, services, networking, bash, cron, logs, and a red team lens on every concept that matters in practice.</p>
+        </div>
+      </a>
+    
+      
+      <a href="/axiom-blog-site/post/databases-fundamentals" class="post-card post-card-related card-cat-learn">
+        <div class="post-card-body">
+          <div class="post-card-toprow">
+            <div class="post-card-badges">
+              
+                <span class="cat-badge cat-learn">Learn</span>
+              
+            </div>
+          </div>
+          <h2 class="post-card-title">Databases — The Complete Foundation</h2>
+          <div class="post-card-meta"><time>2026-06-04</time></div>
+          <p class="post-card-summary">Relational and NoSQL database fundamentals, SQL from scratch, MySQL, PostgreSQL, MSSQL, Oracle, SQLite, MongoDB, Redis, and Cassandra — with red team perspectives on enumeration, default credentials, privilege escalation, credential extraction, and SQL injection for every major engine.</p>
+        </div>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+    </div>
+  </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="/axiom-blog-site/" aria-label="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="button" id="mobileBottomSearch" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span>Search</span>
+    </button>
+    <a href="/axiom-blog-site/#categories" aria-label="Categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-left">
+        <a href="/axiom-blog-site/" class="footer-brand">Axiom</a>
+      </div>
+      <nav class="footer-nav">
+        <a href="/axiom-blog-site/about" class="footer-link">About</a>
+        <a href="/axiom-blog-site/tags" class="footer-link">Tags</a>
+        <a href="/axiom-blog-site/privacy" class="footer-link">Privacy</a>
+        <a href="/axiom-blog-site/feed.xml" class="footer-link">RSS</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/axiom-blog-site/static/js/highlight.min.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/hljs-powershell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-x86asm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dos.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-http.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nginx.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-apache.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dockerfile.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-armasm.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-awk.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-cmake.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-coffeescript.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-dart.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-elixir.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-erlang.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fortran.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-fsharp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-gradle.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-groovy.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-haskell.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-kotlin.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-latex.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-lisp.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-nix.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-ocaml.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-pgsql.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-protobuf.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-scala.min.js"></script>
+  <script src="/axiom-blog-site/static/js/hljs-vim.min.js"></script>
+  <script src="/axiom-blog-site/static/js/search.js?v=1"></script>
+  <script src="/axiom-blog-site/static/js/animations.js?v=3"></script>
+  
+  <script src="/axiom-blog-site/static/js/crypto.js?v=2"></script>
+  <script src="/axiom-blog-site/static/js/app.js?v=3"></script>
+  <script src="/axiom-blog-site/static/js/toc.js?v=7"></script>
+  <script src="/axiom-blog-site/static/js/post.js?v=4"></script>
+
+</body>
+</html>
